@@ -51,9 +51,14 @@
     .page-section.active { display: block; }
 
     /* HERO */
-    .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 60px; background: linear-gradient(135deg, rgba(26,54,93,0.92), rgba(44,82,130,0.88)), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80') center/cover; position: relative; overflow: hidden; }
-    .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(transparent, var(--light)); }
-    .hero-content { max-width: 800px; position: relative; z-index: 1; animation: fadeInUp 1s ease; }
+    .hero { min-height: auto; display: block; text-align: center; padding: 0; position: relative; overflow: hidden; background-color: var(--primary); }
+.hero .img-bg { width: 100%; height: auto; display: block; }
+.hero-text { background: var(--primary); color: var(--white); text-align: center; padding: 40px 20px; }
+.hero-text h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 12px; color: var(--white); }
+.hero-text h2 span { color: var(--accent); }
+.hero-text p { font-size: 1.1rem; color: rgba(255,255,255,0.9); max-width: 700px; margin: 0 auto; line-height: 1.7; }
+    .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 0; }
+    .hero-content { max-width: 800px; position: relative; z-index: 1; animation: fadeInUp 1s ease; display: none; }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(232,168,56,0.15); border: 1px solid rgba(232,168,56,0.3); padding: 8px 20px; border-radius: 50px; color: var(--accent); font-size: 0.8rem; font-weight: 500; margin-bottom: 24px; letter-spacing: 1px; text-transform: uppercase; }
     .hero h1 { font-family: 'Playfair Display', serif; font-size: 3.2rem; color: var(--white); margin-bottom: 20px; line-height: 1.15; }
@@ -71,7 +76,7 @@
     .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
 
     /* HOTEL SEARCH */
-    .search-cta { background: linear-gradient(135deg, var(--primary), var(--primary-light)); text-align: center; padding: 70px 20px; }
+    .search-cta { background: var(--primary); text-align: center; padding: 70px 20px; }
     .search-cta h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--white); margin-bottom: 12px; }
     .search-cta p { color: rgba(255,255,255,0.8); margin-bottom: 28px; font-size: 1rem; }
 
@@ -227,6 +232,10 @@
           <li><a onclick="showSection('europa-turista')"><span class="dest-icon">🌍</span> Europa Turista</a></li>
           <li><a onclick="showSection('europa-italia-sorrento')"><span class="dest-icon">🇮🇹</span> Italia con Sorrento</a></li>
           <li><a onclick="showSection('europa-capitales-berlin')"><span class="dest-icon">🇩🇪</span> Capitales Imperiales con Berlin</a></li>
+          <li><a onclick="showSection('europa-ideal')"><span class="dest-icon">✨</span> Europa Ideal</a></li>
+          <li><a onclick="showSection('europa-promo')"><span class="dest-icon">🏷️</span> Europa en Promo</a></li>
+          <li><a onclick="showSection('europa-maravillas-turquia')"><span class="dest-icon">🇹🇷</span> Maravillas de Turquía</a></li>
+          <li><a onclick="showSection('europa-maravillas-turquia-grecia')"><span class="dest-icon">🇹🇷</span> Maravillas de Turquía y Grecia</a></li>
         </ul>
       </li>
 
@@ -285,6 +294,7 @@
           <li><a onclick="showSection('exoticos-turquia-egipto')"><span class="dest-icon">🇹🇷</span> Turquía y Egipto</a></li>
           <li><a onclick="showSection('exoticos-nilo-bosforo')"><span class="dest-icon">🇪🇬</span> Del Nilo al Bosforo</a></li>
           <li><a onclick="showSection('exoticos-egipto-jordania')"><span class="dest-icon">🇯🇴</span> Egipto y Jordania</a></li>
+          <li><a onclick="showSection('exoticos-japon-dubai')"><span class="dest-icon">🇯🇵</span> Japón al Completo con Dubai</a></li>
         </ul>
       </li>
 
@@ -296,16 +306,12 @@
   <!-- ==================== HOME ==================== -->
   <div class="page-section active" id="section-home">
     <section class="hero">
-      <div class="hero-content">
-        <div class="hero-badge"><i class="fas fa-star"></i> Agencia Premium de Viajes</div>
-        <h1>Descubre el mundo con <span>Tu Agente de Viajes</span></h1>
-        <p>Explora nuestros destinos exclusivos y encuentra el viaje de tus sueños. Experiencias inolvidables diseñadas a tu medida.</p>
-        <div class="hero-buttons">
-          <a class="btn btn-primary" onclick="showSection('home'); document.getElementById('destinosPreview').scrollIntoView({behavior:'smooth'})"><i class="fas fa-compass"></i> Ver Destinos</a>
-          <a class="btn btn-outline" onclick="showSection('hotel-search')"><i class="fas fa-search"></i> Buscar Hoteles</a>
-        </div>
-      </div>
+      <img src="fondo.png" class="img-bg" alt="Tu Agente de Viajes">
     </section>
+    <div class="hero-text">
+      <h2>Descubre el mundo con <span>Tu Agente de Viajes</span></h2>
+      <p>Explora destinos, encuentra el viaje de tus sueños y vive experiencias inolvidables diseñadas a tu medida.</p>
+    </div>
 
     <!-- HOTEL SEARCH CTA -->
     <section class="search-cta" id="hotel-search-home">
@@ -2499,6 +2505,242 @@
     </section>
   </div>
 
+  <!-- ==================== EUROPA: EUROPA IDEAL ==================== -->
+  <div class="page-section" id="section-europa-ideal">
+    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&q=80') center/cover;">
+      <div class="dest-hero-content">
+        <h1>Europa <span>Ideal</span></h1>
+        <p>Roma, Florencia, Venecia, Zúrich, París, Burdeos y Madrid - 15 días</p>
+        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+      </div>
+    </section>
+    <section class="packages">
+      <div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card">
+        <div class="package-info">
+          <span class="package-tag">16 de Noviembre 2027</span>
+          <h3>Europa Ideal - Código BTW</h3>
+          <ul class="package-details">
+            <li><i class="fas fa-plane"></i> Air Europa EZE/Roma//Madrid/EZE (clase turista)</li>
+            <li><i class="fas fa-moon"></i> 14 Noches de alojamiento</li>
+            <li><i class="fas fa-coffee"></i> Desayuno buffet diario</li>
+            <li><i class="fas fa-shuttle-van"></i> Traslados de llegada y salida (servicio regular)</li>
+            <li><i class="fas fa-bus"></i> Autocar de lujo durante todo el recorrido</li>
+            <li><i class="fas fa-user-tie"></i> Guía acompañante de habla hispana</li>
+            <li><i class="fas fa-map-marked-alt"></i> Visita con guía local en París, Madrid y Roma</li>
+            <li><i class="fas fa-shield-alt"></i> Asistencia Coris Global Plus (cancelación multicausa USD 2.000)</li>
+            <li><i class="fas fa-file-invoice"></i> Seguro turístico incluido</li>
+            <li><i class="fas fa-city"></i> Tasas Municipales en Francia, Barcelona y Roma</li>
+          </ul>
+          <div class="package-price">USD 3.990 <span>por persona en doble</span></div>
+        </div>
+        <div class="package-image"><img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=760&q=80" alt="Europa Ideal"></div>
+      </div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px;">Itinerario</h2>
+        <div style="display:grid;gap:16px;">
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 1 - 16 Nov: Ezeiza</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Salida en vuelo intercontinental hacia Roma. Conexión en Madrid. Noche a bordo.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 2 - 17 Nov: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Llegada al aeropuerto internacional de Roma. Asistencia y traslado al hotel. Alojamiento a la hora de check in y resto del día libre.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 3 - 18 Nov: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Alojamiento y desayuno. Visita panorámica de la Roma Imperial: Foros Imperiales, Coliseo, Arco de Constantino, Termas de Caracalla, Circo Máximo. AUDIENCIA PAPAL (si el Santo Padre se encuentra en el Vaticano). Opcional: Museos Vaticanos y Capilla Sixtina. Por la tarde opcional: Roma Barroca.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 4 - 19 Nov: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Alojamiento y desayuno. Día libre. Opcionales: Interior del Coliseo con Foro Romano, excursión a Nápoles, Capri o Pompeya.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 5 - 20 Nov: Roma → Florencia (275 km)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia la Toscana. Visita a pie de Florencia: Catedral de Santa María dei Fiori, Campanile, Baptisterio (Puertas del Paraíso), Plaza de la Signoría, Ponte Vecchio. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 6 - 21 Nov: Florencia → Venecia (256 km)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia Venecia. Embarque al Tronchetto. Visita panorámica: Basílica de San Marcos, Campanario, Palacio Ducal, Puente de los Suspiros. Tiempo libre. Opcional: paseo en Góndola y navegación por la Laguna Veneciana. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 7 - 22 Nov: Venecia → Lucerna → Zúrich (590 km)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Cruzar la frontera con Suiza. Lucerna: puente de madera medieval. Tiempo libre. Opcional: excursión al Monte Titlis (teleférico giratorio 360°, 3.020 mts). Continuación a Zúrich. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 8 - 23 Nov: Zúrich → Basilea → París (595 km)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Basilea: ciudad cultural a orillas del Rhin. Breve tiempo libre. Cruzar frontera con Francia. Continuación a París. Alojamiento. Opcional: París Iluminado y crucero por el río Sena.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 9 - 24 Nov: París</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Alojamiento y desayuno. Visita panorámica: Place de la Concorde, Arco del Triunfo, Campos Elíseos, Isla de la Ciudad, Notre Dame, Inválidos (tumba de Napoleón), Campos de Marte, Torre Eiffel. Opcional: Palacio de Versalles.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 10 - 25 Nov: París</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Alojamiento y desayuno. Día libre. Opcionales: Montmartre, Barrio Latino, excursión a Brujas (Bélgica).</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 11 - 26 Nov: París → Blois → Valle del Loira → Burdeos (574 km)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Valle del Loira: parada en Blois (castillo). Tours, Poitiers. Llegada a Burdeos: capital de Aquitania, región vinícola, Patrimonio de la Humanidad. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 12 - 27 Nov: Burdeos → Madrid (693 km)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia España. San Sebastián, Burgos. Llegada a Madrid. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 13 - 28 Nov: Madrid</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Alojamiento y desayuno. Visita panorámica de la ciudad: avenidas, plazas y edificios importantes. Resto del día libre. Opcional: excursión a Toledo.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 14 - 29 Nov: Madrid</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. A la hora indicada traslado al aeropuerto internacional de Madrid. Vuelo de regreso. Noche a bordo.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 15 - 30 Nov: Ezeiza</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Arribo al aeropuerto internacional. Fin de los servicios.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==================== EUROPA: EUROPA EN PROMO ==================== -->
+  <div class="page-section" id="section-europa-promo">
+    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&q=80') center/cover;">
+      <div class="dest-hero-content">
+        <h1>Europa en <span>Promo</span></h1>
+        <p>Madrid, Burdeos, Valle del Loira, París, Lucerna, Zúrich, Venecia, Florencia y Roma - 16 días</p>
+        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+      </div>
+    </section>
+    <section class="packages">
+      <div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card">
+        <div class="package-info">
+          <span class="package-tag">19 Abril / 24 Mayo 2027</span>
+          <h3>Europa en Promo - Código BTW</h3>
+          <ul class="package-details">
+            <li><i class="fas fa-plane"></i> Air Europa EZE/Madrid//Roma/EZE (ida directa, vuelta conexión Madrid)</li>
+            <li><i class="fas fa-moon"></i> 15 Noches de alojamiento</li>
+            <li><i class="fas fa-coffee"></i> Desayuno buffet diario</li>
+            <li><i class="fas fa-shuttle-van"></i> Traslados de llegada y salida</li>
+            <li><i class="fas fa-bus"></i> Autocar de lujo durante todo el recorrido</li>
+            <li><i class="fas fa-user-tie"></i> Guía profesional de habla hispana</li>
+            <li><i class="fas fa-map-marked-alt"></i> Visita con guía local en Madrid, París, Venecia, Florencia y Roma</li>
+            <li><i class="fas fa-shield-alt"></i> Asistencia Coris Global Plus (cancelación multicausa USD 2.000)</li>
+            <li><i class="fas fa-hotel"></i> Tasas hoteleras incluidas</li>
+          </ul>
+          <div class="package-price">USD 4.390 <span>por persona en doble</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding:12px;background:var(--light);border-radius:8px;">
+            <div><strong style="color:var(--primary);">Salidas</strong><br><span style="font-size:0.85rem;color:var(--text);">19 Abril y 24 Mayo 2027</span></div>
+            <div><strong style="color:var(--primary);">Duración</strong><br><span style="font-size:0.85rem;color:var(--text);">16 Días / 15 Noches</span></div>
+          </div>
+        </div>
+        <div class="package-image"><img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=760&q=80" alt="Europa en Promo"></div>
+      </div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px;">Itinerario</h2>
+        <div style="display:grid;gap:16px;">
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 1 - 19 Abr: Ezeiza</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Embarque en el Aeropuerto Internacional de Ezeiza para tomar vuelo con destino Madrid. Noche a bordo.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 2 - 20 Abr: Madrid</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Llegada a la capital de España. Asistencia en el aeropuerto y traslado al hotel. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 3 - 21 Abr: Madrid</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Plaza de España, Gran Vía, Fuente de la Cibeles, Puerta de Alcalá, Estadio Santiago Bernabéu, Plaza de las Ventas, Puerta del Sol. Opcional: excursión a Toledo. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 4 - 22 Abr: Madrid → Burdeos</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia el norte de España, entrando en Francia. Región de las Landas. Llegada a Burdeos, capital mundial del vino. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 5 - 23 Abr: Burdeos → Valle del Loira → París</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Atravesando Poitiers y Tours, llegada al Valle del Loira. Tiempo libre para visitar el Castillo de Chambord. Continuación a París. Opcional: París Iluminado. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 6 - 24 Abr: París</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Campos Elíseos, Arco del Triunfo, Ópera, Torre Eiffel, Barrio Latino, Jardines de Luxemburgo, Los Inválidos. Opcional: Palacio de Versalles. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 7 - 25 Abr: París</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Opcionales: Torre Eiffel, barrio de Montmartre, crucero por el río Sena. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 8 - 26 Abr: París → Lucerna → Zúrich</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia Suiza. Lucerna: ciudad medieval, puente de madera. Tiempo libre. Continuación a Zúrich. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 9 - 27 Abr: Zúrich → Venecia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida temprano. Opcional: excursión al Monte Titlis (teleférico, 3.200 mts). Continuación a Venecia. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 10 - 28 Abr: Venecia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Embarque en barco a Plaza de San Marcos. Visita a pie: Basílica de San Marcos, Campanile, Torre del Reloj, Palacio Ducal, Puente de los Suspiros. Tarde libre. Opcional: góndola o crucero por la Laguna. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 11 - 29 Abr: Venecia → Padua → Florencia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Pádua: Basílica de San Antonio. Continuación a Florencia. Visita panorámica: Catedral, Baptisterio, Puente Vecchio, Plaza de la Señoría. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 12 - 30 Abr: Florencia → Asís → Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Asís: ciudad amurallada, Basílicas y tumba de San Francisco. Continuación a Roma. Opcional: Roma Barroca (Plaza Navona, Fontana de Trevi, Panteón). Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 13 - 01 May: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Plaza de Venecia, Coliseo, Foro Romano, Circo Máximo, Castillo de Santo Ángel, Vaticano. Opcional: Museos Vaticanos, Capilla Sixtina, Basílica de San Pedro. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 14 - 02 May: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Opcional: excursión de día completo a Nápoles y la isla de Capri. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 15 - 03 May: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Check out y salida hacia el aeropuerto de Roma. Vuelo de regreso. Conexión en Madrid. Noche a bordo.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 16 - 04 May: Ezeiza</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Arribo al aeropuerto internacional. Fin de los servicios.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==================== EUROPA: MARAVILLAS DE TURQUÍA ==================== -->
+  <div class="page-section" id="section-europa-maravillas-turquia">
+    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(180,30,30,0.85)), url('https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=1920&q=80') center/cover;">
+      <div class="dest-hero-content">
+        <h1>Maravillas de <span>Turquía</span></h1>
+        <p>Estambul, Ankara, Capadocia, Pamukkale, Izmir - 14 días</p>
+        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+      </div>
+    </section>
+    <section class="packages">
+      <div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card">
+        <div class="package-info">
+          <span class="package-tag">8 Marzo / 5 Abril 2027</span>
+          <h3>Maravillas de Turquía - Código TIP</h3>
+          <ul class="package-details">
+            <li><i class="fas fa-plane"></i> Turkish Airlines EZE/IST/EZE</li>
+            <li><i class="fas fa-moon"></i> 12 Noches de alojamiento</li>
+            <li><i class="fas fa-utensils"></i> Media pensión según itinerario</li>
+            <li><i class="fas fa-user-tie"></i> Guía de habla hispana</li>
+            <li><i class="fas fa-wifi"></i> ESIM incluida</li>
+            <li><i class="fas fa-headset"></i> Coordinador desde Buenos Aires</li>
+            <li><i class="fas fa-shield-alt"></i> Seguro Universal Assistance Value Any Reason 80k</li>
+            <li><i class="fas fa-info-circle"></i> Propinas obligatorias y tasas hoteleras incluidas</li>
+          </ul>
+          <div class="package-price">USD 3.799 <span>por persona en doble</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding:12px;background:var(--light);border-radius:8px;">
+            <div><strong style="color:var(--primary);">Salidas</strong><br><span style="font-size:0.85rem;color:var(--text);">8 Marzo y 5 Abril 2027</span></div>
+            <div><strong style="color:var(--primary);">Duración</strong><br><span style="font-size:0.85rem;color:var(--text);">14 Días / 12 Noches</span></div>
+            <div><strong style="color:var(--primary);">Alojamiento</strong><br><span style="font-size:0.85rem;color:var(--text);">Estambul (5), Capadocia (3), Pamukkale (2), Izmir (2)</span></div>
+            <div><strong style="color:var(--primary);">Régimen</strong><br><span style="font-size:0.85rem;color:var(--text);">Media pensión</span></div>
+          </div>
+          <div style="margin-top:12px;padding:12px;background:#fff3cd;border-radius:8px;font-size:0.85rem;color:#856404;">
+            <strong>No incluye:</strong> Gastos personales, tasas turísticas de Turquía (USD 45 en destino), bebidas en comidas, servicios no mencionados.
+          </div>
+        </div>
+        <div class="package-image"><img src="https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=760&q=80" alt="Maravillas de Turquía"></div>
+      </div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px;">Itinerario</h2>
+        <div style="display:grid;gap:16px;">
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 1 - Buenos Aires → Estambul</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Salida desde Ezeiza en vuelo internacional con destino a Estambul. Noche a bordo.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 2 - Estambul</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Llegada a Estambul. Traslado al hotel. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 3 - Estambul Clásico</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Mezquita de Solimán el Magnífico, Gran Bazar, plaza de Sultanahmet. Almuerzo. Mezquita Azul, Hipódromo Romano. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 4 - Estambul – Bósforo</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Cafetería Pierre Loti, Iglesia de San Jorge, Plaza Taksim, calle İstiklal. Almuerzo a orillas del Bósforo. Crucero por el estrecho. Bazar de las Especias. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 5 - Estambul → Ankara → Capadocia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia Ankara. Mausoleo de Atatürk. Continuación a Capadocia. Lago Salado. Cena y alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 6 - Capadocia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Museo al Aire Libre de Göreme, valles de Avcılar y Güvercinlik. Talleres de alfombras, ónix y turquesa. Cena. Opcional: globo aerostático.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 7 - Capadocia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Ciudad subterránea de Özkonak o Mazı. Çavusin. Valles de Dervent, Uçhisar y del Amor. Cena y alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 8 - Capadocia → Konya → Pamukkale</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Konya: posada medieval de la Ruta de la Seda. Pamukkale: cascadas calcáreas. Cena y alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 9 - Pamukkale (Día libre)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Cena y alojamiento. Opcional: Maldivas Turcas.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 10 - Pamukkale → Éfeso → Zona de Izmir</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Pamukkale e Hierápolis. Éfeso: Templo de Adriano, Biblioteca de Celso. Casa de la Virgen María. Centro de cuero. Cena y alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 11 - Zona de Izmir (Día libre)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Cena y alojamiento. Opcional: Isla griega de Chíos.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 12 - Izmir → Bursa → Estambul</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Bursa: primera capital otomana, Mezquita Verde. Ferry a Estambul. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 13 - Estambul (Día libre)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno y día libre para disfrutar de la ciudad. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 14 - Estambul → Buenos Aires</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Traslado al aeropuerto. Vuelo de regreso a Buenos Aires.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==================== EUROPA: MARAVILLAS DE TURQUÍA Y GRECIA ==================== -->
+  <div class="page-section" id="section-europa-maravillas-turquia-grecia">
+    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(0,100,150,0.85)), url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=80') center/cover;">
+      <div class="dest-hero-content">
+        <h1>Maravillas de <span>Turquía y Grecia</span></h1>
+        <p>Estambul, Ankara, Capadocia, Pamukkale, Éfeso, Samos, Mykonos, Santorini, Atenas - 17 días</p>
+        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+      </div>
+    </section>
+    <section class="packages">
+      <div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card">
+        <div class="package-info">
+          <span class="package-tag">15 de Abril 2027</span>
+          <h3>Maravillas de Turquía y Grecia - Código TIP</h3>
+          <ul class="package-details">
+            <li><i class="fas fa-plane"></i> Lufthansa EZE/IST/EZE</li>
+            <li><i class="fas fa-moon"></i> 15 Noches de alojamiento</li>
+            <li><i class="fas fa-utensils"></i> Desayuno y media pensión según itinerario</li>
+            <li><i class="fas fa-ferry"></i> Ferries incluidos: Samos, Mykonos, Santorini, Atenas</li>
+            <li><i class="fas fa-user-tie"></i> Guía de habla hispana</li>
+            <li><i class="fas fa-wifi"></i> ESIM incluida</li>
+            <li><i class="fas fa-headset"></i> Coordinador desde Buenos Aires</li>
+            <li><i class="fas fa-shield-alt"></i> Seguro Universal Assistance Value Any Reason 80k</li>
+            <li><i class="fas fa-info-circle"></i> Propinas obligatorias y tasas hoteleras de Turquía incluidas</li>
+          </ul>
+          <div class="package-price">USD 5.950 <span>por persona en doble</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding:12px;background:var(--light);border-radius:8px;">
+            <div><strong style="color:var(--primary);">Salida</strong><br><span style="font-size:0.85rem;color:var(--text);">15 de Abril 2027</span></div>
+            <div><strong style="color:var(--primary);">Duración</strong><br><span style="font-size:0.85rem;color:var(--text);">17 Días / 15 Noches</span></div>
+            <div><strong style="color:var(--primary);">Alojamiento</strong><br><span style="font-size:0.85rem;color:var(--text);">Estambul (3), Ankara (1), Capadocia (2), Pamukkale (1), Kusadasi (1), Samos (1), Mykonos (2), Santorini (2), Atenas (2)</span></div>
+            <div><strong style="color:var(--primary);">Régimen</strong><br><span style="font-size:0.85rem;color:var(--text);">Desayuno y media pensión</span></div>
+          </div>
+          <div style="margin-top:12px;padding:12px;background:#fff3cd;border-radius:8px;font-size:0.85rem;color:#856404;">
+            <strong>No incluye:</strong> Gastos personales, tasas turísticas de Turquía (USD 45 en destino), tasas hoteleras en Grecia (aprox. 10-15 €/noche), bebidas en comidas.
+          </div>
+        </div>
+        <div class="package-image"><img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=760&q=80" alt="Maravillas de Turquía y Grecia"></div>
+      </div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px;">Itinerario</h2>
+        <div style="display:grid;gap:16px;">
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 1 - Buenos Aires → Estambul</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Salida del aeropuerto de Ezeiza. Noche a bordo.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 2 - Estambul</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Llegada a Estambul. Traslado al hotel. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 3 - Estambul – Solimán el Magnífico</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Mezquita de Solimán. Recorrido histórico: Santa Sofía (exterior), Palacio de Topkapi. Almuerzo típico en Sultanahmet. Mezquita Azul. Gran Bazar con tiempo libre. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 4 - Estambul Clásico</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Crucero por el Bósforo. Bazar de las Especias. Visita a la parte asiática: Palacio de Beylerbey, puente colgante, Üsküdar. Colina Çamlıca con vistas panorámicas. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 5 - Estambul → Ankara</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia Ankara. Visita panorámica de la capital. Mausoleo Anıtkabir. Cena y alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 6 - Ankara → Capadocia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Lago Salado. Llegada a Capadocia. Opcional: Safari en Jeep. Cena y alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 7 - Capadocia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Valle de Göreme (iglesias rupestres). Valles de Avcılar y Güvercinlik. Talleres de alfombras, ónix y turquesa. Cena y alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 8 - Capadocia → Pamukkale</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida temprano. Hierápolis. Castillo de Algodón, cascadas blancas y Piscinas Naturales. Cena y alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 9 - Pamukkale → Éfeso → Kusadasi/Izmir</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Éfeso: Templo de Adriano, Trajano, Biblioteca de Celso. Casa de la Virgen María. Centro de cuero. Cena y alojamiento en Kusadasi o Izmir.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 10 - Kusadasi → Ferry → Samos</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Traslado al puerto. Ferry a Samos (45 min). Trámites migratorios. Tarde libre para explorar la isla. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 11 - Samos → Ferry → Mykonos</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Ferry a Mykonos. Traslado al hotel. Tarde libre: casco antiguo, boutiques, playas, gastronomía. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 12 - Mykonos (Día libre)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Sol, mar, playas. Opcional: Isla de Delos (cuna de Apolo y Artemis). Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 13 - Mykonos → Ferry → Santorini</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Ferry a Santorini. Traslado al hotel. Tarde libre: Fira, Oía (famosa por sus atardeceres). Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 14 - Santorini (Día libre)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Playas de arena negra, blanca, roja. Opcional: volcán sumergido. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 15 - Santorini → Ferry → Atenas</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Ferry a Atenas. Traslado al hotel. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 16 - Atenas</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Plaza de la Constitución, Parlamento, Biblioteca Nacional, Palacio Real, Evzones. Acrópolis, Estadio Olímpico, Templo de Zeus, Arco de Adriano. Barrio de Plaka. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 17 - Atenas → Buenos Aires</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Salida al aeropuerto temprano. Vuelo de regreso. Fin de servicios.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
   <!-- ==================== EXÓTICOS: SUDÁFRICA ==================== -->
   <div class="page-section" id="section-exoticos-sudafrica">
     <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80') center/cover;">
@@ -3985,6 +4227,64 @@
           <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 13 - Los Angeles</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Alojamiento.</p></div>
           <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 14 - Los Angeles → Buenos Aires</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Tiempo libre. Traslado al aeropuerto. Vuelo de regreso a Buenos Aires. Noche a bordo.</p></div>
           <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 15 - Buenos Aires</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Llegada al Aeroparque Jorge Newbery. Fin de servicios.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==================== EXÓTICOS: JAPÓN AL COMPLETO CON DUBAI ==================== -->
+  <div class="page-section" id="section-exoticos-japon-dubai">
+    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(180,30,30,0.85)), url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=80') center/cover;">
+      <div class="dest-hero-content">
+        <h1>Japón al Completo <span>con Dubai</span></h1>
+        <p>Kioto, Osaka, Kanazawa, Takayama, Matsumoto, Tokio + Dubai - 13 días</p>
+        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+      </div>
+    </section>
+    <section class="packages">
+      <div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card">
+        <div class="package-info">
+          <span class="package-tag">Domingos - Sujeto a disponibilidad</span>
+          <h3>Japón al Completo con Dubai - Código EURORIENTE</h3>
+          <ul class="package-details">
+            <li><i class="fas fa-plane"></i> Emirates (internacionales)</li>
+            <li><i class="fas fa-moon"></i> 9 Noches de alojamiento en Japón + 3 en Dubai</li>
+            <li><i class="fas fa-coffee"></i> Desayuno diario incluido</li>
+            <li><i class="fas fa-train"></i> Tren bala Shinkansen + trenes exprés incluidos</li>
+            <li><i class="fas fa-bus"></i> Autobuses de línea incluidos</li>
+            <li><i class="fas fa-luggage-cart"></i> Envío de equipaje Kioto→Kanazawa y Kanazawa→Tokio</li>
+            <li><i class="fas fa-user-tie"></i> Guía oficial de habla hispana</li>
+            <li><i class="fas fa-headset"></i> Asistencia 24h/7 vía WhatsApp y teléfono</li>
+            <li><i class="fas fa-camel"></i> Safari por el desierto de Dubai con cena incluida</li>
+            <li><i class="fas fa-city"></i> Visita a la ciudad de Dubai incluida</li>
+          </ul>
+          <div class="package-price">USD 6.900 <span>por persona en doble</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding:12px;background:var(--light);border-radius:8px;">
+            <div><strong style="color:var(--primary);">Salidas</strong><br><span style="font-size:0.85rem;color:var(--text);">Domingos (sujeto a disponibilidad)</span></div>
+            <div><strong style="color:var(--primary);">Duración</strong><br><span style="font-size:0.85rem;color:var(--text);">13 Días / 12 Noches</span></div>
+            <div><strong style="color:var(--primary);">Japón (9 noches)</strong><br><span style="font-size:0.85rem;color:var(--text);">Kioto (2), Osaka (2), Kanazawa (1), Takayama (1), Matsumoto (1), Tokio (2)</span></div>
+            <div><strong style="color:var(--primary);">Dubai (3 noches)</strong><br><span style="font-size:0.85rem;color:var(--text);">Alojamiento y desayuno + visita ciudad + safari desierto</span></div>
+          </div>
+        </div>
+        <div class="package-image"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=760&q=80" alt="Japón al Completo con Dubai"></div>
+      </div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px;">Itinerario</h2>
+        <div style="display:grid;gap:16px;">
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 1 - Llegada / Kioto</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">¡Bienvenidos a Japón! A su llegada, será recibido por un asistente de habla hispana que le acompañará en el traslado hasta su hotel en Kioto en transporte público. Alojamiento en el hotel en Kioto.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 2 - Kioto / Visita a la ciudad (D)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno en el hotel. Salida para realizar una visita de día completo por Kioto, antigua capital imperial de Japón. Acompañados por guía de habla hispana, comenzaremos en el Templo Kiyomizu-dera (Patrimonio UNESCO), continuando por la zona de Sannen-zaka. La visita continúa en el Templo Ryoan-ji (jardín zen), el Templo Kinkaku-ji (Pabellón Dorado) y el Templo Sanjusangen-do (mil una estatua de Kannon). Paseo por el barrio de Gion, con sus casas de té y calles estrechas. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 3 - Kioto / Nara / Fushimi Inari / Osaka (D)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita de día completo a Nara y Fushimi Inari con guía. Traslado en tren hacia el Fushimi Inari Taisha, célebre por sus pasillos de torii rojos. Continuación a Nara, primera capital permanente de Japón. Visita al Templo Todai-ji (Gran Buda), Santuario Kasuga Taisha y Parque de Nara con sus ciervos sagrados. Continuación a Osaka. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 4 - Osaka (Día libre)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Opcional: visita a Arashiyama con guía - Bosque de Bambú, Templo Tenryu-ji (Patrimonio UNESCO) y Puente Togetsukyo. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 5 - Osaka / Kanazawa (D)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida sin asistente hacia la estación de Osaka. Tren exprés (2ª clase, aprox. 1h30) a Tsuruga y tren bala Shinkansen (2ª clase, aprox. 45 min) a Kanazawa, ciudad con patrimonio histórico intacto. Tarde libre: Jardín Kenrokuen, Higashi Chaya-gai (antiguo distrito de geishas), Castillo de Kanazawa, Casa del samurái Nomura, Mercado Omicho Ichiba. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 6 - Kanazawa / Shirakawa-go / Takayama (D)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Autobús exprés a Shirakawa-go (Patrimonio UNESCO, casas gassho-zukuri). Tiempo libre para recorrer el pueblo. Continuación a Takayama, ciudad alpina. Tarde libre: barrio Sanmachi-suji, Takayama Jinya, mercados locales. Opcional: Upgrade a Ryokan (alojamiento tradicional japonés con cena y onsen). Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 7 - Takayama / Matsumoto (D)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Autobús exprés a Matsumoto, en los Alpes Japoneses. Tarde libre: Castillo de Matsumoto ("Castillo del Cuervo Negro"), Museo de Arte (Yayoi Kusama), barrio Nakamachi. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 8 - Matsumoto / Tokio (D)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Tren exprés (2ª clase, aprox. 2h30) a Tokio a través de los Alpes Japoneses. Llegada a la estación de Shinjuku. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 9 - Tokio / Visita a la ciudad (D)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita de día completo con guía. Santuario Meiji Jingu, barrio de Asakusa (Templo Senso-ji, Nakamise-dori), Harajuku, Omotesando, Tokyo Metropolitan Government Building (mirador panorámico). Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 10 - Tokio / Dubai (D)</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Traslado al aeropuerto en Airport Limousine Bus. Vuelo hacia Dubai. Llegada y traslado al hotel. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 11 - Dubai / Visita a la ciudad</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno buffet. Excursión de medio día: zona de Bastakia, Museo de Dubai, taxi fluvial "Abra", Zoco de las Especies y bazares de oro. Tarde libre. Opcional: Visita al Dubái Moderno con almuerzo - Dubái Mall, Burj Khalifa (piso 124-125), fuentes mágicas, The Palm, Atlantis, centro financiero. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 12 - Dubai / Safari por el desierto</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Tarde: Safari por el desierto en Land Cruisers (6 personas por vehículo). Fotos de la puesta de sol árabe. Campamento: cena con espectáculos folclóricos y danza del vientre. Actividades: sandboarding, montar a camello, tatuaje de henna. Cena incluye agua, refrescos, té y café. Regreso aprox. 21:30. Alojamiento.</p></div>
+          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 13 - Dubai / Aeropuerto</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno en el hotel. A la hora indicada traslado al aeropuerto. Fin de servicios.</p></div>
         </div>
       </div>
     </section>
