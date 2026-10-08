@@ -118,6 +118,9 @@
     .package-details { list-style: none; margin-bottom: 12px; }
     .package-details li { padding: 3px 0; font-size: 0.82rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
     .package-details li i { color: var(--green); font-size: 0.75rem; width: 14px; }
+    .itinerary-day { padding: 14px 18px; background: var(--light); border-radius: 10px; border-left: 4px solid var(--accent); }
+    .itinerary-day strong { color: var(--primary); }
+    .itinerary-day p { font-size: 0.85rem; color: var(--text); margin-top: 4px; }
     .package-price { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--accent-hover); font-weight: 700; }
     .package-price span { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 400; color: var(--text-light); display: block; }
     .package-image { position: relative; overflow: hidden; }
@@ -244,6 +247,50 @@
           <li><a onclick="showSection('europa-leyendas-europa')"><span class="dest-icon">🏰</span> Leyendas de Europa</a></li>
           <li><a onclick="showSection('europa-tutta-italia-sorrento')"><span class="dest-icon">🇮🇹</span> Tutta Italia con Sorrento</a></li>
           <li><a onclick="showSection('europa-experiencia-turquia')"><span class="dest-icon">🇹🇷</span> Experiencia Turquía</a></li>
+          <li><a onclick="showSection('europa-encantos-turquia-islas-griegas')"><span class="dest-icon">🇹🇷</span> Encantos de Turquía e Islas Griegas</a></li>
+        </ul>
+      </li>
+
+      <!-- TOURS SIN AEREOS -->
+      <li class="nav-item">
+        <span class="nav-link-btn" onclick="toggleDropdown(event, this)"><i class="fas fa-bus-alt"></i> Tours Sin Aéreos <i class="fas fa-chevron-down"></i></span>
+        <ul class="dropdown">
+          <li class="dropdown-header">Tours sin aéreos</li>
+          <li><a onclick="showSection('tour-india-nepal')"><span class="dest-icon">🇮🇳</span> India y Nepal</a></li>
+          <li><a onclick="showSection('tour-egipto-clasico')"><span class="dest-icon">🇪🇬</span> Egipto Clásico</a></li>
+          <li><a onclick="showSection('tour-egipto-mar-rojo')"><span class="dest-icon">🇪🇬</span> Egipto y Mar Rojo</a></li>
+          <li><a onclick="showSection('tour-marruecos-clasico')"><span class="dest-icon">🇲🇦</span> Marruecos Clásico</a></li>
+          <li><a onclick="showSection('tour-vuelta-marruecos')"><span class="dest-icon">🇲🇦</span> Vuelta a Marruecos</a></li>
+          <li><a onclick="showSection('tour-japon-tren')"><span class="dest-icon">🇯🇵</span> Japón en Tren</a></li>
+          <li><a onclick="showSection('tour-japon')"><span class="dest-icon">🇯🇵</span> Japón</a></li>
+          <li><a onclick="showLoadedTour('tailandia-clasica')"><span class="dest-icon">🇹🇭</span> Tailandia Clásica</a></li>
+          <li><a onclick="showLoadedTour('bangkok-playas')"><span class="dest-icon">🇹🇭</span> Bangkok y Playas</a></li>
+          <li><a onclick="showLoadedTour('bangkok-phi-phi-krabi')"><span class="dest-icon">🇹🇭</span> Bangkok, Phi Phi y Krabi</a></li>
+          <li><a onclick="showLoadedTour('norte-tailandia-playas')"><span class="dest-icon">🇹🇭</span> Norte de Tailandia y Playas</a></li>
+          <li><a onclick="showLoadedTour('bali-tailandia')"><span class="dest-icon">🌴</span> Bali y Tailandia</a></li>
+          <li><a onclick="showLoadedTour('camboya-tailandia')"><span class="dest-icon">🇰🇭</span> Camboya y Tailandia</a></li>
+          <li><a onclick="showLoadedTour('vietnam-tailandia')"><span class="dest-icon">🇻🇳</span> Vietnam y Tailandia</a></li>
+          <li><a onclick="showLoadedTour('tailandia-vietnam-camboya')"><span class="dest-icon">🌏</span> Tailandia, Vietnam y Camboya</a></li>
+          <li><a onclick="showLoadedTour('descubriendo-indonesia')"><span class="dest-icon">🇮🇩</span> Descubriendo Indonesia</a></li>
+          <li><a onclick="showLoadedTour('filipinas')"><span class="dest-icon">🇵🇭</span> Filipinas</a></li>
+          <li><a onclick="showLoadedTour('tahiti-bora-bora')"><span class="dest-icon">🌺</span> Polinesia Tahiti &amp; Bora Bora</a></li>
+          <li><a onclick="showLoadedTour('tahiti-moorea')"><span class="dest-icon">🌺</span> Polinesia Tahiti &amp; Moorea</a></li>
+          <li><a onclick="showLoadedTour('kenia-tanzania-playas')"><span class="dest-icon">🇰🇪</span> Kenia, Tanzania y Playas</a></li>
+          <li><a onclick="showLoadedTour('safari-kenia-tanzania')"><span class="dest-icon">🦁</span> Safari en Kenia y Tanzania</a></li>
+          <li><a onclick="showLoadedTour('kenia-zanzibar')"><span class="dest-icon">🇰🇪</span> Kenia y Playas de Zanzíbar</a></li>
+          <li><a onclick="showLoadedTour('sudafrica-cabo')"><span class="dest-icon">🇿🇦</span> Sudáfrica Clásica y Ciudad del Cabo</a></li>
+          <li><a onclick="showLoadedTour('sudafrica-ruta-jardin')"><span class="dest-icon">🇿🇦</span> Sudáfrica Clásica y Ruta Jardín</a></li>
+          <li><a onclick="showLoadedTour('explorando-sudafrica')"><span class="dest-icon">🇿🇦</span> Explorando Sudáfrica</a></li>
+          <li><a onclick="showLoadedTour('sudafrica-mauritius')"><span class="dest-icon">🌍</span> Sudáfrica y Mauritius</a></li>
+          <li><a onclick="showLoadedTour('seychelles')"><span class="dest-icon">🇸🇨</span> Islas Seychelles</a></li>
+          <li><a onclick="showLoadedTour('mauritius')"><span class="dest-icon">🇲🇺</span> Isla Mauritius</a></li>
+          <li><a onclick="showLoadedTour('maldivas')"><span class="dest-icon">🇲🇻</span> Islas Maldivas</a></li>
+          <li><a onclick="showLoadedTour('mauritius-seychelles')"><span class="dest-icon">🏝️</span> Mauritius y Seychelles</a></li>
+          <li><a onclick="showLoadedTour('esencias-kenia-tanzania')"><span class="dest-icon">🦒</span> Esencias de Kenia y Tanzania</a></li>
+          <li><a onclick="showLoadedTour('paraiso-china')"><span class="dest-icon">🇨🇳</span> Paraíso de China</a></li>
+          <li><a onclick="showLoadedTour('maravillas-japon')"><span class="dest-icon">🇯🇵</span> Maravillas de Japón</a></li>
+          <li><a onclick="showLoadedTour('vietnam-camboya-tailandia-playas')"><span class="dest-icon">🌏</span> Vietnam, Camboya, Tailandia y Playas</a></li>
+          <li><a onclick="showLoadedTour('marruecos-completo')"><span class="dest-icon">🇲🇦</span> Marruecos al Completo</a></li>
         </ul>
       </li>
 
@@ -273,6 +320,7 @@
           <li><a onclick="showSection('lujo-china-exotica')"><span class="dest-icon">🇨🇳</span> China Exótica</a></li>
           <li><a onclick="showSection('lujo-turquia-grecia')"><span class="dest-icon">🇹🇷</span> Turquía y Grecia</a></li>
           <li><a onclick="showSection('lujo-costa-amalfitana')"><span class="dest-icon">🇮🇹</span> Costa Amalfitana Sicilia y Malta</a></li>
+          <li><a onclick="showSection('lujo-corea-japon-cherry-blossom')"><span class="dest-icon">🌸</span> Corea &amp; Japón - "Cherry Blossom"</a></li>
         </ul>
       </li>
 
@@ -305,6 +353,10 @@
           <li><a onclick="showSection('exoticos-egipto-jordania')"><span class="dest-icon">🇯🇴</span> Egipto y Jordania</a></li>
           <li><a onclick="showSection('exoticos-japon-dubai')"><span class="dest-icon">🇯🇵</span> Japón al Completo con Dubai</a></li>
           <li><a onclick="showSection('exoticos-japon-corea-emirates')"><span class="dest-icon">🇯🇵</span> Japón y Corea con Emirates</a></li>
+          <li><a onclick="showSection('exoticos-clasicos-corea-japon')"><span class="dest-icon">🇰🇷</span> Clásicos de Corea y Japón</a></li>
+          <li><a onclick="showSection('exoticos-china-completo-estambul')"><span class="dest-icon">🇨🇳</span> China al Completo con Estambul</a></li>
+          <li><a onclick="showSection('exoticos-tailandia-esencial-estambul')"><span class="dest-icon">🇹🇭</span> Tailandia Escencial con Estambul</a></li>
+          <li><a onclick="showSection('exoticos-mejor-turquia-egipto')"><span class="dest-icon">🇹🇷</span> Lo Mejor de Turquía y Egipto</a></li>
         </ul>
       </li>
 
@@ -342,15 +394,15 @@
       <div class="destinos-grid">
         <div class="destino-card" onclick="showSection('caribe-puntacana')">
           <img src="https://images.unsplash.com/photo-1569700946659-fe1941c71fe4?w=600&q=80" alt="Punta Cana Verano 2027">
-          <div class="card-body"><span class="card-tag">Caribe</span><h3>Punta Cana Verano 2027</h3><p>7 noches All Inclusive con aéreos y traslados incluidos.</p><div class="price">Desde USD 1.899 <span>/persona</span></div></div>
+          <div class="card-body"><span class="card-tag">Caribe</span><h3>Punta Cana Verano 2027</h3><p>7 noches All Inclusive con aéreos y traslados incluidos.</p><div class="price">Desde USD 2.390 <span>/persona</span></div></div>
         </div>
         <div class="destino-card" onclick="showSection('caribe-cancun')">
           <img src="https://images.unsplash.com/photo-1510097467424-192d713fd8b2?w=600&q=80" alt="Cancún Verano 2027">
-          <div class="card-body"><span class="card-tag">Caribe</span><h3>Cancún Verano 2027</h3><p>7 noches All Inclusive con aéreos y traslados incluidos.</p><div class="price">Desde USD 2.100 <span>/persona</span></div></div>
+          <div class="card-body"><span class="card-tag">Caribe</span><h3>Cancún Verano 2027</h3><p>7 noches All Inclusive con aéreos y traslados incluidos.</p><div class="price">Desde USD 2.490 <span>/persona</span></div></div>
         </div>
         <div class="destino-card" onclick="showSection('brasil-rio')">
           <img src="https://images.unsplash.com/photo-1603213820002-d63657fe8091?w=600&q=80" alt="Búzios Verano 2027">
-          <div class="card-body"><span class="card-tag">Brasil</span><h3>Búzios Verano 2027</h3><p>7 noches con desayuno, aéreo directo y posada en playa.</p><div class="price">Desde USD 1.199 <span>/persona</span></div></div>
+          <div class="card-body"><span class="card-tag">Brasil</span><h3>Búzios Verano 2027</h3><p>7 noches con desayuno, aéreo directo y posada en playa.</p><div class="price">Desde USD 1.390 <span>/persona</span></div></div>
         </div>
         <div class="destino-card" onclick="showSection('europa-conociendo')">
           <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600&q=80" alt="Conociendo Europa">
@@ -5019,10 +5071,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Nov 2026</span>
+          <span class="package-tag">Sep - Dic 2026 / Mar - Jun 2027</span>
           <h3>Punta Cana</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Noviembre 2026</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre 2026 y Marzo a Junio 2027</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
@@ -5046,17 +5098,17 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel All Inclusive</li>
           </ul>
-          <div class="package-price">USD 1.899 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.390 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1569700946659-fe1941c71fe4?w=760&q=80" alt="Punta Cana Verano"></div>
       </div>
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Nov 2026</span>
+          <span class="package-tag">Sep - Dic 2026 / Mar - Jun 2027</span>
           <h3>Bayahibe</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Noviembre 2026</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre 2026 y Marzo a Junio 2027</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
@@ -5080,7 +5132,7 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel All Inclusive</li>
           </ul>
-          <div class="package-price">USD 2.500 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.999 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1659020693147-59b56c1d9c92?w=760&q=80" alt="Bayahibe Verano"></div>
       </div>
@@ -5101,10 +5153,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Nov 2026</span>
+          <span class="package-tag">Sep - Dic 2026 / Mar - Jun 2027</span>
           <h3>Cancún</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Noviembre 2026</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre 2026 y Marzo a Junio 2027</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
@@ -5128,17 +5180,17 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel All Inclusive</li>
           </ul>
-          <div class="package-price">USD 2.100 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.490 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1510097467424-192d713fd8b2?w=760&q=80" alt="Cancún Verano"></div>
       </div>
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Nov 2026</span>
+          <span class="package-tag">Sep - Dic 2026 / Mar - Jun 2027</span>
           <h3>Riviera Maya</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Noviembre 2026</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre 2026 y Marzo a Junio 2027</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
@@ -5162,17 +5214,17 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel All Inclusive</li>
           </ul>
-          <div class="package-price">USD 2.200 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.590 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1568548634530-38ee433dcc1b?w=760&q=80" alt="Riviera Maya Verano"></div>
       </div>
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Nov 2026</span>
+          <span class="package-tag">Sep - Dic 2026 / Mar - Jun 2027</span>
           <h3>Costa Mujeres</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Noviembre 2026</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre 2026 y Marzo a Junio 2027</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
@@ -5196,7 +5248,7 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel All Inclusive</li>
           </ul>
-          <div class="package-price">USD 2.600 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.850 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1676074841885-98294f273ddb?w=760&q=80" alt="Costa Mujeres Verano"></div>
       </div>
@@ -5217,10 +5269,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Nov 2026</span>
+          <span class="package-tag">Sep - Dic 2026 / Mar - Jun 2027</span>
           <h3>Ocho Rios / Montego Bay / Negril</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Noviembre 2026</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre 2026 y Marzo a Junio 2027</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
@@ -5244,7 +5296,7 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel All Inclusive</li>
           </ul>
-          <div class="package-price">USD 2.550 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.990 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1530225029356-e301a685e6b1?w=760&q=80" alt="Jamaica Verano"></div>
       </div>
@@ -5265,10 +5317,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Nov 2026</span>
+          <span class="package-tag">Sep - Dic 2026 / Mar - Jun 2027</span>
           <h3>San Andrés</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Noviembre 2026</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre 2026 y Marzo a Junio 2027</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
@@ -5292,7 +5344,7 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel All Inclusive</li>
           </ul>
-          <div class="package-price">USD 1.990 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.390 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1592782985575-a96c6e647155?w=760&q=80" alt="San Andrés Verano"></div>
       </div>
@@ -5313,10 +5365,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Nov 2026</span>
+          <span class="package-tag">Sep - Dic 2026 / Mar - Jun 2027</span>
           <h3>Aruba</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Noviembre 2026</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre 2026 y Marzo a Junio 2027</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-coffee"></i> Desayuno incluido</li>
             <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
@@ -5340,9 +5392,43 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel en linea de Playa</li>
           </ul>
-          <div class="package-price">USD 2.990 <span>por persona en doble</span></div>
+          <div class="package-price">USD 3.500 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1633421332483-1aa89f0c6b9a?w=760&q=80" alt="Aruba Verano"></div>
+      </div>
+
+      <div class="package-card">
+        <div class="package-info">
+          <span class="package-tag">Verano 2027</span>
+          <h3>Curazao</h3>
+          <ul class="package-details">
+            <li><i class="fas fa-calendar-alt"></i> Salidas Enero y Febrero 2027</li>
+            <li><i class="fas fa-moon"></i> 7 Noches</li>
+            <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
+            <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
+            <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
+            <li><i class="fas fa-hotel"></i> Hotel en linea de Playa</li>
+          </ul>
+          <div class="package-price">USD 3.100 <span>por persona en doble</span></div>
+        </div>
+        <div class="package-image"><img src="https://images.unsplash.com/photo-1633421332483-1aa89f0c6b9a?w=760&q=80" alt="Curazao Verano"></div>
+      </div>
+
+      <div class="package-card">
+        <div class="package-info">
+          <span class="package-tag">Mar - Jun 2027</span>
+          <h3>Curazao</h3>
+          <ul class="package-details">
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027</li>
+            <li><i class="fas fa-moon"></i> 7 Noches</li>
+            <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
+            <li><i class="fas fa-plane"></i> Aéreos incluidos</li>
+            <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
+            <li><i class="fas fa-hotel"></i> Hotel en linea de Playa</li>
+          </ul>
+          <div class="package-price">USD 1.999 <span>por persona en doble</span></div>
+        </div>
+        <div class="package-image"><img src="https://images.unsplash.com/photo-1633421332483-1aa89f0c6b9a?w=760&q=80" alt="Curazao Marzo a Junio"></div>
       </div>
     </section>
   </div>
@@ -5361,10 +5447,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Dic 2026</span>
+          <span class="package-tag">Mar - Jun 2027 / Sep - Dic 2026</span>
           <h3>Rio de Janeiro</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027 y Septiembre a Diciembre 2026</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-coffee"></i> Desayuno incluido</li>
             <li><i class="fas fa-plane"></i> Aéreo directo</li>
@@ -5388,17 +5474,17 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel 3 estrellas en Copacabana</li>
           </ul>
-          <div class="package-price">USD 1.090 <span>por persona en doble</span></div>
+          <div class="package-price">USD 1.290 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=760&q=80" alt="Rio Verano"></div>
       </div>
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Dic 2026</span>
+          <span class="package-tag">Mar - Jun 2027 / Sep - Dic 2026</span>
           <h3>Buzios</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027 y Septiembre a Diciembre 2026</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-coffee"></i> Desayuno incluido</li>
             <li><i class="fas fa-plane"></i> Aéreo directo</li>
@@ -5422,7 +5508,7 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-umbrella-beach"></i> Posada en Playa João Fernandez</li>
           </ul>
-          <div class="package-price">USD 1.199 <span>por persona en doble</span></div>
+          <div class="package-price">USD 1.390 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1603213820002-d63657fe8091?w=760&q=80" alt="Buzios Verano"></div>
       </div>
@@ -5443,10 +5529,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Dic 2026</span>
+          <span class="package-tag">Mar - Jun 2027 / Sep - Dic 2026</span>
           <h3>Imbassai</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027 y Septiembre a Diciembre 2026</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreo incluido</li>
@@ -5470,17 +5556,17 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel Grand Palladium</li>
           </ul>
-          <div class="package-price">USD 2.400 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.800 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1745681278433-4f45b29fb3c4?w=760&q=80" alt="Imbassai Verano"></div>
       </div>
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Dic 2026</span>
+          <span class="package-tag">Mar - Jun 2027 / Sep - Dic 2026</span>
           <h3>Praia do Forte</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027 y Septiembre a Diciembre 2026</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreo incluido</li>
@@ -5504,7 +5590,7 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel Iberostar Bahia</li>
           </ul>
-          <div class="package-price">USD 2.400 <span>por persona en doble</span></div>
+          <div class="package-price">USD 2.800 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1745681278433-4f45b29fb3c4?w=760&q=80" alt="Praia do Forte Verano"></div>
       </div>
@@ -5525,10 +5611,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Dic 2026</span>
+          <span class="package-tag">Mar - Jun 2027 / Sep - Dic 2026</span>
           <h3>Canasvieiras</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027 y Septiembre a Diciembre 2026</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-coffee"></i> Desayuno incluido</li>
             <li><i class="fas fa-plane"></i> Aéreo directo</li>
@@ -5552,7 +5638,7 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel 3 estrellas</li>
           </ul>
-          <div class="package-price">USD 1.150 <span>por persona en doble</span></div>
+          <div class="package-price">USD 1.250 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1623848462534-52cf72c0ed37?w=760&q=80" alt="Canasvieiras Verano"></div>
       </div>
@@ -5573,10 +5659,10 @@
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Dic 2026</span>
+          <span class="package-tag">Mar - Jun 2027 / Sep - Dic 2026</span>
           <h3>Porto de Galinhas</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027 y Septiembre a Diciembre 2026</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-coffee"></i> Desayuno incluido</li>
             <li><i class="fas fa-plane"></i> Aéreo incluido</li>
@@ -5600,17 +5686,17 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel o Posada 3 estrellas próximo a playa</li>
           </ul>
-          <div class="package-price">USD 1.550 <span>por persona en doble</span></div>
+          <div class="package-price">USD 1.590 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1698760043699-286349868fa8?w=760&q=80" alt="Porto de Galinhas Verano"></div>
       </div>
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Dic 2026</span>
+          <span class="package-tag">Mar - Jun 2027 / Sep - Dic 2026</span>
           <h3>Maceió</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027 y Septiembre a Diciembre 2026</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-coffee"></i> Desayuno incluido</li>
             <li><i class="fas fa-plane"></i> Aéreo incluido</li>
@@ -5634,17 +5720,17 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel 3 estrellas en Playa Ponta Verde</li>
           </ul>
-          <div class="package-price">USD 1.700 <span>por persona en doble</span></div>
+          <div class="package-price">USD 1.750 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1626794467452-937f5100a9f5?w=760&q=80" alt="Maceió Verano"></div>
       </div>
 
       <div class="package-card">
         <div class="package-info">
-          <span class="package-tag">Sep - Dic 2026</span>
+          <span class="package-tag">Mar - Jun 2027 / Sep - Dic 2026</span>
           <h3>Natal</h3>
           <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas Septiembre a Diciembre</li>
+            <li><i class="fas fa-calendar-alt"></i> Salidas Marzo a Junio 2027 y Septiembre a Diciembre 2026</li>
             <li><i class="fas fa-moon"></i> 7 Noches</li>
             <li><i class="fas fa-glass-martini-alt"></i> All Inclusive</li>
             <li><i class="fas fa-plane"></i> Aéreo incluido</li>
@@ -5668,7 +5754,7 @@
             <li><i class="fas fa-shuttle-van"></i> Traslados in/out</li>
             <li><i class="fas fa-hotel"></i> Hotel 4 estrellas en Playa Ponta Negra</li>
           </ul>
-          <div class="package-price">USD 1.699 <span>por persona en doble</span></div>
+          <div class="package-price">USD 1.750 <span>por persona en doble</span></div>
         </div>
         <div class="package-image"><img src="https://images.unsplash.com/photo-1626794467452-937f5100a9f5?w=760&q=80" alt="Natal Verano"></div>
       </div>
@@ -6001,6 +6087,332 @@
     </section>
   </div>
 
+  <!-- ==================== LUJO: COREA Y JAPON CHERRY BLOSSOM ==================== -->
+  <div class="page-section" id="section-lujo-corea-japon-cherry-blossom">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1522383225653-ed111181a951?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Corea &amp; Japón <span>“Cherry Blossom”</span></h1><p>Una experiencia premium de 22 días entre Corea del Sur y Japón</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">17 de Marzo</span><h3>Salida grupal a Corea y Japón - Código King</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Salida 17 de marzo</li><li><i class="fas fa-moon"></i> 22 días</li><li><i class="fas fa-plane"></i> Turkish Airlines y vuelo Busán–Osaka</li><li><i class="fas fa-hotel"></i> 18 noches y late check-out en Tokio</li><li><i class="fas fa-utensils"></i> 10 almuerzos y 2 cenas</li><li><i class="fas fa-language"></i> Guías de habla hispana</li><li><i class="fas fa-user-friends"></i> Tour leader desde Argentina con mínimo 10 pasajeros</li></ul><div class="package-price">USD 12.900 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?w=760&q=80" alt="Corea y Japón Cherry Blossom"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">El programa incluye</h2><ul class="package-details">
+        <li><i class="fas fa-plane"></i> Aéreo Turkish Airlines Buenos Aires–Seúl / Tokio–Buenos Aires y vuelo Busán–Osaka.</li><li><i class="fas fa-hotel"></i> Seúl 3 noches, Gyeongju 2, Busán 2, Osaka 2, Kioto 3, Kanazawa 1, Takayama 1, Yugawara 1 y Tokio 3 noches más late check-out.</li><li><i class="fas fa-coffee"></i> Desayuno diario, 10 almuerzos y 2 cenas según itinerario.</li><li><i class="fas fa-map-marked-alt"></i> Excursiones, visitas y todos los traslados según itinerario.</li><li><i class="fas fa-train"></i> Billetes de tren en clase turista.</li><li><i class="fas fa-language"></i> Guías de habla hispana.</li><li><i class="fas fa-shield-alt"></i> Universal Assistance Maximum de cortesía, cobertura hasta USD 300.000.</li><li><i class="fas fa-info-circle"></i> Reunión informativa previa al viaje.</li><li><i class="fas fa-user-friends"></i> Tour leader acompañante desde Argentina con un mínimo de 10 pasajeros.</li>
+      </ul></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 1 – Buenos Aires / Seúl</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Salida desde Ezeiza en el vuelo Turkish Airlines TK016 de las 23:55 con destino a Seúl vía Estambul.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 2 – Estambul</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Arribo a las 22:35 y conexión con el siguiente vuelo.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 3 – Estambul / Seúl</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Salida en TK090 a las 02:15. Llegada a Incheon a las 18:20, asistencia, traslado privado y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 4 – Seúl</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Tour completo: Gwanghwamun, Palacio Gyeongbokgung, aldea Bukchon, Ikseon-dong, COEX Mall y Biblioteca Starfield, y Lotte World Tower. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 5 – Seúl</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Visita a la Zona Desmilitarizada: Puente de la Libertad, Tercer Túnel y Observatorio Dora. Almuerzo y paseo por Myeong-dong. Pasaporte físico obligatorio; túnel no recomendado para personas con claustrofobia o movilidad reducida.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 6 – Seúl / Gyeongju</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Traslado a Gyeongju. Palacio Donggung y estanque Wolji, calle Hwangridan, tumbas reales Daereungwon y observatorio Cheomseongdae. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 7 – Gyeongju</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Gruta Seokguram, Templo Bulguksa, almuerzo, Museo Nacional de Gyeongju y Complejo Turístico Bomun. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 8 – Gyeongju / Busán</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Templo costero Haedong Yonggungsa, Plaza BIFF, calle gastronómica de Nampo y Playa Haeundae. Traslado y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 9 – Busán</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Aldea Cultural Gamcheon, Mercado Jagalchi, puente Songdo Yonggung, Puente Gwangan y Playa Gwangalli. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 10 – Busán / Osaka</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Traslado al aeropuerto, vuelo a Osaka, recepción en Kansai, traslado y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 11 – Osaka</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Dotonbori, vista panorámica del Castillo de Osaka, Umeda Sky Building y Mercado Kuromon. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 12 – Osaka / Nara / Kioto</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Templo Todai-ji, Parque de Nara, almuerzo y Santuario Fushimi Inari. Traslado y alojamiento en Kioto.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 13 – Kioto</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Kinkaku-ji, Tenryu-ji, almuerzo, Bosque de Bambú de Arashiyama y barrio Gion. Está prohibido fotografiar en ciertos callejones; multa posible de hasta USD 100.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 14 – Kioto / Hiroshima / Miyajima / Kioto</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Tren bala a Hiroshima, Parque de la Paz, Cúpula de la Bomba Atómica, Isla Miyajima y Santuario Itsukushima. Almuerzo y regreso en tren.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 15 – Kioto / Kanazawa</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Tren express, Mercado Omicho, Higashichaya y Jardín Kenrokuen. Almuerzo y alojamiento. Una maleta se envía directamente a Tokio.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 16 – Kanazawa / Shirakawago / Takayama / Gero</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Casas Gasshozukuri, barrio Kamisannomachi, bodegas de sake y Yatai Kaikan. Almuerzo, cena y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 17 – Takayama / Tsumago / Odawara / Yugawara</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Tsumago, Waki Honjin y paseo por el pueblo. Almuerzo, tren bala Nagoya–Odawara y traslado al ryokan en Yugawara. Cena.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 18 – Yugawara / Hakone / Tokio</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Museo al Aire Libre de Hakone, teleférico al Monte Komagatake y barco por Lago Ashi. Almuerzo y traslado a Tokio.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 19 – Tokio</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Plaza del Palacio Imperial, Templo Senso-ji, Nakamise, almuerzo y experiencia TeamLab Planets. Final en Ginza.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 20 – Tokio</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno y día libre. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 21 – Tokio</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno y mañana libre. Late check-out incluido. Traslado a Haneda y vuelo TK199 a las 22:05 con destino Estambul.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 22 – Estambul / Buenos Aires</strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Conexión con TK015 de las 10:00. Arribo a Ezeiza a las 22:25. Fin de nuestros servicios.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: INDIA Y NEPAL ==================== -->
+  <div class="page-section" id="section-tour-india-nepal">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>India <span>&amp; Nepal</span></h1><p>14 días / 13 noches · Salidas los martes programados</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Martes programados</span><h3>India &amp; Nepal</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 14 días / 13 noches</li><li><i class="fas fa-users"></i> Mínimo 2 personas</li><li><i class="fas fa-language"></i> Guías locales de habla hispana</li><li><i class="fas fa-train"></i> Tren Agra–Jhansi sujeto a disponibilidad</li><li><i class="fas fa-plane"></i> Vuelos Varanasi–Delhi–Kathmandú incluidos</li><li><i class="fas fa-coffee"></i> Desayunos y 1 almuerzo</li></ul><div class="package-price">USD 2.600 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=760&q=80" alt="India y Nepal"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><p style="color:var(--text-light);font-size:.9rem;margin-bottom:24px">Guías locales en español · Mínimo 2 personas</p><div style="display:grid;gap:16px">
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 1 – Delhi <span style="font-weight:400">(-/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Llegada al Aeropuerto Internacional Indira Gandhi, recepción por un chofer de habla hispana y traslado al hotel. Resto del día libre. Alojamiento en el hotel elegido.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 2 – Delhi <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Recorrido por la Antigua Delhi: Jama Masjid, vista del Fuerte Rojo, Chandni Chowk y Raj Ghat. Por la tarde, Nueva Delhi: Qutub Minar, distrito de Rashtrapati Bhavan, edificios gubernamentales, parlamento, Puerta de la India y monumento de la Marcha de la Sal. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 3 – Delhi / Jaipur <span style="font-weight:400">(255 km · D/A/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Salida hacia la “ciudad rosa”. Parada en Shahpura para almorzar en un haveli. Llegada a Jaipur y ceremonia Aarti en el templo Birla. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 4 – Jaipur <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita al Fuerte Amber con acceso en jeep: palacios Jagmandir y Jai Mahal, templo de Kali y jardines. Por la tarde, Palacio de la Ciudad, Puerta del Pavo Real, Palacio de los Vientos y observatorio Jantar Mantar. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 5 – Jaipur / Fatehpur Sikri / Agra <span style="font-weight:400">(235 km · D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Salida hacia Agra y visita a Fatehpur Sikri, antigua capital mogola: palacios, pabellones, mezquitas, Mausoleo de Salim Chisti y Panch Mahal. Continuación a Agra y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 6 – Agra <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita al Taj Mahal, mausoleo construido por Shah Jahan en memoria de Mumtaz Mahal. Por la tarde, Fuerte de Agra, Diwan-i-Am y Diwan-i-Khas. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 7 – Agra / Jhansi / Orchha / Khajuraho <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Traslado a la estación y tren Shatabdi Express de las 08:10 a Jhansi, sujeto a disponibilidad. Continuación por ruta a Khajuraho con visita a Orchha, su palacio-fortaleza, cenotafios chhatris y templos. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 8 – Khajuraho / Allahabad <span style="font-weight:400">(265 km · D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita al conjunto de templos de Khajuraho, Patrimonio UNESCO: Chausath Yogini, Kandariya Mahadeva, Chitragupta, Vishwanath, Lakshmana y Vishnu Garuda. Viaje a Allahabad con parada en Chitrakoot. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 9 – Allahabad / Varanasi <span style="font-weight:400">(150 km · D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita al Sangam, confluencia del Ganges, Yamuna y Saraswati; Fuerte de Allah, Anand Bhavan y Hanuman Mandir. Continuación a Varanasi y ceremonia Aarti en los ghats del Ganges. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 10 – Varanasi <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Al amanecer, paseo en barca por el Ganges para observar ceremonias y baños sagrados. Visita al templo de la Madre India, Vishwanath y Universidad de Varanasi. Desayuno en el hotel. Por la tarde, excursión a Sarnath, donde Buda predicó su primer sermón. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 11 – Varanasi / Delhi / Kathmandú <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Traslado al aeropuerto y vuelos incluidos a Delhi y Kathmandú. Recepción, traslado y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 12 – Kathmandú <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita a Kathmandú y Swayambhunath: Plaza Durbar, Kumari Bahal, antiguo Palacio Real y santuario budista. Por la tarde, Patan y su patrimonio Newar: Palacio Real y templos de Taleju, Krishna y Vishwanath. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 13 – Kathmandú <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita a Bodhnath, una de las mayores estupas del mundo, y Pashupatinath, el santuario hindú más sagrado de Nepal. Continuación a Bhaktapur: Plaza Durbar, Palacio de las Cincuenta y Cinco Ventanas, Puerta Dorada y templos. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 14 – Kathmandú <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Check-out por la mañana y resto del día libre. A la hora convenida, traslado al aeropuerto para tomar el vuelo de regreso. Fin de los servicios.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: EGIPTO CLASICO ==================== -->
+  <div class="page-section" id="section-tour-egipto-clasico">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Egipto <span>Clásico</span></h1><p>8 días / 7 noches · El Cairo y crucero por el Nilo</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Salidas programadas</span><h3>Egipto Clásico</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Jueves, viernes, sábados y domingos</li><li><i class="fas fa-moon"></i> 8 días / 7 noches</li><li><i class="fas fa-users"></i> Mínimo 2 personas</li><li><i class="fas fa-language"></i> Guías locales de habla hispana</li><li><i class="fas fa-ship"></i> Crucero por el Nilo con pensión completa</li><li><i class="fas fa-plane"></i> Vuelos internos Cairo–Luxor y Aswan–Cairo</li></ul><div class="package-price">USD 1390 <span>por persona en doble para salidas octubre a abril</span></div><div class="package-price" style="margin-top:10px">USD 1100 <span>por persona en doble para salidas de mayo a septiembre</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=760&q=80" alt="Egipto Clásico"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><p style="color:var(--text-light);font-size:.9rem;margin-bottom:24px">Válido para salidas jueves y sábados. Consultar itinerario para otros días de inicio.</p><div style="display:grid;gap:16px">
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 1 – El Cairo <span style="font-weight:400">(-/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Llegada al aeropuerto internacional de El Cairo, recepción en español y traslado al hotel. Resto del día libre. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 2 – El Cairo <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita con guía en español a las pirámides de Keops, Kefrén y Micerinos, la Gran Esfinge de Gizeh y el Templo del Valle de Kefrén. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 3 – El Cairo / Luxor <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Traslado al aeropuerto y vuelo a Luxor. Embarque en el crucero y almuerzo. Visita a los templos de Luxor y Karnak, con paseo entre esfinges e historias de los faraones. Alojamiento a bordo con pensión completa.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 4 – Crucero Luxor / Edfu <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Día libre para descansar o realizar excursiones opcionales. Navegación a través de la esclusa de Esna hasta Edfu. Pensión completa a bordo.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 5 – Crucero Edfu / Kom Ombo / Aswan <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita al templo de Horus en Edfu, uno de los mejor conservados de Egipto. Regreso al crucero, almuerzo y navegación a Kom Ombo para visitar el templo dedicado a Haroeris y Sobek. Continuación a Aswan y pensión completa.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 6 – Crucero en Aswan <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita a la presa de Aswan y al Obelisco Inacabado de 42 metros en las canteras de granito rosa. Alojamiento a bordo con pensión completa.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 7 – Aswan / El Cairo <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno y desembarque. Traslado al aeropuerto de Aswan y vuelo a El Cairo. Recepción en español, traslado y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 8 – El Cairo <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Traslado al aeropuerto para tomar el vuelo de regreso. Fin de los servicios.</p></div>
+      </div></div>
+      <div style="background:#fff8e7;border-radius:14px;border-left:4px solid var(--accent);padding:24px;margin-top:24px"><strong style="color:var(--primary)">Importante</strong><p style="font-size:.85rem;color:var(--text);line-height:1.7;margin-top:8px">El itinerario es estimado y puede variar según los horarios y días de operación de los cruceros del Nilo. También está sujeto a la operación de las compuertas de Esna, controladas por el gobierno egipcio. Si estuvieran cerradas, las visitas de Luxor se realizarán en autobús desde Esna.</p></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: EGIPTO Y MAR ROJO ==================== -->
+  <div class="page-section" id="section-tour-egipto-mar-rojo">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Egipto y Playas del <span>Mar Rojo</span></h1><p>11 días / 10 noches · El Cairo, crucero por el Nilo y Hurghada</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Salidas programadas</span><h3>Egipto y Playas del Mar Rojo</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Domingos a jueves</li><li><i class="fas fa-moon"></i> 11 días / 10 noches</li><li><i class="fas fa-users"></i> Mínimo 2 personas</li><li><i class="fas fa-language"></i> Guías locales en español</li><li><i class="fas fa-ship"></i> Crucero por el Nilo con pensión completa</li><li><i class="fas fa-umbrella-beach"></i> Hurghada con All Inclusive</li></ul><div class="package-price">USD 1950 <span>por persona en doble de octubre a abril</span></div><div class="package-price" style="margin-top:10px">USD 1690 <span>por persona en doble de mayo a septiembre</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=760&q=80" alt="Egipto y Mar Rojo"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><p style="color:var(--text-light);font-size:.9rem;margin-bottom:24px">Válido para salidas lunes y miércoles. Consultar por otros días de inicio.</p><div style="display:grid;gap:16px">
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 1 – El Cairo <span style="font-weight:400">(-/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Llegada, recepción en español y traslado al hotel. Resto del día libre y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 2 – El Cairo <span style="font-weight:400">(D/A/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Pirámides de Keops, Kefrén y Micerinos, Gran Esfinge y Templo del Valle. Almuerzo local. Por la tarde, Menfis y necrópolis de Sakkara, conjunto de Zoser y mastabas. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 3 – El Cairo / Aswan <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno, traslado y vuelo incluido a Aswan. Embarque y almuerzo. Visita al Templo de Philae y paseo en faluca con vistas a Elefantina y Kitchener. Pensión completa sin bebidas.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 4 – Crucero Aswan / Kom Ombo / Edfu <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno y mañana libre. Navegación a Kom Ombo y visita al templo de Haroeris y Sobek. Almuerzo y continuación a Edfu. Pensión completa sin bebidas.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 5 – Crucero Edfu / Esna / Luxor <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Visita al templo de Horus en Edfu. Por la tarde, templos de Luxor y Karnak y paseo entre esfinges. Pensión completa sin bebidas.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 6 – Luxor / Hurghada <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno y desembarque. Valle de los Reyes, templo funerario de Hatshepsut y Colosos de Memnón. Traslado por carretera a Hurghada. All Inclusive.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Días 7 y 8 – Hurghada <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Días libres para descansar en la playa y realizar actividades acuáticas, golf o spa. Alojamiento All Inclusive.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 9 – Hurghada / El Cairo <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Traslado y vuelo incluido a El Cairo. Recepción, traslado y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 10 – El Cairo <span style="font-weight:400">(D/A/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Ciudadela de Saladino y Mezquita de Alabastro. Gran Museo Egipcio: estatua de Ramsés II, Gran Escalera y galerías de Tutankamón. Barrio Copto e Iglesia de San Sergio. Almuerzo típico y tiempo en Khan El Khalili. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 11 – El Cairo <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno, check-out y día libre. Traslado al aeropuerto para el vuelo de regreso. Fin de los servicios.</p></div>
+      </div></div>
+      <div style="background:#fff8e7;border-radius:14px;border-left:4px solid var(--accent);padding:24px;margin-top:24px"><strong style="color:var(--primary)">Importante</strong><p style="font-size:.85rem;color:var(--text);line-height:1.7;margin-top:8px">Itinerario estimado, sujeto a horarios y operación de los cruceros y de las compuertas de Esna. Si estas cerraran, las visitas de Luxor se realizarán en autobús desde Esna.</p></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: MARRUECOS CLASICO ==================== -->
+  <div class="page-section" id="section-tour-marruecos-clasico">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Marruecos <span>Clásico</span></h1><p>7 días / 6 noches · Casablanca, Rabat, Meknes, Fez y Marrakech</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Todos los viernes</span><h3>Marruecos Clásico</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Salidas todos los viernes</li><li><i class="fas fa-moon"></i> 7 días / 6 noches</li><li><i class="fas fa-users"></i> Mínimo 2 personas</li><li><i class="fas fa-map-marked-alt"></i> Cinco ciudades imperiales y culturales</li><li><i class="fas fa-coffee"></i> Desayuno diario</li><li><i class="fas fa-shuttle-van"></i> Traslados de llegada y salida</li></ul><div class="package-price">USD 1290 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=760&q=80" alt="Marruecos Clásico"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 1 – Casablanca <span style="font-weight:400">(-/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Llegada, recepción, traslado y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 2 – Casablanca / Rabat <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Panorámica por Corniche, Anfa y exteriores de Hassan II. En Rabat: Palacio Real, Kasbah de los Oudaya, Mausoleo de Mohamed V y Torre Hassan. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 3 – Rabat / Meknes <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Viaje entre fértiles valles. Visita a las murallas, Bab el Mansur, estanque del Agdal y plaza Bab Lahdim. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 4 – Meknes / Fez <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Palacio Real, medina, Medersa Bou Anania, Fuente Nejjarine, Mezquita Karaouine, Mausoleo de Moulay Idriss y barrio de los curtidores. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 5 – Fez / Marrakech <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Viaje a Marrakech con parada en Ifrane. Llegada, tarde libre y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 6 – Marrakech <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Jardines de la Menara, minarete de la Kutubia, Palacio de la Bahía y Plaza de Yamaa el Fna. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 7 – Marrakech <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno, check-out y traslado al aeropuerto para tomar el vuelo de regreso.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: VUELTA A MARRUECOS ==================== -->
+  <div class="page-section" id="section-tour-vuelta-marruecos">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1489493585363-d69421e0edd3?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Vuelta a <span>Marruecos</span></h1><p>11 días / 10 noches · Ciudades imperiales, kasbahs y desierto</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Todos los domingos</span><h3>Vuelta a Marruecos</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Salidas todos los domingos</li><li><i class="fas fa-info-circle"></i> Consultar por llegadas los lunes</li><li><i class="fas fa-moon"></i> 11 días / 10 noches</li><li><i class="fas fa-users"></i> Mínimo 2 personas</li><li><i class="fas fa-utensils"></i> Desayuno y 10 cenas</li><li><i class="fas fa-map-marked-alt"></i> Ciudades imperiales y Ruta de las Kasbahs</li></ul><div class="package-price">USD 1590 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1489493585363-d69421e0edd3?w=760&q=80" alt="Vuelta a Marruecos"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 1 – Marrakech <span style="font-weight:400">(-/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Llegada, recepción y traslado al hotel. Cena y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 2 – Marrakech <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Jardines de la Menara, minarete de la Kutubia, Palacio de la Bahía y Plaza Jemaa el Fna. Cena y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 3 – Marrakech / Tinghir <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Alto Atlas por Tichka, Ouarzazate y Kelaa M'Gouna. Ruta de las Kasbahs entre montañas y desierto. Alojamiento en Tinghir o Dades en categoría Superior. Cena.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 4 – Tinghir / Erfoud <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Gargantas del Todra, desfiladero de paredes verticales de más de 300 metros. Continuación a Erfoud y visita a un centro de extracción de fósiles. Cena y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 5 – Erfoud / Ouarzazate <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Visita a Rissani y continuación por Al Nif y Agdez entre dromedarios y paisajes semilunares. Cena y alojamiento en Ouarzazate.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 6 – Ouarzazate / Marrakech <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Visita a Kasbah Taourirt y Ait Ben Haddou, Patrimonio de la Humanidad. Continuación a Marrakech. Cena y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 7 – Marrakech / Casablanca <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Viaje a Casablanca y panorámica por Corniche, Anfa y exteriores de la Mezquita Hassan II, eventualmente al día siguiente. Cena y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 8 – Casablanca / Rabat / Meknes / Fez <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Rabat: Palacio Real, Oudaya, Mausoleo de Mohamed V y Torre Hassan. Meknes: murallas, Bab el Mansur, Agdal y Bab Lahdim. Continuación a Fez. Cena.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 9 – Fez <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Palacio Real, medina, Medersa Bou Anania, Fuente Nejjarine, Mezquita Karaouine, Mausoleo de Moulay Idriss y barrio de curtidores. Cena y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 10 – Fez / Marrakech <span style="font-weight:400">(D/-/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Regreso a Marrakech con parada en Ifrane. Llegada y tarde libre. Cena y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 11 – Marrakech <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno, check-out y traslado al aeropuerto para tomar el vuelo de regreso.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: JAPON EN TREN ==================== -->
+  <div class="page-section" id="section-tour-japon-tren">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Japón <span>en Tren</span></h1><p>11 días / 10 noches · Tour sin guía con pase ferroviario</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Salidas todos los días</span><h3>Japón en Tren · Tour sin guía</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 11 días / 10 noches</li><li><i class="fas fa-train"></i> Pase de tren durante toda la estadía</li><li><i class="fas fa-hotel"></i> Tokio: 3 noches</li><li><i class="fas fa-hotel"></i> Kioto: 3 noches</li><li><i class="fas fa-hotel"></i> Hiroshima: 1 noche</li><li><i class="fas fa-hotel"></i> Osaka: 2 noches · Tokio: 1 noche</li></ul><div class="package-price">USD 1899 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=760&q=80" alt="Japón en Tren"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:12px">Recorrido</h2><p style="color:var(--text);line-height:1.8">Tokio (3 noches) · Kioto (3 noches) · Hiroshima (1 noche) · Osaka (2 noches) · Tokio (1 noche).</p><p style="color:var(--text-light);font-size:.9rem;margin-top:10px">Programa independiente sin guía. Pase ferroviario incluido durante toda la estadía.</p></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: JAPON ==================== -->
+  <div class="page-section" id="section-tour-japon">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1><span>Japón</span></h1><p>10 días / 9 noches · Tokio, Hakone, Kioto, Kanazawa, Gero y Osaka</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Salidas programadas</span><h3>Japón</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Lunes, martes y viernes programados</li><li><i class="fas fa-moon"></i> 10 días / 9 noches</li><li><i class="fas fa-users"></i> Mínimo 2 personas</li><li><i class="fas fa-language"></i> Guías locales en español</li><li><i class="fas fa-train"></i> Trenes bala y express detallados</li><li><i class="fas fa-utensils"></i> Desayunos, 3 almuerzos y 1 cena</li></ul><div class="package-price">USD 3999 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=760&q=80" alt="Japón"></div></div>
+      <div style="background:#fff8e7;border-radius:14px;border-left:4px solid var(--accent);padding:20px 24px;margin-top:24px"><p style="font-size:.85rem;color:var(--text);line-height:1.7"><strong>Importante:</strong> guías locales de habla hispana, excepto en los traslados de entrada y salida. Las llegadas por Haneda tienen un suplemento de USD 50 por persona.</p></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 1 – Tokio <span style="font-weight:400">(-/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Llegada a Narita. Asistente en español para abordar el traslado regular con chofer en inglés. Llegada al hotel y día libre. Alojamiento en New Otani o similar. Suplemento por llegada a Haneda: USD 50 por persona.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 2 – Tokio <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. City tour de medio día: Santuario Meiji, Palacio Imperial, Templo Senso-ji y calle Nakamise. Final en Ginza hasta marzo de 2027 o Shibuya desde abril de 2027. Regreso al hotel por cuenta propia.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 3 – Tokio / Hakone / Tokio <span style="font-weight:400">(D/A/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Excursión al Parque Nacional de Hakone y minicrucero por el Lago Ashi con vistas al Monte Fuji. Almuerzo local y regreso a Tokio.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 4 – Tokio / Nara / Kioto <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Tren bala Nozomi a Kioto. Visita a Fushimi Inari y excursión a Nara: Templo Todai-ji y Parque de los Ciervos Sagrados. Regreso a Kioto y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 5 – Kioto <span style="font-weight:400">(D/A/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Templo Tenryu-ji, Bosque de Bambú de Arashiyama, Kinkaku-ji y Templo Sanjusangendo. Almuerzo local incluido y alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 6 – Kioto <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Día libre para descansar o realizar una excursión opcional a Hiroshima. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 7 – Kioto / Kanazawa <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno y traslado en autobús a Kanazawa. Visita con guía en español al Mercado Omicho, barrio Higashichaya y Jardín Kenrokuen. Alojamiento.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 8 – Kanazawa / Shirakawago / Takayama / Gero <span style="font-weight:400">(D/A/C)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Shirakawago y sus casas Gasshozukuri. En Takayama, barrio Kami-Sannomachi y Yatai Kaikan. Llegada a Gero, cena y alojamiento en ryokan Suimeikan o similar con baños onsen.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 9 – Gero / Nagoya / Osaka <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Tren express Wideview Hida a Nagoya y tren bala Nozomi a Osaka. Visita a Dotonbori y Castillo de Osaka. Alojamiento en Sheraton Miyako Osaka o similar.</p></div>
+        <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 10 – Osaka <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno, check-out y día libre. Traslado en autobús regular con chofer en inglés, sin asistencia en español, al aeropuerto para tomar el vuelo de regreso.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== EXOTICOS: CLASICOS DE COREA Y JAPON ==================== -->
+  <div class="page-section" id="section-exoticos-clasicos-corea-japon">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Clásicos de <span>Corea y Japón</span></h1><p>Seúl, Busán, Fukuoka, Hiroshima, Matsuyama, Kobe, Kioto y Tokio</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">19 de Marzo</span><h3>Salida grupal a Corea y Japón - Código TU</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Salida 19 de marzo</li><li><i class="fas fa-plane"></i> Turkish Airlines y vuelo Busán–Fukuoka</li><li><i class="fas fa-hotel"></i> 15 noches de alojamiento</li><li><i class="fas fa-utensils"></i> Desayunos, 7 almuerzos y 4 cenas</li><li><i class="fas fa-language"></i> Guía en español</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años</li></ul><div class="package-price">USD 9.300 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=760&q=80" alt="Clásicos de Corea y Japón"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">Incluye</h2><ul class="package-details">
+        <li><i class="fas fa-plane"></i> Vuelos internacionales EZE–ICN / HND–EZE por Turkish Airlines, equipaje facturado y carry on; vuelo Busán–Fukuoka.</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años; consultar suplemento desde 70 años.</li><li><i class="fas fa-shuttle-van"></i> Traslados de llegada y salida; recorrido en autocar con guía en español.</li><li><i class="fas fa-utensils"></i> Desayunos buffet, 7 almuerzos y 4 cenas.</li><li><i class="fas fa-ship"></i> Ferris Hiroshima–Miyajima y Hiroshima–Matsuyama.</li><li><i class="fas fa-hotel"></i> Corea: Seúl 3 noches, Jeonju 1 y Busán 1. Japón: Fukuoka, Hiroshima, Matsuyama, Kobe, Monte Koya y Kioto 1 noche cada uno; Tokio 4 noches.</li><li><i class="fas fa-map-marked-alt"></i> Panorámicas en Seúl, Busán, Kioto y Tokio; entradas y visitas según itinerario.</li><li><i class="fas fa-mountain"></i> Telesilla en DMZ Imjingang y teleférico al Castillo de Matsuyama.</li>
+      </ul></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div class="itinerary-day"><strong>Día 1 · 19 marzo – Buenos Aires / Estambul</strong><p>Salida desde Ezeiza a las 23:55 en vuelo TK16. Noche a bordo.</p></div>
+        <div class="itinerary-day"><strong>Día 2 · 20 marzo – Estambul</strong><p>Llegada a las 22:55 y conexión con el vuelo TK220 de las 02:20 del día siguiente.</p></div>
+        <div class="itinerary-day"><strong>Día 3 · 21 marzo – Seúl</strong><p>Llegada a las 18:20, traslado al hotel y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 4 · 22 marzo – Seúl y DMZ</strong><p>Desayuno. Observatorio Aegibong, zona desmilitarizada de Paju, Memorial Nacional, Mangbaedan, Imjingak, telesilla y Puente de la Libertad; almuerzo incluido. Visita nocturna por City Hall, Deoksugung y Myeongdong, cena y regreso en metro. Pasaporte obligatorio; la DMZ puede cerrar sin aviso.</p></div>
+        <div class="itinerary-day"><strong>Día 5 · 23 marzo – Seúl</strong><p>Changdeokgung, Bukchon Hanok, Memorial de la Guerra, almuerzo, Gangnam y Lotte World Tower. Alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 6 · 24 marzo – Seúl / Suwon / Jeonju</strong><p>Gyeongbokgung y posible cambio de guardia. Murallas y palacio Hwaseong Haenggung en Suwon, almuerzo y casco histórico Hanok de Jeonju.</p></div>
+        <div class="itinerary-day"><strong>Día 7 · 25 marzo – Jeonju / Damyang / Haeinsa / Busán</strong><p>Aldea de Sunchang Gochujang, bosque Juknokwon y Museo del Bambú, almuerzo típico y templo Haeinsa con su Tripitaka. Llegada a Busán.</p></div>
+        <div class="itinerary-day"><strong>Día 8 · 26 marzo – Busán / Fukuoka</strong><p>Templo costero Haedong Yonggung, Memorial de Naciones Unidas y mercado de pescado de Nampo. Almuerzo, vuelo incluido a Fukuoka y traslado al hotel.</p></div>
+        <div class="itinerary-day"><strong>Día 9 · 27 marzo – Fukuoka / Iwakuni / Miyajima / Hiroshima</strong><p>Puente Kintai-Kyo, ferry a Miyajima y santuario Itsukushima. En Hiroshima, Memorial, Cúpula y Museo de la Paz. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 10 · 28 marzo – Hiroshima / Matsuyama</strong><p>Ferry a Shikoku, teleférico al Castillo de Matsuyama, templo Ishiteji, almuerzo y entrada al tradicional Dogo Onsen.</p></div>
+        <div class="itinerary-day"><strong>Día 11 · 29 marzo – Matsuyama / Kotohira / Takamatsu / Naruto / Kobe</strong><p>Santuario de Kotohira, jardines Ritsurin, almuerzo y pasarela acristalada sobre los remolinos de Naruto. Llegada a Kobe.</p></div>
+        <div class="itinerary-day"><strong>Día 12 · 30 marzo – Kobe / Osaka / Monte Koya</strong><p>Museo del Terremoto, Osaka y Monte Koya: cementerio Okuno, templo Kongobuji, monasterio budista, meditación zen y cena vegetariana. Habitaciones tradicionales con baños comunes.</p></div>
+        <div class="itinerary-day"><strong>Día 13 · 31 marzo – Monte Koya / Kioto</strong><p>Desayuno japonés. Visita de Fushimi Inari, Palacio Imperial, Kinkakuji y paseo por Gion. Alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 14 · 1 abril – Kioto / Tokio</strong><p>Viaje en tren bala a Tokio. Llegada y tiempo libre.</p></div>
+        <div class="itinerary-day"><strong>Día 15 · 2 abril – Tokio</strong><p>Tour de siete horas: Zojoji, Shibuya, Meiji, Omotesando, Tokyo Skytree, Asakusa y Sensoji; regreso por Akihabara y Ginza. Por la noche, Shinjuku, cena y metro incluidos.</p></div>
+        <div class="itinerary-day"><strong>Días 16 y 17 · 3 y 4 abril – Tokio</strong><p>Desayuno y días libres para disfrutar de la ciudad.</p></div>
+        <div class="itinerary-day"><strong>Día 18 · 5 abril – Tokio / Estambul</strong><p>Desayuno, habitación hasta las 10:00 y traslado al aeropuerto para el vuelo TK119 de las 21:45.</p></div>
+        <div class="itinerary-day"><strong>Día 19 · 6 abril – Estambul / Buenos Aires</strong><p>Conexión con TK15 a las 10:00. Llegada a Ezeiza a las 22:25. Fin de servicios.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== EXOTICOS: CHINA AL COMPLETO CON ESTAMBUL ==================== -->
+  <div class="page-section" id="section-exoticos-china-completo-estambul">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>China al Completo <span>con Estambul</span></h1><p>Estambul, Beijing, Xi’an, Guilin y Shanghái</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">02 de Marzo</span><h3>Salida grupal a China y Estambul - Código TU</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Salida 2 de marzo</li><li><i class="fas fa-plane"></i> Turkish Airlines y vuelos domésticos</li><li><i class="fas fa-hotel"></i> 15 noches de alojamiento</li><li><i class="fas fa-train"></i> Tren de alta velocidad Beijing–Xi’an</li><li><i class="fas fa-user-friends"></i> Acompañante desde Buenos Aires con mínimo 20 pasajeros</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años</li></ul><div class="package-price">USD 6.900 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=760&q=80" alt="China al Completo con Estambul"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">Incluye</h2><ul class="package-details"><li><i class="fas fa-plane"></i> Vuelos internacionales Turkish Airlines con equipaje facturado y carry on.</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años; consultar suplemento desde 70 años.</li><li><i class="fas fa-user-friends"></i> Acompañante Tucano Tours desde Buenos Aires con mínimo 20 pasajeros.</li><li><i class="fas fa-mosque"></i> Estambul: 4 noches con desayuno y late check-out, traslados, excursión histórica con almuerzo, Bósforo y Bazar de las Especias, guía en español.</li><li><i class="fas fa-hotel"></i> China: Beijing 3 noches, Xi’an 2, Guilin 2 y Shanghái 4, todas con desayuno.</li><li><i class="fas fa-map-marked-alt"></i> Traslados, guía en español, entradas, comidas indicadas y crucero por el río Li con almuerzo.</li><li><i class="fas fa-train"></i> Tren Beijing–Xi’an en segunda clase; vuelos Xi’an–Guilin y Guilin–Shanghái.</li></ul></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div class="itinerary-day"><strong>Días 1 y 2 · 2–3 marzo – Buenos Aires / Estambul</strong><p>Salida en TK16 a las 23:55. Llegada el día 3 a las 22:55, traslado y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 3 · 4 marzo – Estambul histórica</strong><p>Mezquita de Solimán, Santa Sofía exterior, Palacio Topkapi, almuerzo en Sultanahmet, Mezquita Azul, Hipódromo y Gran Bazar.</p></div>
+        <div class="itinerary-day"><strong>Día 4 · 5 marzo – Estambul</strong><p>Paseo en barco por el Bósforo y Bazar de las Especias. Tarde libre; excursión opcional al lado asiático, Beylerbey, Üsküdar y colina Camlica.</p></div>
+        <div class="itinerary-day"><strong>Días 5 y 6 · 6–7 marzo – Estambul</strong><p>Días libres. La noche del día 6, traslado al aeropuerto; habitación disponible hasta la salida.</p></div>
+        <div class="itinerary-day"><strong>Día 7 · 8 marzo – Estambul / Beijing</strong><p>Vuelo TK88 y llegada a Beijing a las 16:15. Traslado y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 8 · 9 marzo – Beijing</strong><p>Plaza Tiananmen, Ciudad Prohibida y Palacio de Verano. Almuerzo incluido.</p></div>
+        <div class="itinerary-day"><strong>Día 9 · 10 marzo – Beijing</strong><p>Gran Muralla en Juyongguan o Badaling, almuerzo, fotos en Nido del Pájaro y Cubo del Agua, y cena de Pato Laqueado.</p></div>
+        <div class="itinerary-day"><strong>Día 10 · 11 marzo – Beijing / Xi’an</strong><p>Templo del Cielo, almuerzo y tren de alta velocidad a Xi’an. Traslado al hotel.</p></div>
+        <div class="itinerary-day"><strong>Día 11 · 12 marzo – Xi’an</strong><p>Museo de Guerreros y Corceles de Terracota, almuerzo, Pequeña Pagoda de la Oca Silvestre y Barrio Musulmán.</p></div>
+        <div class="itinerary-day"><strong>Día 12 · 13 marzo – Xi’an / Guilin</strong><p>Desayuno, vuelo a Guilin, traslado y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 13 · 14 marzo – Guilin</strong><p>Crucero por el río Li con almuerzo a bordo y visita a la Gruta de las Flautas de Caña.</p></div>
+        <div class="itinerary-day"><strong>Día 14 · 15 marzo – Guilin / Shanghái</strong><p>Vuelo a Shanghái, traslado y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 15 · 16 marzo – Shanghái</strong><p>Jardín Yuyuan, Barrio Antiguo, Templo del Buda de Jade y Malecón The Bund. Almuerzo incluido.</p></div>
+        <div class="itinerary-day"><strong>Días 16 y 17 · 17–18 marzo – Shanghái</strong><p>Desayuno y días libres para disfrutar de la ciudad.</p></div>
+        <div class="itinerary-day"><strong>Día 18 · 19 marzo – Shanghái / Estambul</strong><p>Desayuno, habitación hasta las 10:00 y vuelo TK27 de las 22:55.</p></div>
+        <div class="itinerary-day"><strong>Día 19 · 20 marzo – Estambul / Buenos Aires</strong><p>Conexión con TK15 a las 09:55. Llegada a Ezeiza a las 22:25.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== EXOTICOS: TAILANDIA ESENCIAL CON ESTAMBUL ==================== -->
+  <div class="page-section" id="section-exoticos-tailandia-esencial-estambul">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1528181304800-259b08848526?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Tailandia Escencial <span>con Estambul</span></h1><p>Bangkok, Sukhothai, Chiang Rai, Chiang Mai, Phuket y Estambul</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">30 de Enero</span><h3>Salida a Tailandia y Estambul - Código TU</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Salida 30 de enero</li><li><i class="fas fa-plane"></i> Turkish Airlines</li><li><i class="fas fa-hotel"></i> 15 noches con desayuno</li><li><i class="fas fa-language"></i> Guías locales de habla hispana</li><li><i class="fas fa-user-friends"></i> Acompañante con mínimo 20 pasajeros</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años</li></ul><div class="package-price">USD 6.670 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1528181304800-259b08848526?w=760&q=80" alt="Tailandia Escencial con Estambul"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">Incluye</h2><ul class="package-details"><li><i class="fas fa-plane"></i> Turkish Airlines con equipaje de hasta 23 kg y carry on; vuelo Chiang Mai–Phuket con 20 kg y carry on.</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años; consultar suplemento desde 70.</li><li><i class="fas fa-user-friends"></i> Acompañante Tucano Tours desde Buenos Aires con mínimo 20 pasajeros.</li><li><i class="fas fa-hotel"></i> Bangkok 3 noches, Sukhothai 1, Chiang Rai 1, Chiang Mai 2, Phuket 4 y Estambul 4, con desayuno.</li><li><i class="fas fa-utensils"></i> Alimentación indicada en el itinerario.</li><li><i class="fas fa-ticket-alt"></i> Visitas y entradas indicadas, asistencia y guías de habla hispana.</li><li><i class="fas fa-bus"></i> Traslados en vehículos con aire acondicionado y tasas hoteleras en Turquía.</li></ul></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div class="itinerary-day"><strong>30–31 enero – Buenos Aires / Estambul</strong><p>Salida confirmada TK016 desde Ezeiza el 30 de enero a las 23:55. Llegada a Estambul el 31 a las 22:35 y conexión.</p></div>
+        <div class="itinerary-day"><strong>Día 2 · 1 febrero – Bangkok</strong><p>Vuelo TK068 a la 01:40, llegada a las 15:10, asistencia en español y traslado. Cenas opcionales en Baiyoke Sky o crucero Viva Alangka.</p></div>
+        <div class="itinerary-day"><strong>Día 3 · 2 febrero – Bangkok</strong><p>Gran Palacio y Wat Pho, almuerzo en restaurante local y regreso al hotel.</p></div>
+        <div class="itinerary-day"><strong>Día 4 · 3 febrero – Bangkok</strong><p>Día libre. Opcional Mercado Flotante y mercado del tren de Mae Klong.</p></div>
+        <div class="itinerary-day"><strong>Día 5 · 4 febrero – Bangkok / Ayutthaya / Sukhothai</strong><p>Wat Yai Chaimongkol, Wat Mahathat, gran Buda de Ang Thong, almuerzo y ruinas de Kamphaeng Phet. Llegada a Sukhothai.</p></div>
+        <div class="itinerary-day"><strong>Día 6 · 5 febrero – Sukhothai / Lampang / Chiang Rai</strong><p>Parque Histórico de Sukhothai, escuela de Muay Thai, almuerzo y Templo Azul de Chiang Rai.</p></div>
+        <div class="itinerary-day"><strong>Día 7 · 6 febrero – Chiang Rai / Chiang Mai</strong><p>Triángulo de Oro, Museo del Opio, Templo Blanco, almuerzo y templo Doi Suthep en Chiang Mai.</p></div>
+        <div class="itinerary-day"><strong>Día 8 · 7 febrero – Chiang Mai</strong><p>Día libre. Opcionales: elefantes, mujeres jirafa, Muay Thai y masaje tailandés.</p></div>
+        <div class="itinerary-day"><strong>Día 9 · 8 febrero – Chiang Mai / Phuket</strong><p>Vuelo incluido a Phuket, traslado al hotel y tarde libre.</p></div>
+        <div class="itinerary-day"><strong>9–11 febrero – Phuket</strong><p>Tres días libres de playa. Excursiones opcionales a Phi Phi y bahía de Phang Nga.</p></div>
+        <div class="itinerary-day"><strong>Día 14 · 12 febrero – Phuket / Estambul</strong><p>Vuelo TK167 a las 09:00, llegada 15:55 y traslado al hotel.</p></div>
+        <div class="itinerary-day"><strong>Día 15 · 13 febrero – Estambul histórica</strong><p>Solimán, Santa Sofía exterior, Topkapi, almuerzo, Mezquita Azul, Hipódromo y Gran Bazar.</p></div>
+        <div class="itinerary-day"><strong>Día 16 · 14 febrero – Estambul</strong><p>Paseo por el Bósforo y Bazar de las Especias. Opcional lado asiático, Beylerbey, Üsküdar y Camlica.</p></div>
+        <div class="itinerary-day"><strong>Día 17 · 15 febrero – Estambul</strong><p>Día libre para recorrer la ciudad o realizar excursiones opcionales.</p></div>
+        <div class="itinerary-day"><strong>Día 18 · 16 febrero – Estambul / Buenos Aires</strong><p>Vuelo TK015 a las 09:55. Llegada a Ezeiza a las 22:25.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== EXOTICOS: LO MEJOR DE TURQUIA Y EGIPTO ==================== -->
+  <div class="page-section" id="section-exoticos-mejor-turquia-egipto">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Lo Mejor de <span>Turquía y Egipto</span></h1><p>Estambul, Anatolia, El Cairo y crucero por el Nilo</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">18 de Marzo</span><h3>Salida grupal a Turquía y Egipto - Código TU</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Salida 18 de marzo</li><li><i class="fas fa-plane"></i> Turkish Airlines y vuelos domésticos</li><li><i class="fas fa-ship"></i> 4 noches de crucero por el Nilo</li><li><i class="fas fa-language"></i> Guía profesional en español</li><li><i class="fas fa-user-friends"></i> Acompañante con mínimo 20 pasajeros</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años</li></ul><div class="package-price">USD 5.600 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=760&q=80" alt="Lo Mejor de Turquía y Egipto"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">Incluye</h2><ul class="package-details"><li><i class="fas fa-plane"></i> Turkish Airlines con equipaje de hasta 23 kg y carry on.</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años; suplemento desde 70.</li><li><i class="fas fa-user-friends"></i> Acompañante Tucano Tours desde Buenos Aires con mínimo 20 pasajeros y guía en español.</li><li><i class="fas fa-mosque"></i> Turquía: traslados, Estambul 4 noches con desayuno, circuito de Anatolia 5 noches en media pensión, visita histórica con almuerzo, Bósforo, Bazar Egipcio y tasas.</li><li><i class="fas fa-landmark"></i> Egipto: El Cairo 3 noches con desayuno, crucero por el Nilo 4 noches con pensión completa, pirámides, Esfinge, Templo del Valle, entradas y visa.</li><li><i class="fas fa-plane"></i> Vuelos El Cairo–Luxor y Aswan–El Cairo con equipaje de hasta 20 kg.</li></ul></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div class="itinerary-day"><strong>Días 1 y 2 · 18–19 marzo – Buenos Aires / Estambul</strong><p>Salida TK16 a las 23:55. Llegada al día siguiente a las 22:55 y traslado al hotel.</p></div>
+        <div class="itinerary-day"><strong>Día 3 · 20 marzo – Estambul histórica</strong><p>Solimán, Santa Sofía exterior, Topkapi, almuerzo, Mezquita Azul, Hipódromo y Gran Bazar.</p></div>
+        <div class="itinerary-day"><strong>Día 4 · 21 marzo – Estambul</strong><p>Paseo por el Bósforo y Bazar de las Especias. Opcional lado asiático, Beylerbey, Üsküdar y Camlica.</p></div>
+        <div class="itinerary-day"><strong>Día 5 · 22 marzo – Estambul / Ankara</strong><p>Viaje por Bolu, panorámica de Ankara y Mausoleo de Atatürk. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 6 · 23 marzo – Ankara / Capadocia</strong><p>Lago Salado y caravanserai del siglo XIII. Llegada, cena y alojamiento. Safari en jeep opcional.</p></div>
+        <div class="itinerary-day"><strong>Día 7 · 24 marzo – Capadocia</strong><p>Göreme, valles de Avcilar y Güvercinlik, chimeneas de hadas y talleres de alfombras, ónix y turquesa. Globo opcional. Cena.</p></div>
+        <div class="itinerary-day"><strong>Día 8 · 25 marzo – Capadocia / Pamukkale</strong><p>Hierápolis y Castillo de Algodón con sus piscinas termales. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 9 · 26 marzo – Pamukkale / Éfeso / Kusadasi</strong><p>Éfeso, Biblioteca de Celso, Casa de la Virgen María y galería de cuero. Cena y alojamiento en Kusadasi o Izmir.</p></div>
+        <div class="itinerary-day"><strong>Día 10 · 27 marzo – Kusadasi / Bursa / Estambul</strong><p>Mezquita Ulucamii, Bazar de Seda Kozahan y Mausoleo Verde. Continuación a Estambul; el tramo puede operarse en vuelo.</p></div>
+        <div class="itinerary-day"><strong>Día 11 · 28 marzo – Estambul / El Cairo</strong><p>Tiempo libre y vuelo TK694 a las 18:25. Llegada 19:50, traslado y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 12 · 29 marzo – El Cairo / Luxor</strong><p>Mañana libre, vuelo doméstico a Luxor, embarque y visita a Karnak y Luxor. Cena a bordo. Visita completa de El Cairo opcional.</p></div>
+        <div class="itinerary-day"><strong>Día 13 · 30 marzo – Luxor / Esna / Edfu</strong><p>Pensión completa. Valle de los Reyes, templo de Hatshepsut y Colosos de Memnón. Navegación a Edfu.</p></div>
+        <div class="itinerary-day"><strong>Día 14 · 31 marzo – Edfu / Kom Ombo / Aswan</strong><p>Templo de Horus, templos de Sobek y Haroeris, navegación y noche en Aswan.</p></div>
+        <div class="itinerary-day"><strong>Día 15 · 1 abril – Aswan</strong><p>Alta Presa, templo de Philae y paseo en faluca. Pensión completa; Abu Simbel opcional.</p></div>
+        <div class="itinerary-day"><strong>Día 16 · 2 abril – Aswan / El Cairo</strong><p>Desembarque, vuelo doméstico a El Cairo, traslado y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 17 · 3 abril – El Cairo</strong><p>Pirámides de Keops, Kefrén y Micerinos, Templo del Valle y Esfinge. Saqqara, Menfis y espectáculo de luz opcionales.</p></div>
+        <div class="itinerary-day"><strong>Día 18 · 4 abril – El Cairo / Buenos Aires</strong><p>Vuelo TK693 a las 05:05, conexión en Estambul con TK15 y llegada a Ezeiza a las 22:25.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== EUROPA: ENCANTOS DE TURQUIA E ISLAS GRIEGAS ==================== -->
+  <div class="page-section" id="section-europa-encantos-turquia-islas-griegas">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Encantos de Turquía <span>e Islas Griegas</span></h1><p>Estambul, Anatolia, Samos, Mykonos, Santorini y Atenas</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">29 de Abril</span><h3>Salida grupal a Turquía con las Islas Griegas - Código TU</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Salida 29 de abril</li><li><i class="fas fa-plane"></i> Turkish Airlines</li><li><i class="fas fa-hotel"></i> 16 noches y late check-out</li><li><i class="fas fa-ship"></i> Ferris entre Kusadasi, Samos, Mykonos, Santorini y Atenas</li><li><i class="fas fa-user-friends"></i> Acompañante con mínimo 20 pasajeros</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años</li></ul><div class="package-price">USD 6.100 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=760&q=80" alt="Encantos de Turquía e Islas Griegas"></div></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">Incluye</h2><ul class="package-details"><li><i class="fas fa-plane"></i> Turkish Airlines con equipaje de hasta 23 kg y carry on.</li><li><i class="fas fa-shield-alt"></i> Assist Card AC 60 hasta 69 años; suplemento desde 70.</li><li><i class="fas fa-user-friends"></i> Acompañante Tucano Tours desde Buenos Aires con mínimo 20 pasajeros.</li><li><i class="fas fa-mosque"></i> Turquía: Estambul 4 noches con desayuno, Anatolia 5 noches en media pensión, traslados, visita histórica con almuerzo, Bósforo, Bazar de las Especias y guía en español.</li><li><i class="fas fa-umbrella-beach"></i> Grecia: Samos 1 noche, Mykonos 2, Santorini 2 y Atenas 2 con desayuno y late check-out.</li><li><i class="fas fa-ship"></i> Traslados y ferris Kusadasi–Samos–Mykonos–Santorini–Atenas.</li><li><i class="fas fa-landmark"></i> Visita de medio día de Atenas.</li></ul></div>
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div class="itinerary-day"><strong>Días 1 y 2 · 28–29 abril – Buenos Aires / Estambul</strong><p>Salida TK16 desde Ezeiza el 28 a las 23:55. Llegada el 29 a las 22:55, traslado y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 3 · 30 abril – Estambul</strong><p>Desayuno y día libre para comenzar a conocer la ciudad.</p></div>
+        <div class="itinerary-day"><strong>Día 4 · 1 mayo – Estambul histórica</strong><p>Solimán, Santa Sofía exterior, Topkapi, almuerzo, Mezquita Azul, Hipódromo y Gran Bazar.</p></div>
+        <div class="itinerary-day"><strong>Día 5 · 2 mayo – Estambul</strong><p>Bósforo y Bazar de las Especias. Opcional lado asiático, Beylerbey y Camlica.</p></div>
+        <div class="itinerary-day"><strong>Día 6 · 3 mayo – Estambul / Ankara</strong><p>Viaje por Bolu, panorámica y Mausoleo Anitkabir. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 7 · 4 mayo – Ankara / Capadocia</strong><p>Lago Salado y caravanserai del siglo XIII. Safari en jeep opcional. Cena.</p></div>
+        <div class="itinerary-day"><strong>Día 8 · 5 mayo – Capadocia</strong><p>Göreme, valles de Avcilar, Pasabagi y Güvercinlik, chimeneas de hadas y talleres artesanales. Cena.</p></div>
+        <div class="itinerary-day"><strong>Día 9 · 6 mayo – Capadocia / Pamukkale</strong><p>Hierápolis y Castillo de Algodón. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 10 · 7 mayo – Pamukkale / Éfeso / Kusadasi o Izmir</strong><p>Éfeso, Biblioteca de Celso y Casa de la Virgen María. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 11 · 8 mayo – Kusadasi / Samos</strong><p>Ferry a Samos, traslado al hotel y tarde libre de playa.</p></div>
+        <div class="itinerary-day"><strong>Día 12 · 9 mayo – Samos / Mykonos</strong><p>Traslado al puerto, ferry a Mykonos y tarde libre.</p></div>
+        <div class="itinerary-day"><strong>Día 13 · 10 mayo – Mykonos</strong><p>Día libre de playa y vida nocturna; posibilidad de visitar Delos.</p></div>
+        <div class="itinerary-day"><strong>Día 14 · 11 mayo – Mykonos / Santorini</strong><p>Ferry a Santorini, traslado al hotel y tarde libre.</p></div>
+        <div class="itinerary-day"><strong>Día 15 · 12 mayo – Santorini</strong><p>Día libre para sus pueblos, acantilados y playas; visita opcional al volcán.</p></div>
+        <div class="itinerary-day"><strong>Día 16 · 13 mayo – Santorini / Atenas</strong><p>Ferry al Pireo, desembarque y traslado al hotel.</p></div>
+        <div class="itinerary-day"><strong>Día 17 · 14 mayo – Atenas</strong><p>Panorámica: Kalimármaro, Arco de Adriano, Parlamento, Syntagma, Omonia y Acrópolis con Propileos, Atenea Nike, Erecteion y Partenón. Tarde libre.</p></div>
+        <div class="itinerary-day"><strong>Día 18 · 15 mayo – Atenas</strong><p>Día libre y late check-out hasta el traslado nocturno al aeropuerto.</p></div>
+        <div class="itinerary-day"><strong>Día 19 · 16 mayo – Atenas / Buenos Aires</strong><p>Vuelo TK1842 a las 03:55, conexión con TK15 y llegada a Ezeiza a las 22:25.</p></div>
+      </div></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: FICHA PROVISIONAL ==================== -->
+  <div class="page-section" id="section-tour-sin-aereos">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80') center/cover">
+      <div class="dest-hero-content">
+        <h1 id="tourSinAereosTitle">Tours <span>Sin Aéreos</span></h1>
+        <p>Programa terrestre sin pasajes aéreos internacionales</p>
+        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+      </div>
+    </section>
+    <section class="packages">
+      <div class="section-header"><h2 id="tourSinAereosHeading">Información próximamente</h2><div class="section-divider"></div></div>
+      <div id="tourSinAereosContent" style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;text-align:center">
+        <i class="fas fa-map-marked-alt" style="font-size:2.4rem;color:var(--accent);margin-bottom:16px"></i>
+        <p style="color:var(--text);font-size:1rem;line-height:1.7">Estamos preparando los detalles de este tour sin aéreos.</p>
+      </div>
+    </section>
+  </div>
+
   <!-- ==================== FOOTER ==================== -->
   <footer id="mainFooter">
     <div class="footer-content">
@@ -6033,6 +6445,62 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
       document.getElementById('navLinks').classList.remove('active');
       document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+    }
+
+    const loadedTours = {
+      'tailandia-clasica': {name:'Tailandia Clásica', duration:'11 días / 10 noches', departures:'Salidas todos los días · Guías en español excepto Phuket', prices:['USD 1990 por persona en doble de noviembre a marzo','USD 1700 por persona en doble de abril a octubre'], route:['Días 1–3: Bangkok. Llegada, city tour por Wat Traimit, Wat Pho, Palacio Real y Wat Phra Kaew; día libre.','Días 4–6: vuelo incluido a Chiang Mai, city tour por Doi Suthep, Talat Warorod, Wat Phra Singh, Chedi Luang y Suan Dok; día libre.','Días 7–11: vuelo incluido a Phuket, tres días libres de playa y traslado de salida en inglés.']},
+      'bangkok-playas': {name:'Bangkok y Playas', duration:'12 días / 11 noches', departures:'Salidas todos los días', prices:['USD 1599 por persona en doble'], route:['Días 1–4: Bangkok. Llegada, visita a Wat Traimit, Wat Pho, Palacio Real y Wat Phra Kaew; dos días libres.','Días 5–7: vuelo incluido a Phuket, ferry y estadía en Phi Phi Island.','Días 8–12: ferry a Phuket, tres días libres de playa y traslado de salida.']},
+      'bangkok-phi-phi-krabi': {name:'Bangkok, Phi Phi y Krabi', duration:'12 días / 11 noches', departures:'Salidas todos los días', prices:['USD 1990 por persona en doble'], route:['Días 1–4: Bangkok con city tour de templos y Palacio Real, más dos días libres.','Días 5–7: vuelo incluido a Phuket y ferry a Phi Phi; días libres.','Días 8–12: ferry a Krabi, tres días libres y vuelo incluido Krabi–Bangkok para conectar con el regreso.']},
+      'norte-tailandia-playas': {name:'Norte de Tailandia y Playas', duration:'12 días / 11 noches', departures:'Todos los martes · Mínimo 2 personas · Guías en español excepto Phuket', prices:['USD 2090 por persona en doble'], route:['Días 1–3: Bangkok, día libre y visita a Wat Traimit, Wat Pho, Palacio Real y Buda Esmeralda.','Días 4–7: Ayutthaya, Wat Muang, Sukhothai, Lago Phayao, Chiang Rai, Triángulo de Oro, Templos Azul y Blanco, Chiang Mai, Doi Suthep y santuario de elefantes. Incluye almuerzos según programa.','Días 8–12: vuelo incluido a Phuket, tres días libres y traslado de salida.']},
+      'bali-tailandia': {name:'Bali & Tailandia', duration:'12 días / 11 noches', departures:'Salidas todos los días', prices:['USD 1850 por persona en doble'], route:['Días 1–4: Bali, visita de Uluwatu y días libres.','Días 5–7: vuelos incluidos vía Kuala Lumpur a Bangkok, city tour de templos y Palacio Real, y día libre.','Días 8–12: vuelo incluido a Phuket, tres días libres y traslado de salida en inglés.']},
+      'camboya-tailandia': {name:'Camboya & Tailandia', duration:'11 días / 10 noches', departures:'Lunes, miércoles y sábados', prices:['USD 2590 por persona en doble'], route:['Días 1–4: Bangkok, city tour de templos y Palacio Real y dos días libres.','Días 5–7: vuelo incluido a Siem Reap; templos Rolous, Angkor Thom, Bayon, Ta Prohm, Angkor Wat, ceremonia budista, Banteay Srei y artesanos de Angkor. Dos almuerzos incluidos.','Días 8–11: vuelos incluidos Siem Reap–Bangkok–Phuket, dos días libres de playa y traslado de salida.']},
+      'vietnam-tailandia': {name:'Vietnam & Tailandia', duration:'17 días / 16 noches', departures:'Todos los martes · Mínimo 2 personas', prices:['USD 2960 por persona en doble'], route:['Días 1–8: Hanoi, crucero en Halong Bay, Hoi An, Danang, Hue y Ho Chi Minh. Incluye vuelos internos, visitas, almuerzos y una noche con pensión completa en junco.','Días 9–12: vuelo incluido a Bangkok, city tour de templos y Palacio Real y dos días libres.','Días 13–17: vuelo incluido a Phuket, tres días libres y traslado de salida.']},
+      'tailandia-vietnam-camboya': {name:'Tailandia, Vietnam & Camboya', duration:'19 días / 18 noches', departures:'Todos los martes · Mínimo 2 personas', prices:['USD 3900 por persona en doble'], route:['Días 1–8: Hanoi, Halong Bay, Hoi An, Danang, Hue y Ho Chi Minh, con vuelos internos, visitas y comidas indicadas.','Días 9–11: Delta del Mekong, vuelo a Siem Reap, Angkor Thom, Bayon, Ta Prohm, Angkor Wat y Lago Tonle Sap; vuelo a Bangkok.','Días 12–19: Bangkok con city tour y días libres; vuelo a Phuket, tres días de playa y traslado de salida.']},
+      'descubriendo-indonesia': {name:'Descubriendo Indonesia', duration:'14 días / 13 noches', departures:'Todos los días · Mínimo 2 personas · Guías en español en Yogyakarta y Bali, en inglés en Borneo', prices:['USD 3450 por persona en doble'], route:['Días 1–4: Jakarta y Borneo. Vuelos incluidos, klotok por Tanjung Puting, Pondok Tanguy y Camp Leakey para observar orangutanes.','Días 5–6: Borobudur, Prambanan y vuelo incluido a Bali.','Días 7–9: Ubud, Kerta Gosa, Besakih, Tenganan, Kintamani, Tirta Empul, Tegallalang y Uluwatu.','Días 10–14: estadía libre en Nusa Dua y traslado de salida.']},
+      'filipinas': {name:'Filipinas', duration:'8 días / 7 noches', departures:'Salidas todos los días', prices:['USD 1600 por persona en doble'], route:['Día 1: llegada a Manila, recepción en español y traslado.','Días 2–4: vuelo incluido a Boracay y días libres.','Días 5–8: vuelos incluidos Boracay–Manila–El Nido, días libres y regreso aéreo a Manila.']},
+      'tahiti-bora-bora': {name:'Tahití & Bora Bora', duration:'9 días / 8 noches', departures:'Salidas todos los días', prices:['USD 3100 por persona en doble'], route:['Traslados de entrada y salida en inglés.','Aéreos interislas Papeete–Bora Bora–Papeete.','1 noche en Papeete, 6 noches en Bora Bora y 1 noche final en Papeete, todas con desayuno.']},
+      'tahiti-moorea': {name:'Tahití & Moorea', duration:'9 días / 8 noches', departures:'Salidas todos los días', prices:['USD 3350 por persona en doble'], route:['Traslados de entrada y salida en inglés.','Ferries interislas Papeete–Moorea–Papeete.','1 noche en Papeete, 6 noches en Moorea y 1 noche final en Papeete, todas con desayuno.']},
+      'kenia-tanzania-playas': {name:'Kenia, Tanzania & Playas', duration:'13 días / 12 noches', departures:'Todos los domingos · Mínimo 2 personas · Guías en español; traslados en inglés en Zanzíbar', prices:['USD 5990 por persona en doble'], route:['Días 1–3: Nairobi, Amboseli, frontera de Namanga, Arusha y Tarangire con safaris y pensión completa.','Días 4–7: Serengeti y Cráter de Ngorongoro con safaris diarios y almuerzos picnic.','Días 8–13: vuelo incluido a Zanzíbar y cinco noches en Riu Jambo o similar con All Inclusive.']},
+      'safari-kenia-tanzania': {name:'Safari en Kenia & Tanzania', duration:'13 días / 12 noches', departures:'Todos los miércoles · Mínimo 2 personas · Guías en español', prices:['USD 6600 por persona en doble de julio a octubre','USD 6300 por persona en doble el resto del año'], route:['Días 1–6: Nairobi, Montes Aberdare, Lago Nakuru y Maasai Mara, con safaris y pensión completa según programa.','Días 7–11: Arusha, Tarangire, Serengeti y Cráter de Ngorongoro con safaris y almuerzos picnic.','Días 12–13: regreso a Nairobi vía Arusha, día libre y traslado de salida.']},
+      'kenia-zanzibar': {name:'Kenia & Playas de Zanzíbar', duration:'10 días / 9 noches', departures:'Todos los miércoles · Mínimo 2 personas · Guías en español en Kenia', prices:['USD 3800 por persona en doble de julio a octubre','USD 3350 por persona en doble el resto del año'], route:['Días 1–5: Nairobi, Aberdare, Lago Nakuru, Lago Naivasha y Maasai Mara con safaris y comidas indicadas.','Días 6–10: vuelo incluido a Zanzíbar, Riu Jambo o similar con All Inclusive, tres días libres y traslado de salida en inglés.']},
+      'sudafrica-cabo': {name:'Sudáfrica Clásica & Ciudad del Cabo', duration:'10 días / 9 noches', departures:'Todos los lunes · Mínimo 2 personas · Guías en español', prices:['USD 1650 por persona en doble'], route:['Días 1–4: Johannesburgo, Mpumalanga, Kruger con safari 4x4, Pretoria y vuelo incluido a Ciudad del Cabo.','Días 5–9: Ciudad del Cabo libre; opcionales Ciudad y Viñedos (USD 150) y Península del Cabo (USD 190).','Día 10: traslado de salida. Opcional Soweto y casa de Mandela: USD 90.']},
+      'sudafrica-ruta-jardin': {name:'Sudáfrica Clásica con Ruta Jardín', duration:'10 días / 9 noches', departures:'Todos los lunes · Mínimo 2 personas · Guías en español', prices:['USD 210 por persona en doble'], route:['Días 1–4: Johannesburgo, Mpumalanga, Kruger, Pretoria y vuelo incluido a Ciudad del Cabo.','Días 5–6: Ciudad del Cabo libre con excursiones opcionales.','Días 7–10: Ruta 62, Oudtshoorn, granja de avestruces, Cuevas Cango, Knysna, regreso a Ciudad del Cabo y traslado de salida. Safari nocturno opcional USD 70.']},
+      'explorando-sudafrica': {name:'Explorando Sudáfrica', duration:'14 días / 13 noches', departures:'Todos los lunes · Mínimo 2 personas · Guías en español', prices:['USD 3300 por persona en doble'], route:['Días 1–4: Johannesburgo, Mpumalanga, safari en Kruger, Pretoria y vuelo incluido a Ciudad del Cabo.','Días 5–9: Ciudad del Cabo, Ruta Jardín, Oudtshoorn, Cuevas Cango y Knysna.','Días 10–14: vuelo incluido a Durban, tres días libres de playa y vuelo incluido a Johannesburgo.']},
+      'sudafrica-mauritius': {name:'Mauritius & Sudáfrica Express', duration:'15 días / 14 noches', departures:'Salidas todos los días · Fly & Drive en Sudáfrica', prices:['USD 3300 por persona en doble'], route:['Días 1–6: alquiler de auto con kilómetros libres y seguro premium en Ciudad del Cabo, Johannesburgo y Kruger; vuelo interno incluido. Entradas no incluidas.','Días 7–13: vuelo incluido a Mauritius y seis días libres de playa con régimen indicado.','Días 14–15: vuelo a Johannesburgo, hotel con shuttle de cortesía y traslado de salida.']},
+      'seychelles': {name:'Islas Seychelles', duration:'8 días / 7 noches', departures:'Salidas todos los días', prices:['USD 1500 por persona en doble categoría 3 estrellas','USD 2400 por persona en doble categoría 4 estrellas'], route:['Día 1: llegada, recepción en inglés, traslado, cena y alojamiento.','Días 2–7: días libres en las playas del Océano Índico, con desayuno y cena.','Día 8: check-out y traslado al aeropuerto.']},
+      'mauritius': {name:'Isla Mauritius', duration:'8 días / 7 noches', departures:'Salidas todos los días', prices:['USD 850 por persona en doble categoría 3 estrellas','USD 1890 por persona en doble categoría 4 estrellas'], route:['Día 1: llegada, recepción en inglés y traslado.','Días 2–7: días libres en las playas del Océano Índico, según régimen indicado.','Día 8: check-out y traslado al aeropuerto.']},
+      'maldivas': {name:'Islas Maldivas', duration:'8 días / 7 noches', departures:'Salidas todos los días', prices:['USD 2300 por persona en doble noviembre, diciembre y abril','USD 2700 por persona en doble enero a marzo','USD 1800 por persona en doble mayo a junio','USD 2000 por persona en doble agosto a octubre'], route:['Traslados aeropuerto de Malé–puerto–aeropuerto.','Lancha rápida de ida y regreso entre el puerto y el alojamiento.','7 noches en Hotel Riu Atoll con All Inclusive.']},
+      'mauritius-seychelles': {name:'Mauritius & Seychelles', duration:'13 días / 12 noches', departures:'De 2 a 4 salidas semanales según el mes · Consultar', prices:['USD 2400 por persona en doble categoría 3 estrellas','USD 3990 por persona en doble categoría 4 estrellas'], route:['Días 1–6: Mauritius, recepción en inglés, traslados y cinco días libres con desayuno y cena.','Día 7: vuelo Air Seychelles incluido a Seychelles, recepción y traslado.','Días 8–13: cinco días libres con desayuno y cena, check-out y traslado de salida.']},
+      'esencias-kenia-tanzania': {name:'Esencias de Kenia y Tanzania', duration:'12 días / 11 noches', departures:'Safari regular · Conductor-guía de habla castellana', prices:['USD 5600 por persona en doble'], route:['Incluye traslados, 2 noches en Nairobi con desayuno, pensión completa durante el safari, cena en Carnivore, almuerzo en Arusha, entradas a parques, Flying Doctors, agua mineral, sombreros y etiquetas. Transporte en Land Cruiser 4x4 de 7 plazas, uso no exclusivo y ventana garantizada.','Días 1–6: Nairobi, Montes Aberdare, Lago Nakuru y Maasai Mara, con safaris por la mañana y tarde y cena en Carnivore.','Días 7–11: frontera de Namanga, Arusha, opción Lago Manyara o Tarangire, Serengeti y Cráter de Ngorongoro. Guía compartido hasta por 3 vehículos.','Día 12: regreso a Arusha, almuerzo local y traslado al Aeropuerto de Kilimanjaro.']},
+      'paraiso-china': {name:'Paraíso de China', duration:'13 días / 12 noches', departures:'Circuito regular por China', prices:['USD 2900 por persona en doble'], route:['Días 1–4: Beijing: Ciudad Prohibida, Tian An Men, Palacio de Verano, Gran Muralla, Estadio Nacional, Pato Laqueado y Templo del Cielo. Tren rápido a Xi’an; consultar suplemento por vuelo.','Días 5–6: Guerreros de Terracota, Gran Pagoda de la Oca Silvestre, Barrio Musulmán y vuelo a Guilin.','Días 7–9: crucero por el Río Li hasta Yangshuo, Gruta de las Flautas de Caña, vuelo a Hangzhou, Lago del Oeste, Templo del Alma Escondida y Pagoda de las Seis Armonías.','Días 10–13: trenes a Suzhou y Shanghái; Colina del Tigre, Jardín del Pescador, Torre Jinmao, Malecón, Buda de Jade, casco antiguo, día libre y traslado de salida.']},
+      'maravillas-japon': {name:'Maravillas de Japón', duration:'10 días / 9 noches', departures:'Circuito regular con guías en español', prices:['USD 4100 por persona en doble'], route:['Incluye 3 noches en Tokio, 3 en Kioto, 1 en Kanazawa, 1 en Gero y 1 en Osaka; desayunos, 3 almuerzos, 1 cena japonesa, excursiones, trenes y traslados.','Días 1–3: llegada a Tokio con asistencia, city tour por Meiji, Senso-ji, Nakamise y Shibuya; excursión a Hakone con Lago Ashi, santuario y museo al aire libre.','Días 4–6: tren bala a Kioto, Nara, Todai-ji, Parque de los Ciervos, Sanjusangendo, Fushimi Inari, Kinkaku-ji, Tenryu-ji y Arashiyama. Hiroshima y Miyajima opcional en preventa.','Días 7–9: Kanazawa, Omicho, Higashichaya, Kenrokuen, Shirakawago, Takayama, ryokan con onsen en Gero o Gifu, trenes a Osaka, Dotonbori y Castillo de Osaka.','Día 10: Airport Limousine Bus a Kansai o Itami. Para vuelos muy tempranos, taxi con suplemento de USD 135 por pasajero; pasajero solo abona el doble.']},
+      'vietnam-camboya-tailandia-playas': {name:'Vietnam, Camboya, Tailandia y Playas', duration:'18 días / 17 noches', departures:'Circuito regular con guías de habla hispana', prices:['USD 3990 por persona en doble'], route:['Incluye Hanoi 2 noches, crucero Halong 1, Hoi An 2, Hue 2, Ho Chi Minh 2, Siem Reap 2, Bangkok 3 y Phuket 3; vuelos internos, traslados, 10 comidas y 1 brunch.','Días 1–4: Hanoi, visita de la ciudad, café vietnamita, Barrio Antiguo, crucero en Halong y vuelo a Danang.','Días 5–10: Hoi An, Hue, Ciudadela Imperial, mausoleos, vuelo a Ho Chi Minh, city tour, Delta del Mekong, túneles de Cu Chi y vuelo a Siem Reap.','Días 11–14: Angkor Thom, Bayon, Ta Prohm, Angkor Wat, cena Apsara, Tonle Sap, vuelo a Bangkok, templos, Palacio Real y día libre.','Días 15–18: vuelo a Phuket, dos días libres y vuelo final a Bangkok.']},
+      'marruecos-completo': {name:'Marruecos al Completo', duration:'8 días / 7 noches', departures:'Circuito regular · Guía acompañante con mínimo 7 pasajeros', prices:['USD 2100 por persona en doble'], route:['Incluye 1 noche en Tánger, 2 en Fez, 1 en Erfoud, 1 en Ouarzazate y 2 en Marrakech con media pensión; traslados con chofer y visitas con guías locales en español.','Días 1–3: Tánger, Tetuán, Chauen, Meknes y Fez; Palacio Real, medina, Medrasa, Karaouine, Moulay Idriss y curtidores.','Días 4–5: Ifrane, Midelt, Errachidia, Erfoud, opciones en Merzouga, Rissani, Gargantas del Todra y Ruta de las Kasbahs hasta Ouarzazate.','Días 6–8: Ait Ben Haddou, Alto Atlas, Marrakech, Menara, Kutubia, Palacio de la Bahía, farmacia bereber, Jemaa el Fna y traslado de salida.','Llegada opcional por Casablanca: traslado privado a Tánger por EUR 85 por persona desde 2 pasajeros.']}
+    };
+
+    function tourDetailHtml(tour) {
+      const prices = tour.prices.map((price, index) => `<div class="package-price"${index ? ' style="margin-top:10px"' : ''}>${price}</div>`).join('');
+      const route = tour.route.map(item => `<div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);text-align:left"><p style="font-size:.88rem;color:var(--text);line-height:1.65">${item}</p></div>`).join('');
+      return `<div class="package-card"><div class="package-info"><span class="package-tag">${tour.departures}</span><h3>${tour.name}</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> ${tour.duration}</li><li><i class="fas fa-plane-slash"></i> Programa sin aéreo internacional</li></ul>${prices}</div><div class="package-image"><img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=760&q=80" alt="${tour.name}"></div></div><div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:20px">Itinerario e incluye</h2><div style="display:grid;gap:16px">${route}</div></div>`;
+    }
+
+    function showLoadedTour(key) {
+      const tour = loadedTours[key];
+      if (!tour) return;
+      document.getElementById('tourSinAereosTitle').textContent = tour.name;
+      document.getElementById('tourSinAereosHeading').textContent = tour.name;
+      document.getElementById('tourSinAereosContent').innerHTML = tourDetailHtml(tour);
+      showSection('tour-sin-aereos');
+    }
+
+    function showTourSinAereos(nombre) {
+      const title = document.getElementById('tourSinAereosTitle');
+      const heading = document.getElementById('tourSinAereosHeading');
+      const content = document.getElementById('tourSinAereosContent');
+      title.textContent = nombre;
+      heading.textContent = nombre;
+      content.innerHTML = '<i class="fas fa-map-marked-alt" style="font-size:2.4rem;color:var(--accent);margin-bottom:16px"></i><p style="color:var(--text);font-size:1rem;line-height:1.7">Estamos preparando los detalles de este tour sin aéreos.</p>';
+      showSection('tour-sin-aereos');
     }
 
     function toggleMenu() {
