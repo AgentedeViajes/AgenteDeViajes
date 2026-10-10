@@ -43,6 +43,7 @@
     .dropdown li a:hover { background: #f7fafc; border-left-color: var(--accent); color: var(--primary); padding-left: 22px; }
     .dropdown li a .dest-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; }
     .dropdown-header { padding: 12px 18px 8px; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-light); font-weight: 600; }
+    .dropdown-header.month-header { margin-top: 5px; padding-top: 11px; border-top: 1px solid #edf2f7; color: var(--primary); background: #f8fafc; position: sticky; top: 0; z-index: 1; }
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
     .hamburger span { width: 24px; height: 2px; background: var(--white); transition: all 0.3s ease; }
 
@@ -121,6 +122,15 @@
     .itinerary-day { padding: 14px 18px; background: var(--light); border-radius: 10px; border-left: 4px solid var(--accent); }
     .itinerary-day strong { color: var(--primary); }
     .itinerary-day p { font-size: 0.85rem; color: var(--text); margin-top: 4px; }
+    .tour-detail-card { background: var(--white); border-radius: 14px; box-shadow: var(--shadow); padding: 36px; margin-top: 30px; }
+    .tour-detail-card h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--primary); margin-bottom: 18px; }
+    .tour-itinerary { display: grid; gap: 16px; }
+    #section-tour-india-nepal .package-info h3::after,
+    #section-tour-egipto-clasico .package-info h3::after,
+    #section-tour-marruecos-clasico .package-info h3::after,
+    #section-tour-vuelta-marruecos .package-info h3::after,
+    #section-tour-japon-tren .package-info h3::after,
+    #section-tour-japon .package-info h3::after { content: "(código Crown)"; display: block; margin-top: 8px; color: var(--accent); font-family: 'Montserrat', sans-serif; font-size: .92rem; font-weight: 700; }
     .package-price { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--accent-hover); font-weight: 700; }
     .package-price span { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 400; color: var(--text-light); display: block; }
     .package-image { position: relative; overflow: hidden; }
@@ -208,51 +218,70 @@
       <li class="nav-item">
         <span class="nav-link-btn" onclick="toggleDropdown(event, this)"><i class="fas fa-landmark"></i> Europa <i class="fas fa-chevron-down"></i></span>
         <ul class="dropdown">
-          <li class="dropdown-header">Destinos en Europa</li>
-          <li><a onclick="showSection('europa-madrid')"><span class="dest-icon">🇪🇸</span> Madrid y Norte Europeo</a></li>
-          <li><a onclick="showSection('europa-sicilia')"><span class="dest-icon">🇮🇹</span> Sicilia y Sur de Italia con Puglia</a></li>
-          <li><a onclick="showSection('europa-puglia')"><span class="dest-icon">🇮🇹</span> Circuito de Puglia</a></li>
-          <li><a onclick="showSection('europa-dos-sicilias')"><span class="dest-icon">🇮🇹</span> Reino de las Dos Sicilias</a></li>
-          <li><a onclick="showSection('europa-maravillas')"><span class="dest-icon">🌍</span> Maravillas de Europa</a></li>
-          <li><a onclick="showSection('europa-inglaterra-escocia-irlanda')"><span class="dest-icon">🇬🇧</span> Maravillas de Inglaterra Escocia Irlanda</a></li>
-          <li><a onclick="showSection('europa-europeando')"><span class="dest-icon">✈️</span> Europeando</a></li>
-          <li><a onclick="showSection('europa-europeando-ss')"><span class="dest-icon">✝️</span> Europeando Semana Santa</a></li>
-          <li><a onclick="showSection('europa-europeando-xl')"><span class="dest-icon">✈️</span> Europeando XL</a></li>
-          <li><a onclick="showSection('europa-europeando-2027')"><span class="dest-icon">✈️</span> Europeando 2027</a></li>
-          <li><a onclick="showSection('europa-escapada-ss')"><span class="dest-icon">✝️</span> Escapada Europea Semana Santa</a></li>
-          <li><a onclick="showSection('europa-conociendo')"><span class="dest-icon">🏛️</span> Conociendo Europa</a></li>
-          <li><a onclick="showSection('europa-turquia-griegas')"><span class="dest-icon">🇹🇷</span> Turquía con Islas Griegas</a></li>
-          <li><a onclick="showSection('europa-todo-turquia')"><span class="dest-icon">🇹🇷</span> Todo Turquía</a></li>
-          <li><a onclick="showSection('europa-portugal-andalucia')"><span class="dest-icon">🇵🇹</span> Portugal, Andalucía y Marruecos</a></li>
-          <li><a onclick="showSection('europa-auroras')"><span class="dest-icon">🌌</span> Auroras Boreales</a></li>
-          <li><a onclick="showSection('europa-auroras-artico')"><span class="dest-icon">🌌</span> Auroras del Ártico</a></li>
-          <li><a onclick="showSection('europa-peninsula')"><span class="dest-icon">🇮🇧</span> Península Ibérica</a></li>
-          <li><a onclick="showSection('europa-andalucia-marruecos')"><span class="dest-icon">🇲🇦</span> Andalucía, Marruecos y Portugal</a></li>
-          <li><a onclick="showSection('europa-sonada')"><span class="dest-icon">✨</span> Europa Soñada</a></li>
-          <li><a onclick="showSection('europa-italia-turistica')"><span class="dest-icon">🇮🇹</span> Italia Turística</a></li>
-          <li><a onclick="showSection('europa-tutta-italia')"><span class="dest-icon">🇮🇹</span> Tutta Italia</a></li>
-          <li><a onclick="showSection('europa-sicilia-sur')"><span class="dest-icon">🇮🇹</span> Sicilia y Sur de Italia</a></li>
-          <li><a onclick="showSection('europa-italia-griegas')"><span class="dest-icon">🇮🇹</span> Italia con Islas Griegas</a></li>
-          <li><a onclick="showSection('europa-turista')"><span class="dest-icon">🌍</span> Europa Turista</a></li>
-          <li><a onclick="showSection('europa-italia-sorrento')"><span class="dest-icon">🇮🇹</span> Italia con Sorrento</a></li>
-          <li><a onclick="showSection('europa-capitales-berlin')"><span class="dest-icon">🇩🇪</span> Capitales Imperiales con Berlin</a></li>
-          <li><a onclick="showSection('europa-ideal')"><span class="dest-icon">✨</span> Europa Ideal</a></li>
-          <li><a onclick="showSection('europa-promo')"><span class="dest-icon">🏷️</span> Europa en Promo</a></li>
-          <li><a onclick="showSection('europa-maravillas-turquia')"><span class="dest-icon">🇹🇷</span> Maravillas de Turquía</a></li>
-          <li><a onclick="showSection('europa-maravillas-turquia-grecia')"><span class="dest-icon">🇹🇷</span> Maravillas de Turquía y Grecia</a></li>
-          <li><a onclick="showSection('europa-euroimperiales')"><span class="dest-icon">🏰</span> Euroimperiales</a></li>
-          <li><a onclick="showSection('europa-finlandia-magica')"><span class="dest-icon">🇫🇮</span> Finlandia Mágica</a></li>
-          <li><a onclick="showSection('europa-ilusion-europea')"><span class="dest-icon">✨</span> Ilusión Europea</a></li>
-          <li><a onclick="showSection('europa-imperdibles-reino-unido')"><span class="dest-icon">🇬🇧</span> Imperdibles de Reino Unido</a></li>
-          <li><a onclick="showSection('europa-leyendas-europa')"><span class="dest-icon">🏰</span> Leyendas de Europa</a></li>
-          <li><a onclick="showSection('europa-tutta-italia-sorrento')"><span class="dest-icon">🇮🇹</span> Tutta Italia con Sorrento</a></li>
-          <li><a onclick="showSection('europa-experiencia-turquia')"><span class="dest-icon">🇹🇷</span> Experiencia Turquía</a></li>
-          <li><a onclick="showSection('europa-encantos-turquia-islas-griegas')"><span class="dest-icon">🇹🇷</span> Encantos de Turquía e Islas Griegas</a></li>
-          <li><a onclick="showSection('europa-madrid-portugal-andalucia-marruecos')"><span class="dest-icon">🇪🇸</span> Madrid, Portugal, Andalucía y Marruecos</a></li>
-          <li><a onclick="showSection('europa-turquia-locura')"><span class="dest-icon">🇹🇷</span> Turquía de Locura</a></li>
-          <li><a onclick="showSection('europa-descubriendo-turquia')"><span class="dest-icon">🇹🇷</span> Descubriendo Turquía</a></li>
-          <li><a onclick="showSection('europa-magica-vips')"><span class="dest-icon">✨</span> Europa Mágica</a></li>
-          <li><a onclick="showSection('europa-maravillas-reino-unido-irlanda')"><span class="dest-icon">🇬🇧</span> Maravillas de Reino Unido con Irlanda</a></li>
+          <li class="dropdown-header">Destinos en Europa por salida</li>
+          <li class="dropdown-header month-header">Noviembre 2026</li>
+          <li><a onclick="showSection('europa-europeando')"><span class="dest-icon">✈️</span> Europeando · 9 nov</a></li>
+          <li class="dropdown-header month-header">Enero 2027</li>
+          <li><a onclick="showSection('europa-auroras')"><span class="dest-icon">🌌</span> Auroras Boreales · 24 ene</a></li>
+          <li><a onclick="showSection('europa-experiencia-turquia')"><span class="dest-icon">🇹🇷</span> Experiencia Turquía · 29 ene</a></li>
+          <li class="dropdown-header month-header">Febrero 2027</li>
+          <li><a onclick="showSection('europa-turquia-locura')"><span class="dest-icon">🇹🇷</span> Turquía de Locura · 5 y 26 feb</a></li>
+          <li><a onclick="showSection('europa-magica-vips')"><span class="dest-icon">✨</span> Europa Mágica · 6 feb</a></li>
+          <li><a onclick="showSection('europa-auroras-artico')"><span class="dest-icon">🌌</span> Auroras del Ártico · 7 feb</a></li>
+          <li><a onclick="showSection('europa-madrid-portugal-andalucia-marruecos')"><span class="dest-icon">🇪🇸</span> Madrid, Portugal, Andalucía y Marruecos · 23 feb</a></li>
+          <li class="dropdown-header month-header">Marzo 2027</li>
+          <li><a onclick="showSection('europa-maravillas')"><span class="dest-icon">🌍</span> Maravillas de Europa · 4 mar</a></li>
+          <li><a onclick="showSection('europa-magica-vips')"><span class="dest-icon">✨</span> Europa Mágica · 6 mar</a></li>
+          <li><a onclick="showSection('europa-maravillas-turquia')"><span class="dest-icon">🇹🇷</span> Maravillas de Turquía · 8 mar</a></li>
+          <li><a onclick="showSection('europa-sicilia')"><span class="dest-icon">🇮🇹</span> Sicilia y Sur de Italia con Puglia · 9 mar</a></li>
+          <li><a onclick="showSection('europa-finlandia-magica')"><span class="dest-icon">🇫🇮</span> Finlandia Mágica · 11 mar</a></li>
+          <li><a onclick="showSection('europa-madrid')"><span class="dest-icon">🇪🇸</span> Madrid y Norte Europeo · 12 mar</a></li>
+          <li><a onclick="showSection('europa-peninsula')"><span class="dest-icon">🇮🇧</span> Península Ibérica · 12 mar</a></li>
+          <li><a onclick="showSection('europa-andalucia-marruecos')"><span class="dest-icon">🇲🇦</span> Andalucía, Marruecos y Portugal · 12 mar</a></li>
+          <li><a onclick="showSection('europa-sonada')"><span class="dest-icon">✨</span> Europa Soñada · 12 mar</a></li>
+          <li><a onclick="showSection('europa-ilusion-europea')"><span class="dest-icon">✨</span> Ilusión Europea · 12 mar</a></li>
+          <li><a onclick="showSection('europa-turquia-locura')"><span class="dest-icon">🇹🇷</span> Turquía de Locura · 12 mar</a></li>
+          <li><a onclick="showSection('europa-turista')"><span class="dest-icon">🌍</span> Europa Turista · 17 mar</a></li>
+          <li><a onclick="showSection('europa-italia-turistica')"><span class="dest-icon">🇮🇹</span> Italia Turística · 18 mar</a></li>
+          <li><a onclick="showSection('europa-tutta-italia')"><span class="dest-icon">🇮🇹</span> Tutta Italia · 18 mar</a></li>
+          <li><a onclick="showSection('europa-sicilia-sur')"><span class="dest-icon">🇮🇹</span> Sicilia y Sur de Italia · 18 mar</a></li>
+          <li><a onclick="showSection('europa-escapada-ss')"><span class="dest-icon">✝️</span> Escapada Europea Semana Santa · 21 mar</a></li>
+          <li><a onclick="showSection('europa-europeando-ss')"><span class="dest-icon">✝️</span> Europeando Semana Santa · 22 mar</a></li>
+          <li class="dropdown-header month-header">Abril 2027</li>
+          <li><a onclick="showSection('europa-maravillas-turquia')"><span class="dest-icon">🇹🇷</span> Maravillas de Turquía · 5 abr</a></li>
+          <li><a onclick="showSection('europa-italia-sorrento')"><span class="dest-icon">🇮🇹</span> Italia con Sorrento · 6 abr</a></li>
+          <li><a onclick="showSection('europa-portugal-andalucia')"><span class="dest-icon">🇵🇹</span> Portugal, Andalucía y Marruecos · 7 abr</a></li>
+          <li><a onclick="showSection('europa-descubriendo-turquia')"><span class="dest-icon">🇹🇷</span> Descubriendo Turquía · 13 abr</a></li>
+          <li><a onclick="showSection('europa-maravillas-turquia-grecia')"><span class="dest-icon">🇹🇷</span> Maravillas de Turquía y Grecia · 15 abr</a></li>
+          <li><a onclick="showSection('europa-madrid-portugal-andalucia-marruecos')"><span class="dest-icon">🇪🇸</span> Madrid, Portugal, Andalucía y Marruecos · 17 abr</a></li>
+          <li><a onclick="showSection('europa-promo')"><span class="dest-icon">🏷️</span> Europa en Promo · 19 abr</a></li>
+          <li><a onclick="showSection('europa-europeando-xl')"><span class="dest-icon">✈️</span> Europeando XL · 22 abr</a></li>
+          <li><a onclick="showSection('europa-madrid')"><span class="dest-icon">🇪🇸</span> Madrid y Norte Europeo · 23 abr</a></li>
+          <li><a onclick="showSection('europa-peninsula')"><span class="dest-icon">🇮🇧</span> Península Ibérica · 23 abr</a></li>
+          <li><a onclick="showSection('europa-andalucia-marruecos')"><span class="dest-icon">🇲🇦</span> Andalucía, Marruecos y Portugal · 23 abr</a></li>
+          <li><a onclick="showSection('europa-sonada')"><span class="dest-icon">✨</span> Europa Soñada · 23 abr</a></li>
+          <li><a onclick="showSection('europa-ilusion-europea')"><span class="dest-icon">✨</span> Ilusión Europea · 23 abr</a></li>
+          <li><a onclick="showSection('europa-encantos-turquia-islas-griegas')"><span class="dest-icon">🇹🇷</span> Encantos de Turquía e Islas Griegas · 29 abr</a></li>
+          <li class="dropdown-header month-header">Mayo 2027</li>
+          <li><a onclick="showSection('europa-magica-vips')"><span class="dest-icon">✨</span> Europa Mágica · 1 may</a></li>
+          <li><a onclick="showSection('europa-capitales-berlin')"><span class="dest-icon">🇩🇪</span> Capitales Imperiales con Berlín · 5 may</a></li>
+          <li><a onclick="showSection('europa-italia-turistica')"><span class="dest-icon">🇮🇹</span> Italia Turística · 6 may</a></li>
+          <li><a onclick="showSection('europa-tutta-italia')"><span class="dest-icon">🇮🇹</span> Tutta Italia · 6 may</a></li>
+          <li><a onclick="showSection('europa-sicilia-sur')"><span class="dest-icon">🇮🇹</span> Sicilia y Sur de Italia · 6 may</a></li>
+          <li><a onclick="showSection('europa-europeando-2027')"><span class="dest-icon">✈️</span> Europeando 2027 · 10 may</a></li>
+          <li><a onclick="showSection('europa-italia-griegas')"><span class="dest-icon">🇮🇹</span> Italia con Islas Griegas · 12 may</a></li>
+          <li><a onclick="showSection('europa-maravillas-reino-unido-irlanda')"><span class="dest-icon">🇬🇧</span> Maravillas de Reino Unido con Irlanda · 18 may</a></li>
+          <li><a onclick="showSection('europa-promo')"><span class="dest-icon">🏷️</span> Europa en Promo · 24 may</a></li>
+          <li><a onclick="showSection('europa-euroimperiales')"><span class="dest-icon">🏰</span> Euroimperiales · 25 may</a></li>
+          <li><a onclick="showSection('europa-inglaterra-escocia-irlanda')"><span class="dest-icon">🇬🇧</span> Maravillas de Inglaterra Escocia Irlanda · 26 may</a></li>
+          <li><a onclick="showSection('europa-imperdibles-reino-unido')"><span class="dest-icon">🇬🇧</span> Imperdibles de Reino Unido · 29 may</a></li>
+          <li class="dropdown-header month-header">Junio 2027</li>
+          <li><a onclick="showSection('europa-leyendas-europa')"><span class="dest-icon">🏰</span> Leyendas de Europa · 7 jun</a></li>
+          <li><a onclick="showSection('europa-tutta-italia-sorrento')"><span class="dest-icon">🇮🇹</span> Tutta Italia con Sorrento · 10 jun</a></li>
+          <li class="dropdown-header month-header">Salidas regulares</li>
+          <li><a onclick="showSection('europa-conociendo')"><span class="dest-icon">🏛️</span> Conociendo Europa · semanal</a></li>
+          <li><a onclick="showSection('europa-turquia-griegas')"><span class="dest-icon">🇹🇷</span> Turquía con Islas Griegas · semanal</a></li>
+          <li><a onclick="showSection('europa-todo-turquia')"><span class="dest-icon">🇹🇷</span> Todo Turquía · salidas diarias</a></li>
         </ul>
       </li>
 
@@ -260,7 +289,9 @@
       <li class="nav-item">
         <span class="nav-link-btn" onclick="toggleDropdown(event, this)"><i class="fas fa-bus-alt"></i> Tours Sin Aéreos <i class="fas fa-chevron-down"></i></span>
         <ul class="dropdown">
-          <li class="dropdown-header">Tours sin aéreos</li>
+          <li class="dropdown-header">Operan todo el año</li>
+          <li><a onclick="showSection('europa-puglia')"><span class="dest-icon">🇮🇹</span> Circuito de Puglia</a></li>
+          <li><a onclick="showSection('europa-dos-sicilias')"><span class="dest-icon">🇮🇹</span> Reino de las Dos Sicilias</a></li>
           <li><a onclick="showSection('tour-india-nepal')"><span class="dest-icon">🇮🇳</span> India y Nepal</a></li>
           <li><a onclick="showSection('tour-egipto-clasico')"><span class="dest-icon">🇪🇬</span> Egipto Clásico</a></li>
           <li><a onclick="showSection('tour-egipto-mar-rojo')"><span class="dest-icon">🇪🇬</span> Egipto y Mar Rojo</a></li>
@@ -296,6 +327,28 @@
           <li><a onclick="showLoadedTour('maravillas-japon')"><span class="dest-icon">🇯🇵</span> Maravillas de Japón</a></li>
           <li><a onclick="showLoadedTour('vietnam-camboya-tailandia-playas')"><span class="dest-icon">🌏</span> Vietnam, Camboya, Tailandia y Playas</a></li>
           <li><a onclick="showLoadedTour('marruecos-completo')"><span class="dest-icon">🇲🇦</span> Marruecos al Completo</a></li>
+          <li><a onclick="showLoadedTour('china-tren-alta-velocidad')"><span class="dest-icon">🚄</span> China en Tren de Alta Velocidad</a></li>
+          <li><a onclick="showLoadedTour('china-express')"><span class="dest-icon">🇨🇳</span> China Express</a></li>
+          <li><a onclick="showLoadedTour('maravillas-china')"><span class="dest-icon">🏯</span> Maravillas de China</a></li>
+          <li><a onclick="showLoadedTour('explorando-china')"><span class="dest-icon">🌏</span> Explorando China</a></li>
+          <li><a onclick="showLoadedTour('china-misteriosa-tibet')"><span class="dest-icon">🏔️</span> China Misteriosa con Tíbet</a></li>
+          <li><a onclick="showLoadedTour('china-japon')"><span class="dest-icon">🇨🇳</span> China y Japón</a></li>
+          <li><a onclick="showLoadedTour('cinco-capitales-europa')"><span class="dest-icon">🇪🇺</span> Cinco Capitales (Europa)</a></li>
+          <li><a onclick="showLoadedTour('clasicos-europeos')"><span class="dest-icon">🏛️</span> Clásicos Europeos</a></li>
+          <li><a onclick="showLoadedTour('eco-europa-clasica')"><span class="dest-icon">🇪🇺</span> Eco Europa Clásica</a></li>
+          <li><a onclick="showLoadedTour('eco-madrid-santiago-portugal')"><span class="dest-icon">🇵🇹</span> Eco Madrid, Santiago y Portugal</a></li>
+          <li><a onclick="showLoadedTour('escapada-europea-mad-lon')"><span class="dest-icon">🚌</span> Escapada Europea MAD/LON</a></li>
+          <li><a onclick="showLoadedTour('balcanes-capitales-imperiales')"><span class="dest-icon">🏰</span> Balcanes y Capitales Imperiales</a></li>
+          <li><a onclick="showLoadedTour('capitales-imperiales-alcance')"><span class="dest-icon">👑</span> Capitales Imperiales a su Alcance</a></li>
+          <li><a onclick="showLoadedTour('belle-europa-serie-clasica')"><span class="dest-icon">🇪🇺</span> Belle Europa Serie Clásica</a></li>
+          <li><a onclick="showSection('tour-toda-turquia')"><span class="dest-icon">🇹🇷</span> Toda Turquía</a></li>
+          <li><a onclick="showSection('tour-leyendas-turquia-grecia-crucero')"><span class="dest-icon">🚢</span> Leyendas de Turquía y Grecia con Crucero</a></li>
+          <li><a onclick="showSection('tour-grecia-completo')"><span class="dest-icon">🇬🇷</span> Grecia al Completo</a></li>
+          <li><a onclick="showSection('tour-gran-turquia-islas-griegas')"><span class="dest-icon">🇹🇷</span> Gran Tour de Turquía e Islas Griegas</a></li>
+          <li><a onclick="showSection('tour-gran-islas-griegas')"><span class="dest-icon">🏝️</span> Gran Tour de las Islas Griegas</a></li>
+          <li><a onclick="showSection('tour-maravillas-egipto')"><span class="dest-icon">🇪🇬</span> Maravillas de Egipto</a></li>
+          <li><a onclick="showSection('tour-encantos-egipto-mar-rojo')"><span class="dest-icon">🏖️</span> Encantos de Egipto y el Mar Rojo</a></li>
+          <li><a onclick="showSection('tour-mejor-turquia-egipto')"><span class="dest-icon">🌍</span> Lo Mejor de Turquía y Egipto</a></li>
         </ul>
       </li>
 
@@ -315,17 +368,21 @@
       <li class="nav-item">
         <span class="nav-link-btn" onclick="toggleDropdown(event, this)"><i class="fas fa-gem"></i> Lujo <i class="fas fa-chevron-down"></i></span>
         <ul class="dropdown">
-          <li class="dropdown-header">Experiencias Premium</li>
-          <li><a onclick="showSection('lujo-tailandia-phuket')"><span class="dest-icon">🇹🇭</span> Tailandia con Phuket</a></li>
-          <li><a onclick="showSection('lujo-auroras')"><span class="dest-icon">🌌</span> Auroras Boreales</a></li>
-          <li><a onclick="showSection('lujo-australia-nz')"><span class="dest-icon">🇦🇺</span> Australia y Nueva Zelanda</a></li>
-          <li><a onclick="showSection('lujo-china-hk')"><span class="dest-icon">🇨🇳</span> China y Hong Kong</a></li>
-          <li><a onclick="showSection('lujo-egipto-hurghada')"><span class="dest-icon">🇪🇬</span> Egipto con Hurghada</a></li>
-          <li><a onclick="showSection('lujo-gran-tour')"><span class="dest-icon">🌍</span> Gran Tour por Europa</a></li>
-          <li><a onclick="showSection('lujo-china-exotica')"><span class="dest-icon">🇨🇳</span> China Exótica</a></li>
-          <li><a onclick="showSection('lujo-turquia-grecia')"><span class="dest-icon">🇹🇷</span> Turquía y Grecia</a></li>
-          <li><a onclick="showSection('lujo-costa-amalfitana')"><span class="dest-icon">🇮🇹</span> Costa Amalfitana Sicilia y Malta</a></li>
-          <li><a onclick="showSection('lujo-corea-japon-cherry-blossom')"><span class="dest-icon">🌸</span> Corea &amp; Japón - "Cherry Blossom"</a></li>
+          <li class="dropdown-header">Experiencias Premium por salida</li>
+          <li class="dropdown-header month-header">Febrero 2027</li>
+          <li><a onclick="showSection('lujo-tailandia-phuket')"><span class="dest-icon">🇹🇭</span> Tailandia con Phuket · 23 feb</a></li>
+          <li class="dropdown-header month-header">Marzo 2027</li>
+          <li><a onclick="showSection('lujo-auroras')"><span class="dest-icon">🌌</span> Auroras Boreales · 4 mar</a></li>
+          <li><a onclick="showSection('lujo-australia-nz')"><span class="dest-icon">🇦🇺</span> Australia y Nueva Zelanda · 4 mar</a></li>
+          <li><a onclick="showSection('lujo-corea-japon-cherry-blossom')"><span class="dest-icon">🌸</span> Corea &amp; Japón - "Cherry Blossom" · 17 mar</a></li>
+          <li><a onclick="showSection('lujo-china-hk')"><span class="dest-icon">🇨🇳</span> China y Hong Kong · 18 mar</a></li>
+          <li class="dropdown-header month-header">Abril 2027</li>
+          <li><a onclick="showSection('lujo-egipto-hurghada')"><span class="dest-icon">🇪🇬</span> Egipto con Hurghada · 8 abr</a></li>
+          <li><a onclick="showSection('lujo-gran-tour')"><span class="dest-icon">🌍</span> Gran Tour por Europa · 8 abr</a></li>
+          <li><a onclick="showSection('lujo-china-exotica')"><span class="dest-icon">🇨🇳</span> China Exótica · 9 abr</a></li>
+          <li><a onclick="showSection('lujo-turquia-grecia')"><span class="dest-icon">🇹🇷</span> Turquía y Grecia · 24 abr</a></li>
+          <li class="dropdown-header month-header">Mayo 2027</li>
+          <li><a onclick="showSection('lujo-costa-amalfitana')"><span class="dest-icon">🇮🇹</span> Costa Amalfitana Sicilia y Malta · 1 may</a></li>
         </ul>
       </li>
 
@@ -333,38 +390,49 @@
       <li class="nav-item">
         <span class="nav-link-btn" onclick="toggleDropdown(event, this)"><i class="fas fa-globe-americas"></i> Exóticos <i class="fas fa-chevron-down"></i></span>
         <ul class="dropdown">
-          <li class="dropdown-header">Destinos Exóticos</li>
-          <li><a onclick="showSection('exoticos-sudafrica')"><span class="dest-icon">🇿🇦</span> Sudáfrica</a></li>
-          <li><a onclick="showSection('exoticos-experiencia-sudafrica')"><span class="dest-icon">🇿🇦</span> Experiencia Sudáfrica</a></li>
-          <li><a onclick="showSection('exoticos-india')"><span class="dest-icon">🇮🇳</span> India con Fiesta Holi</a></li>
-          <li><a onclick="showSection('exoticos-juntas-india')"><span class="dest-icon">🇮🇳</span> Juntas por India</a></li>
-          <li><a onclick="showSection('exoticos-india-nepal')"><span class="dest-icon">🇮🇳</span> India y Nepal</a></li>
-          <li><a onclick="showSection('exoticos-kenia')"><span class="dest-icon">🇰🇪</span> Kenia, Tanzania y Playa</a></li>
-          <li><a onclick="showSection('exoticos-japon')"><span class="dest-icon">🇯🇵</span> Japón y Monte Fuji</a></li>
-          <li><a onclick="showSection('exoticos-japon-corea')"><span class="dest-icon">🇯🇵</span> Luces de Japón y Corea</a></li>
-          <li><a onclick="showSection('exoticos-tesoros-corea-japon')"><span class="dest-icon">🇯🇵</span> Tesoros de Corea y Japón</a></li>
-          <li><a onclick="showSection('exoticos-china-japon')"><span class="dest-icon">🇨🇳</span> China y Japón</a></li>
-          <li><a onclick="showSection('exoticos-china')"><span class="dest-icon">🇨🇳</span> China Esencial</a></li>
-          <li><a onclick="showSection('exoticos-tailandia')"><span class="dest-icon">🇹🇭</span> Imperdibles de Tailandia, Vietnam y Camboya</a></li>
-          <li><a onclick="showSection('exoticos-tailandia-templos')"><span class="dest-icon">🇹🇭</span> Tailandia y sus Templos</a></li>
-          <li><a onclick="showSection('exoticos-tailandia-playas')"><span class="dest-icon">🇹🇭</span> Tailandia con Playas</a></li>
-          <li><a onclick="showSection('exoticos-sudeste-asiatico')"><span class="dest-icon">🌏</span> Sudeste Asiático</a></li>
-          <li><a onclick="showSection('exoticos-juntas-marruecos')"><span class="dest-icon">🇲🇦</span> Juntas por Marruecos</a></li>
-          <li><a onclick="showSection('exoticos-egipto')"><span class="dest-icon">🇪🇬</span> Egipto con Mar Rojo</a></li>
-          <li><a onclick="showSection('exoticos-egipto-madrid')"><span class="dest-icon">🇪🇬</span> Egipto con Madrid</a></li>
-          <li><a onclick="showSection('exoticos-dubai')"><span class="dest-icon">🇦🇪</span> Dubai y Abu Dhabi</a></li>
-          <li><a onclick="showSection('exoticos-turquia-egipto')"><span class="dest-icon">🇹🇷</span> Turquía y Egipto</a></li>
-          <li><a onclick="showSection('exoticos-nilo-bosforo')"><span class="dest-icon">🇪🇬</span> Del Nilo al Bosforo</a></li>
-          <li><a onclick="showSection('exoticos-egipto-jordania')"><span class="dest-icon">🇯🇴</span> Egipto y Jordania</a></li>
-          <li><a onclick="showSection('exoticos-japon-dubai')"><span class="dest-icon">🇯🇵</span> Japón al Completo con Dubai</a></li>
-          <li><a onclick="showSection('exoticos-japon-corea-emirates')"><span class="dest-icon">🇯🇵</span> Japón y Corea con Emirates</a></li>
-          <li><a onclick="showSection('exoticos-clasicos-corea-japon')"><span class="dest-icon">🇰🇷</span> Clásicos de Corea y Japón</a></li>
-          <li><a onclick="showSection('exoticos-china-completo-estambul')"><span class="dest-icon">🇨🇳</span> China al Completo con Estambul</a></li>
-          <li><a onclick="showSection('exoticos-tailandia-esencial-estambul')"><span class="dest-icon">🇹🇭</span> Tailandia Escencial con Estambul</a></li>
-          <li><a onclick="showSection('exoticos-mejor-turquia-egipto')"><span class="dest-icon">🇹🇷</span> Lo Mejor de Turquía y Egipto</a></li>
-          <li><a onclick="showSection('exoticos-sudafrica-locura')"><span class="dest-icon">🇿🇦</span> Sudáfrica de Locura</a></li>
-          <li><a onclick="showSection('exoticos-egipto-desierto')"><span class="dest-icon">🇪🇬</span> Egipto con Desierto</a></li>
-          <li><a onclick="showSection('exoticos-egipto-mar-rojo-vips')"><span class="dest-icon">🇪🇬</span> Egipto con el Mar Rojo</a></li>
+          <li class="dropdown-header">Destinos Exóticos por salida</li>
+          <li class="dropdown-header month-header">Noviembre 2026</li>
+          <li><a onclick="showSection('exoticos-juntas-marruecos')"><span class="dest-icon">🇲🇦</span> Juntas por Marruecos · 18 nov</a></li>
+          <li><a onclick="showSection('exoticos-india-nepal')"><span class="dest-icon">🇮🇳</span> India y Nepal · 19 nov</a></li>
+          <li class="dropdown-header month-header">Enero 2027</li>
+          <li><a onclick="showSection('exoticos-sudafrica-locura')"><span class="dest-icon">🇿🇦</span> Sudáfrica de Locura · 9, 16 y 23 ene</a></li>
+          <li><a onclick="showSection('exoticos-experiencia-sudafrica')"><span class="dest-icon">🇿🇦</span> Experiencia Sudáfrica · 11 ene</a></li>
+          <li><a onclick="showSection('exoticos-tailandia-templos')"><span class="dest-icon">🇹🇭</span> Tailandia y sus Templos · 21 ene</a></li>
+          <li><a onclick="showSection('exoticos-tailandia-playas')"><span class="dest-icon">🇹🇭</span> Tailandia con Playas · 21 ene</a></li>
+          <li><a onclick="showSection('exoticos-egipto-madrid')"><span class="dest-icon">🇪🇬</span> Egipto con Madrid · 26 ene</a></li>
+          <li><a onclick="showSection('exoticos-tailandia-esencial-estambul')"><span class="dest-icon">🇹🇭</span> Tailandia Escencial con Estambul · 30 ene</a></li>
+          <li class="dropdown-header month-header">Febrero 2027</li>
+          <li><a onclick="showSection('exoticos-tailandia')"><span class="dest-icon">🇹🇭</span> Imperdibles de Tailandia, Vietnam y Camboya · 5 feb</a></li>
+          <li><a onclick="showSection('exoticos-experiencia-sudafrica')"><span class="dest-icon">🇿🇦</span> Experiencia Sudáfrica · 15 feb</a></li>
+          <li><a onclick="showSection('exoticos-tailandia-templos')"><span class="dest-icon">🇹🇭</span> Tailandia y sus Templos · 15 feb</a></li>
+          <li><a onclick="showSection('exoticos-tailandia-playas')"><span class="dest-icon">🇹🇭</span> Tailandia con Playas · 15 feb</a></li>
+          <li><a onclick="showSection('exoticos-egipto-desierto')"><span class="dest-icon">🇪🇬</span> Egipto con Desierto · 19 feb</a></li>
+          <li><a onclick="showSection('exoticos-nilo-bosforo')"><span class="dest-icon">🇪🇬</span> Del Nilo al Bósforo · 22 feb</a></li>
+          <li class="dropdown-header month-header">Marzo 2027</li>
+          <li><a onclick="showSection('exoticos-china-completo-estambul')"><span class="dest-icon">🇨🇳</span> China al Completo con Estambul · 2 mar</a></li>
+          <li><a onclick="showSection('exoticos-tesoros-corea-japon')"><span class="dest-icon">🇯🇵</span> Tesoros de Corea y Japón · 5 mar</a></li>
+          <li><a onclick="showSection('exoticos-china')"><span class="dest-icon">🇨🇳</span> China Esencial · 6 mar</a></li>
+          <li><a onclick="showSection('exoticos-experiencia-sudafrica')"><span class="dest-icon">🇿🇦</span> Experiencia Sudáfrica · 8 mar</a></li>
+          <li><a onclick="showSection('exoticos-japon-corea')"><span class="dest-icon">🇯🇵</span> Luces de Japón y Corea · 11 mar</a></li>
+          <li><a onclick="showSection('exoticos-japon-corea-emirates')"><span class="dest-icon">🇯🇵</span> Japón y Corea con Emirates · 12 mar</a></li>
+          <li><a onclick="showSection('exoticos-sudafrica')"><span class="dest-icon">🇿🇦</span> Sudáfrica · 13 mar</a></li>
+          <li><a onclick="showSection('exoticos-india')"><span class="dest-icon">🇮🇳</span> India con Fiesta Holi · 14 mar</a></li>
+          <li><a onclick="showSection('exoticos-egipto-mar-rojo-vips')"><span class="dest-icon">🇪🇬</span> Egipto con el Mar Rojo · 14 mar</a></li>
+          <li><a onclick="showSection('exoticos-japon')"><span class="dest-icon">🇯🇵</span> Japón y Monte Fuji · 16 mar</a></li>
+          <li><a onclick="showSection('exoticos-juntas-india')"><span class="dest-icon">🇮🇳</span> Juntas por India · 17 mar</a></li>
+          <li><a onclick="showSection('exoticos-china-japon')"><span class="dest-icon">🇨🇳</span> China y Japón · 17 mar</a></li>
+          <li><a onclick="showSection('exoticos-turquia-egipto')"><span class="dest-icon">🇹🇷</span> Turquía y Egipto · 17 mar</a></li>
+          <li><a onclick="showSection('exoticos-mejor-turquia-egipto')"><span class="dest-icon">🇹🇷</span> Lo Mejor de Turquía y Egipto · 18 mar</a></li>
+          <li><a onclick="showSection('exoticos-clasicos-corea-japon')"><span class="dest-icon">🇰🇷</span> Clásicos de Corea y Japón · 19 mar</a></li>
+          <li class="dropdown-header month-header">Abril 2027</li>
+          <li><a onclick="showSection('exoticos-egipto')"><span class="dest-icon">🇪🇬</span> Egipto con Mar Rojo · 4 abr</a></li>
+          <li><a onclick="showSection('exoticos-egipto-jordania')"><span class="dest-icon">🇯🇴</span> Egipto y Jordania · 9 abr</a></li>
+          <li><a onclick="showSection('exoticos-dubai')"><span class="dest-icon">🇦🇪</span> Dubai y Abu Dhabi · 16 abr</a></li>
+          <li class="dropdown-header month-header">Mayo 2027</li>
+          <li><a onclick="showSection('exoticos-sudeste-asiatico')"><span class="dest-icon">🌏</span> Sudeste Asiático · 8 may</a></li>
+          <li class="dropdown-header month-header">Salidas regulares</li>
+          <li><a onclick="showSection('exoticos-kenia')"><span class="dest-icon">🇰🇪</span> Kenia, Tanzania y Playa · viernes</a></li>
+          <li><a onclick="showSection('exoticos-japon-dubai')"><span class="dest-icon">🇯🇵</span> Japón al Completo con Dubai · domingos</a></li>
         </ul>
       </li>
 
@@ -6132,9 +6200,10 @@
 
   <!-- ==================== TOURS SIN AEREOS: INDIA Y NEPAL ==================== -->
   <div class="page-section" id="section-tour-india-nepal">
-    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>India <span>&amp; Nepal</span></h1><p>14 días / 13 noches · Salidas los martes programados</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>India <span>&amp; Nepal</span></h1><p>Salidas los martes programados</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
     <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
-      <div class="package-card"><div class="package-info"><span class="package-tag">Martes programados</span><h3>India &amp; Nepal</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 14 días / 13 noches</li><li><i class="fas fa-users"></i> Mínimo 2 personas</li><li><i class="fas fa-language"></i> Guías locales de habla hispana</li><li><i class="fas fa-train"></i> Tren Agra–Jhansi sujeto a disponibilidad</li><li><i class="fas fa-plane"></i> Vuelos Varanasi–Delhi–Kathmandú incluidos</li><li><i class="fas fa-coffee"></i> Desayunos y 1 almuerzo</li></ul><div class="package-price">USD 2.600 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=760&q=80" alt="India y Nepal"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Martes programados</span><h3>India &amp; Nepal</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> Duración según fecha de salida</li><li><i class="fas fa-users"></i> Mínimo 2 personas</li><li><i class="fas fa-language"></i> Guías locales de habla hispana</li><li><i class="fas fa-train"></i> Tren Agra–Jhansi sujeto a disponibilidad</li><li><i class="fas fa-plane"></i> Vuelos Varanasi–Delhi–Kathmandú incluidos</li><li><i class="fas fa-coffee"></i> Desayunos y 1 almuerzo</li></ul><div class="package-price">USD 2.400 <span>por persona en doble para enero a marzo</span></div><div class="package-price" style="margin-top:10px">USD 2.100 <span>por persona en doble para abril a octubre</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=760&q=80" alt="India y Nepal"></div></div>
+      <div class="tour-detail-card" style="border-left:5px solid var(--accent)"><h2>Aclaración sobre la duración</h2><p style="font-weight:700;color:var(--primary);line-height:1.8">DE OCTUBRE 2026 A MARZO 2027 EL ITINERARIO ES DE 14 DÍAS / 13 NOCHES<br>DE ABRIL A SEPTIEMBRE 2027 EL ITINERARIO ES DE 13 DÍAS / 12 NOCHES</p></div>
       <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><p style="color:var(--text-light);font-size:.9rem;margin-bottom:24px">Guías locales en español · Mínimo 2 personas</p><div style="display:grid;gap:16px">
         <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 1 – Delhi <span style="font-weight:400">(-/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Llegada al Aeropuerto Internacional Indira Gandhi, recepción por un chofer de habla hispana y traslado al hotel. Resto del día libre. Alojamiento en el hotel elegido.</p></div>
         <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent)"><strong style="color:var(--primary)">Día 2 – Delhi <span style="font-weight:400">(D/-/-)</span></strong><p style="font-size:.85rem;color:var(--text);margin-top:4px">Desayuno. Recorrido por la Antigua Delhi: Jama Masjid, vista del Fuerte Rojo, Chandni Chowk y Raj Ghat. Por la tarde, Nueva Delhi: Qutub Minar, distrito de Rashtrapati Bhavan, edificios gubernamentales, parlamento, Puerta de la India y monumento de la Marcha de la Sal. Alojamiento.</p></div>
@@ -6555,6 +6624,149 @@
     </section>
   </div>
 
+  <!-- ==================== TOURS SIN AEREOS: TODA TURQUIA ==================== -->
+  <div class="page-section" id="section-tour-toda-turquia">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Toda <span>Turquía</span></h1><p>Estambul, Ankara, Capadocia, Pamukkale, Éfeso, Pérgamo, Troya, Çanakkale y Bursa</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Salidas garantizadas diarias, excepto jueves</span><h3>Toda Turquía - Código Oriente</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 11 días / 10 noches</li><li><i class="fas fa-hotel"></i> Estambul 4 noches con desayuno</li><li><i class="fas fa-hotel"></i> Anatolia 6 noches con media pensión</li><li><i class="fas fa-language"></i> Guía profesional de habla hispana</li><li><i class="fas fa-map-marked-alt"></i> Entradas y visitas según itinerario</li><li><i class="fas fa-headset"></i> Asistencia 24/7 en español</li></ul><div class="package-price">USD 999 <span>por persona en base doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=760&q=80" alt="Toda Turquía"></div></div>
+
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">Servicios incluidos</h2><ul class="package-details">
+        <li><i class="fas fa-hotel"></i> 4 noches de alojamiento y desayuno en Estambul según categoría elegida.</li><li><i class="fas fa-hotel"></i> 6 noches durante el circuito por Anatolia en hoteles categoría 4 estrellas.</li><li><i class="fas fa-utensils"></i> Media pensión durante el circuito.</li><li><i class="fas fa-shuttle-van"></i> Traslados de llegada y salida.</li><li><i class="fas fa-mosque"></i> Visita a la Mezquita de Solimán el Magnífico.</li><li><i class="fas fa-ship"></i> Paseo por el Bósforo y visita al Bazar de las Especias.</li><li><i class="fas fa-ticket-alt"></i> Entradas y visitas según itinerario.</li><li><i class="fas fa-language"></i> Guía profesional de habla hispana y asistencia 24/7 en español por WhatsApp o teléfono.</li>
+      </ul></div>
+
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px">Itinerario</h2><div style="display:grid;gap:16px;margin-top:24px">
+        <div class="itinerary-day"><strong>Día 1 – Llegada / Estambul</strong><p>Recepción y traslado al hotel. En IST, encuentro en el exterior de la puerta 9 con cartel de Euroriente Travel; en SAW, encuentro tras el paso peatonal entre las columnas 9 y 10. Alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 2 – Estambul / Solimán el Magnífico (D)</strong><p>Desayuno y visita a la Mezquita de Solimán el Magnífico. Tiempo libre. Opcional de día completo: Santa Sofía exterior, Palacio Topkapi, almuerzo en Sultanahmet, Mezquita Azul, Hipódromo y Gran Bazar.</p></div>
+        <div class="itinerary-day"><strong>Día 3 – Estambul / Bósforo / Bazar de las Especias (D)</strong><p>Desayuno, paseo en barco por el Bósforo y visita al Bazar de las Especias. Opcional con almuerzo por el lado asiático: Palacio Beylerbey, puente del Bósforo, Üsküdar y colina Camlica. Alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 4 – Estambul / Ankara (D/C)</strong><p>Salida por las montañas de Bolu. Panorámica de Ankara y visita al Mausoleo Anitkabir. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 5 – Ankara / Capadocia (D/C)</strong><p>Viaje hacia Capadocia pasando por el Lago Salado y un caravanserai del siglo XIII. Safari en jeep opcional. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 6 – Capadocia (D/C)</strong><p>Göreme, iglesias rupestres, valles de Avcilar y Güvercinlik, chimeneas de hadas y talleres de alfombras, ónix y turquesa. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 7 – Capadocia / Pamukkale (D/C)</strong><p>Salida hacia Pamukkale. Visita a Hierápolis y al Castillo de Algodón con sus cascadas y piscinas termales. Cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 8 – Pamukkale / Éfeso / Kusadasi o Izmir (D/C)</strong><p>Éfeso: Templo de Adriano, Templo de Trajano, teatro y Biblioteca de Celso. Casa de la Virgen María y galería de cuero. Cena y alojamiento. Entre mayo y octubre el hotel puede estar en Izmir o alrededores.</p></div>
+        <div class="itinerary-day"><strong>Día 9 – Izmir / Pérgamo / Troya / Çanakkale (D/C)</strong><p>Visita al Asclepion de Pérgamo y continuación a Troya, ciudad de nueve niveles vinculada a la Ilíada. Llegada a Çanakkale, cena y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 10 – Çanakkale / Bursa / Estambul (D)</strong><p>Visita en Bursa a la Mezquita Ulucamii, Bazar de Seda Kozahan y Mausoleo Verde. Continuación a Estambul y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 11 – Estambul / Aeropuerto (D)</strong><p>Desayuno y traslado al aeropuerto aproximadamente cuatro horas antes del vuelo internacional. Fin de servicios.</p></div>
+      </div></div>
+
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">Hoteles previstos</h2><ul class="package-details">
+        <li><i class="fas fa-hotel"></i> <strong>Estambul, categoría A:</strong> La Quinta by Wyndham, Ramada Tekstilkent, Elite World Basin Express, The G Hotels, Centro Westside by Rotana, Delta Hotels Istanbul West o similares.</li><li><i class="fas fa-hotel"></i> <strong>Estambul, categoría B:</strong> Avantgarde Taksim, Midtown, Elite World Comfy, Nippon, Titanic City Taksim, Avantgarde Şişli, DoubleTree Hilton Piyalepaşa, Occidental Taksim o similares.</li><li><i class="fas fa-hotel"></i> <strong>Estambul, categoría C:</strong> Elite World, Barceló Istanbul, Point Taksim, The Marmara Taksim, Sofitel Taksim, Hilton Bosphorus, CVK Park Bosphorus o similares.</li><li><i class="fas fa-hotel"></i> <strong>Ankara:</strong> Radisson Blu, Holiday Inn Kavaklıdere, Occidental Ankara, New Park o Green Park.</li><li><i class="fas fa-hotel"></i> <strong>Capadocia:</strong> Ramada by Wyndham, Mustafa, Avrasya, DoubleTree by Hilton Avanos, Crowne Plaza Nevşehir, Marriott Cappadocia, Dinler o Barceló Cappadocia.</li><li><i class="fas fa-hotel"></i> <strong>Pamukkale:</strong> Colossae, Anya Resort, Richmond, Adempira, Kaya Thermal o Pam Thermal.</li><li><i class="fas fa-hotel"></i> <strong>Kusadasi:</strong> Le Bleu, Faustina, Infinity, Seven for Life, Grand Belish o Elite World Kusadasi.</li><li><i class="fas fa-hotel"></i> <strong>Izmir:</strong> Ramada Plaza, Ramada Encore, Ramada Kemalpaşa, Hampton by Hilton Aliağa, Radisson Blu Aliağa, Anemon Aydın o Kaya Prestige.</li><li><i class="fas fa-hotel"></i> <strong>Çanakkale:</strong> Yurdakul, MD Barbaros, Remida, Iris, Parion o Kolin.</li>
+      </ul></div>
+
+      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:18px">No incluido y notas</h2><ul class="package-details"><li><i class="fas fa-dollar-sign"></i> Tasas hoteleras en Turquía, USD 15 por persona, de pago en destino.</li><li><i class="fas fa-hand-holding-usd"></i> Propinas generales, USD 45 por persona, de pago en destino.</li><li><i class="fas fa-info-circle"></i> Excursiones opcionales, gastos personales y servicios no mencionados.</li><li><i class="fas fa-plane-arrival"></i> Llegadas o salidas por SAW requieren añadir obligatoriamente el suplemento de traslado SAW.</li><li><i class="fas fa-random"></i> El orden puede variar por razones climáticas u operativas, manteniendo el contenido del programa.</li></ul></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: LEYENDAS TURQUIA Y GRECIA ==================== -->
+  <div class="page-section" id="section-tour-leyendas-turquia-grecia-crucero">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Leyendas de Turquía y Grecia <span>con Crucero</span></h1><p>Estambul, Capadocia, Éfeso, Patmos, Creta, Santorini y Atenas</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Viernes · 20 marzo al 20 octubre 2026</span><h3>Leyendas de Turquía y Grecia con Crucero · Código Oriente</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 13 días / 12 noches</li><li><i class="fas fa-hotel"></i> Turquía y Atenas con desayuno</li><li><i class="fas fa-ship"></i> 2 noches de crucero All Inclusive</li><li><i class="fas fa-language"></i> Guía profesional de habla hispana</li><li><i class="fas fa-landmark"></i> Atenas y Acrópolis incluidas</li></ul><div class="package-price">USD 2.300 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=760&q=80" alt="Turquía y Grecia con crucero"></div></div>
+      <div class="tour-detail-card"><h2>Itinerario</h2><div class="tour-itinerary">
+        <div class="itinerary-day"><strong>Día 1 – Llegada / Estambul</strong><p>Recepción y traslado al hotel. Encuentro Euroriente Travel en puerta 9 de IST o entre columnas 9 y 10 de SAW.</p></div>
+        <div class="itinerary-day"><strong>Día 2 – Estambul / Solimán el Magnífico (D)</strong><p>Visita de la mezquita de Solimán. Tiempo libre o excursión opcional a Santa Sofía exterior, Topkapi, Mezquita Azul, Hipódromo y Gran Bazar, con almuerzo.</p></div>
+        <div class="itinerary-day"><strong>Día 3 – Bósforo / Bazar de las Especias (D)</strong><p>Paseo en barco y bazar. Opcional con almuerzo al Palacio Beylerbey, puente del Bósforo, Üsküdar y colina Camlica.</p></div>
+        <div class="itinerary-day"><strong>Día 4 – Estambul / Ankara (D/C)</strong><p>Viaje por Bolu, panorámica de Ankara y Mausoleo Anitkabir. Cena.</p></div>
+        <div class="itinerary-day"><strong>Día 5 – Ankara / Capadocia (D/C)</strong><p>Lago Salado y caravanserai del siglo XIII. Safari en jeep opcional. Cena.</p></div>
+        <div class="itinerary-day"><strong>Día 6 – Capadocia (D/C)</strong><p>Göreme, valles de Avcilar y Güvercinlik, chimeneas de hadas y talleres de alfombras, ónix y turquesa.</p></div>
+        <div class="itinerary-day"><strong>Día 7 – Capadocia / Pamukkale (D/C)</strong><p>Hierápolis y Castillo de Algodón con cascadas y piscinas termales.</p></div>
+        <div class="itinerary-day"><strong>Día 8 – Pamukkale / Éfeso / Kusadasi o Izmir (D/C)</strong><p>Éfeso, templos, teatro, Biblioteca de Celso, Casa de la Virgen y galería de cuero.</p></div>
+        <div class="itinerary-day"><strong>Día 9 – Kusadasi / Patmos</strong><p>Embarque en el crucero. Patmos y opcional al Monasterio y la Gruta. Cena, entretenimiento y noche a bordo.</p></div>
+        <div class="itinerary-day"><strong>Día 10 – Creta / Santorini (D/A/C)</strong><p>Heraclio y Knossos opcional; por la tarde Santorini y Oía opcional. En marzo y noviembre el crucero no visita Creta.</p></div>
+        <div class="itinerary-day"><strong>Día 11 – Atenas (D)</strong><p>Desembarque en Lavrio, traslado y día libre. Paseo guiado y cena con espectáculo opcionales.</p></div>
+        <div class="itinerary-day"><strong>Día 12 – Atenas (D)</strong><p>Panorámica del Parlamento, Universidad, Biblioteca, Academia, Templo de Zeus, Puerta de Adriano y estadio; visita a la Acrópolis.</p></div>
+        <div class="itinerary-day"><strong>Día 13 – Atenas / Aeropuerto (D)</strong><p>Desayuno y traslado al aeropuerto.</p></div>
+      </div></div>
+      <div class="tour-detail-card"><h2>Servicios incluidos</h2><ul class="package-details"><li><i class="fas fa-check"></i> Turquía: 3 noches en Estambul, 5 en Anatolia con media pensión, traslados, visitas, entradas, guía hispano y asistencia 24/7.</li><li><i class="fas fa-check"></i> Grecia: 2 noches de crucero All Inclusive con bebidas básicas, 2 noches en Atenas, traslados, visita de Atenas y Acrópolis y asistencia 24/7.</li><li><i class="fas fa-hotel"></i> Hoteles previstos en Estambul, Ankara, Capadocia, Pamukkale, Kusadasi/Izmir y Atenas según categorías A, B o C; Celestyal Cruise interior IA en A/B y exterior XA en C.</li></ul></div>
+      <div class="tour-detail-card"><h2>No incluido y notas</h2><ul class="package-details"><li><i class="fas fa-dollar-sign"></i> Turquía: tasas hoteleras USD 15 pp y propinas USD 45 pp.</li><li><i class="fas fa-anchor"></i> Grecia: tasas hoteleras y tasas portuarias/propinas obligatorias del crucero USD 210 pp.</li><li><i class="fas fa-info-circle"></i> Opcionales, gastos personales y servicios no indicados. Llegadas por SAW requieren suplemento obligatorio.</li></ul></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: GRECIA AL COMPLETO ==================== -->
+  <div class="page-section" id="section-tour-grecia-completo">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1504512485720-7d83a16ee930?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Grecia <span>al Completo</span></h1><p>Atenas, Olimpia, Delfos, Santorini y Mykonos</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Lunes y jueves · 1 abril al 20 octubre 2026</span><h3>Grecia al Completo · Código Oriente</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 11 días / 10 noches</li><li><i class="fas fa-route"></i> Circuito clásico por Olimpia y Delfos</li><li><i class="fas fa-ship"></i> Ferries y paseo en velero incluidos</li><li><i class="fas fa-landmark"></i> Atenas y Acrópolis</li></ul><div class="package-price">USD 2.500 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1504512485720-7d83a16ee930?w=760&q=80" alt="Grecia al Completo"></div></div>
+      <div class="tour-detail-card"><h2>Itinerario</h2><div class="tour-itinerary">
+        <div class="itinerary-day"><strong>Día 1 – Atenas</strong><p>Recepción en ATH con cartel de Euroriente Travel, traslado y alojamiento.</p></div><div class="itinerary-day"><strong>Día 2 – Atenas (D)</strong><p>Panorámica del centro y visita a la Acrópolis. Tarde libre.</p></div><div class="itinerary-day"><strong>Día 3 – Atenas / Olimpia (D/C)</strong><p>Canal de Corinto, Epidauro, Museo Esculapio, Nafplio, Micenas, Puerta de los Leones y tumba de Agamenón. Cena.</p></div><div class="itinerary-day"><strong>Día 4 – Olimpia / Delfos (D/C)</strong><p>Antiguo estadio y Museo de Olimpia; puente Rio-Antirio y llegada a Delfos.</p></div><div class="itinerary-day"><strong>Día 5 – Delfos / Atenas (D)</strong><p>Museo, Auriga de Bronce, sitio arqueológico y Templo de Apolo; regreso vía Arachova.</p></div><div class="itinerary-day"><strong>Día 6 – Atenas / Santorini (D)</strong><p>Ferry, traslado y tarde libre en Fira u Oía.</p></div><div class="itinerary-day"><strong>Día 7 – Santorini / Velero tradicional (D)</strong><p>Paseo incluido a Nea Kameni y Palea Kameni y sus aguas termales.</p></div><div class="itinerary-day"><strong>Día 8 – Santorini / Mykonos (D)</strong><p>Ferry, traslado y tarde libre.</p></div><div class="itinerary-day"><strong>Día 9 – Mykonos (D)</strong><p>Día libre; Delos opcional.</p></div><div class="itinerary-day"><strong>Día 10 – Mykonos / Atenas (D)</strong><p>Ferry y traslado al hotel.</p></div><div class="itinerary-day"><strong>Día 11 – Atenas / Aeropuerto (D)</strong><p>Desayuno y traslado.</p></div>
+      </div></div>
+      <div class="tour-detail-card"><h2>Servicios y hoteles</h2><ul class="package-details"><li><i class="fas fa-check"></i> 4 noches en Atenas, 2 en Mykonos y 2 en Santorini con desayuno; circuito de 3 días por Olimpia y Delfos en media pensión.</li><li><i class="fas fa-check"></i> Traslados, ferries, Atenas y Acrópolis, velero por el volcán y asistencia 24/7 en español.</li><li><i class="fas fa-hotel"></i> Atenas: Crystal City, Dorian Inn, Golden City, Central, Athenaeum Grand, Polis Grand o similares. Santorini: Kamari Beach, New Haroula, Strogili, Daedalus, El Greco o similares. Mykonos: Mykonos View, Olia, Pelican Bay, Aeolos, Hermes o similares.</li><li><i class="fas fa-hotel"></i> Circuito: hoteles Hermes/Nafsika/Neda o Amalia en Delfos y Orfeas/Antoniadis/Amalia o similares en Kalambaka.</li></ul></div>
+      <div class="tour-detail-card"><h2>No incluido y nota</h2><ul class="package-details"><li><i class="fas fa-info-circle"></i> Tasas hoteleras en Grecia, opcionales, gastos personales y servicios no indicados.</li><li><i class="fas fa-ship"></i> Para ferry rápido Atenas–Santorini y Mykonos–Atenas debe añadirse el suplemento obligatorio.</li></ul></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: GRAN TURQUIA E ISLAS ==================== -->
+  <div class="page-section" id="section-tour-gran-turquia-islas-griegas">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Gran Tour de Turquía <span>e Islas Griegas</span></h1><p>De Estambul y Capadocia a Santorini, Creta y Rodas</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Lunes y viernes · 1 abril al 20 octubre 2026</span><h3>Gran Tour de Turquía e Islas Griegas · Código Oriente</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 17 días / 16 noches</li><li><i class="fas fa-plane"></i> Vuelos internos y ferries incluidos</li><li><i class="fas fa-hotel"></i> Turquía, Atenas, Santorini, Creta y Rodas</li><li><i class="fas fa-language"></i> Guía hispano en Turquía</li></ul><div class="package-price">USD 3.700 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=760&q=80" alt="Gran Tour Turquía e Islas Griegas"></div></div>
+      <div class="tour-detail-card"><h2>Itinerario</h2><div class="tour-itinerary">
+        <div class="itinerary-day"><strong>Días 1 a 3 – Estambul</strong><p>Llegada y traslado; Mezquita de Solimán; paseo por el Bósforo y Bazar de las Especias. Visitas históricas y lado asiático opcionales.</p></div><div class="itinerary-day"><strong>Día 4 – Estambul / Ankara (D/C)</strong><p>Ruta por Bolu, panorámica y Mausoleo Anitkabir.</p></div><div class="itinerary-day"><strong>Día 5 – Ankara / Capadocia (D/C)</strong><p>Lago Salado y caravanserai; jeep opcional.</p></div><div class="itinerary-day"><strong>Día 6 – Capadocia (D/C)</strong><p>Göreme, Avcilar, Güvercinlik, chimeneas de hadas y talleres.</p></div><div class="itinerary-day"><strong>Día 7 – Capadocia / Pamukkale (D/C)</strong><p>Hierápolis y Castillo de Algodón.</p></div><div class="itinerary-day"><strong>Día 8 – Pamukkale / Éfeso / Kusadasi o Izmir (D/C)</strong><p>Éfeso, Biblioteca de Celso, Casa de la Virgen y galería de cuero.</p></div><div class="itinerary-day"><strong>Día 9 – Izmir / Chíos / Atenas (D)</strong><p>Ferry Çeşme–Chíos, trámites migratorios y vuelo incluido a Atenas.</p></div><div class="itinerary-day"><strong>Día 10 – Atenas (D)</strong><p>Panorámica y Acrópolis.</p></div><div class="itinerary-day"><strong>Día 11 – Atenas / Santorini (D)</strong><p>Ferry y tarde libre.</p></div><div class="itinerary-day"><strong>Día 12 – Santorini / Creta (D)</strong><p>Ferry de unas tres horas a Heraklion y traslado.</p></div><div class="itinerary-day"><strong>Día 13 – Creta (D)</strong><p>Día libre para Heraklion, Cnosos, Chania, Elounda, Samaria y playas.</p></div><div class="itinerary-day"><strong>Día 14 – Creta / Rodas (D)</strong><p>Vuelo doméstico incluido y traslado.</p></div><div class="itinerary-day"><strong>Día 15 – Rodas (D)</strong><p>Día libre para la ciudad medieval, Castillo de los Caballeros y playas.</p></div><div class="itinerary-day"><strong>Día 16 – Rodas / Atenas (D)</strong><p>Vuelo incluido y traslado.</p></div><div class="itinerary-day"><strong>Día 17 – Atenas / Aeropuerto (D)</strong><p>Desayuno y traslado.</p></div>
+      </div></div>
+      <div class="tour-detail-card"><h2>Servicios incluidos</h2><ul class="package-details"><li><i class="fas fa-check"></i> Turquía: 3 noches Estambul, 5 en Anatolia con media pensión, traslados, visitas, ferry Çeşme–Chíos, guía hispano y asistencia.</li><li><i class="fas fa-check"></i> Grecia: 3 noches Atenas, 1 Santorini, 2 Creta y 2 Rodas; traslados y ferries; vuelos Chíos–Atenas y Creta–Rodas–Atenas con maleta de 23 kg; visita de Atenas y Acrópolis.</li><li><i class="fas fa-hotel"></i> Hoteles previstos según categoría en Estambul, Ankara, Capadocia, Pamukkale, Kusadasi/Izmir, Atenas, Santorini, Creta y Rodas, o similares.</li></ul></div>
+      <div class="tour-detail-card"><h2>No incluido y notas</h2><ul class="package-details"><li><i class="fas fa-dollar-sign"></i> Turquía: tasas USD 15 pp y propinas USD 45 pp. Grecia: tasas hoteleras de pago directo.</li><li><i class="fas fa-info-circle"></i> Opcionales, gastos personales y servicios no indicados. SAW requiere suplemento. Ferry rápido Atenas–Santorini requiere suplemento.</li><li><i class="fas fa-random"></i> El orden puede variar por razones climáticas u operativas manteniendo el contenido.</li></ul></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: GRAN TOUR ISLAS GRIEGAS ==================== -->
+  <div class="page-section" id="section-tour-gran-islas-griegas">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1504512485720-7d83a16ee930?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Gran Tour de las <span>Islas Griegas</span></h1><p>Atenas, Mykonos, Santorini, Creta y Rodas</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Salidas diarias · 1 mayo al 20 octubre 2026</span><h3>Gran Tour de las Islas Griegas · Código Oriente</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 12 días / 11 noches</li><li><i class="fas fa-island-tropical"></i> Mykonos, Santorini, Creta y Rodas</li><li><i class="fas fa-ship"></i> Ferries y velero incluidos</li><li><i class="fas fa-plane"></i> Vuelos internos con equipaje</li></ul><div class="package-price">USD 3.300 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1504512485720-7d83a16ee930?w=760&q=80" alt="Gran Tour de las Islas Griegas"></div></div>
+      <div class="tour-detail-card"><h2>Itinerario</h2><div class="tour-itinerary">
+        <div class="itinerary-day"><strong>Día 1 – Atenas</strong><p>Recepción en ATH, traslado y alojamiento.</p></div><div class="itinerary-day"><strong>Día 2 – Atenas (D)</strong><p>Panorámica y visita de la Acrópolis.</p></div><div class="itinerary-day"><strong>Día 3 – Atenas / Mykonos (D)</strong><p>Ferry, traslado y tarde libre.</p></div><div class="itinerary-day"><strong>Día 4 – Mykonos (D)</strong><p>Día libre; Delos opcional.</p></div><div class="itinerary-day"><strong>Día 5 – Mykonos / Santorini (D)</strong><p>Ferry y tarde libre en Fira u Oía.</p></div><div class="itinerary-day"><strong>Día 6 – Santorini / Velero tradicional (D)</strong><p>Paseo incluido por Nea Kameni, Palea Kameni y aguas termales.</p></div><div class="itinerary-day"><strong>Día 7 – Santorini / Creta (D)</strong><p>Ferry a Heraklion y traslado.</p></div><div class="itinerary-day"><strong>Día 8 – Creta (D)</strong><p>Día libre para Cnosos, Heraklion, Chania, Elounda, Samaria y playas.</p></div><div class="itinerary-day"><strong>Día 9 – Creta / Rodas (D)</strong><p>Vuelo doméstico incluido y traslado.</p></div><div class="itinerary-day"><strong>Día 10 – Rodas (D)</strong><p>Día libre para la ciudad medieval, Castillo de los Caballeros y playas.</p></div><div class="itinerary-day"><strong>Día 11 – Rodas / Atenas (D)</strong><p>Vuelo incluido y traslado.</p></div><div class="itinerary-day"><strong>Día 12 – Atenas / Aeropuerto (D)</strong><p>Desayuno y traslado.</p></div>
+      </div></div>
+      <div class="tour-detail-card"><h2>Servicios y hoteles</h2><ul class="package-details"><li><i class="fas fa-check"></i> 3 noches Atenas, 2 Mykonos, 2 Santorini, 2 Creta y 2 Rodas con desayuno.</li><li><i class="fas fa-check"></i> Todos los traslados y ferries; vuelos Creta–Rodas–Atenas con maleta de 23 kg; Atenas y Acrópolis; velero por el volcán; asistencia 24/7.</li><li><i class="fas fa-hotel"></i> Hoteles categorías A/B: Crystal City, Dorian Inn, Athenaeum Grand o similares en Atenas; Mykonos View, Olia, Pelican Bay o similares; Kamari Beach, Strogili, El Greco o similares en Santorini; Marim Dream, Atrion, Olive Green o similares en Creta; Lydia, Esperia, Elite o similares en Rodas.</li></ul></div>
+      <div class="tour-detail-card"><h2>No incluido y nota</h2><ul class="package-details"><li><i class="fas fa-info-circle"></i> Tasas hoteleras en Grecia, opcionales, gastos personales y servicios no indicados.</li><li><i class="fas fa-ship"></i> Para ferry rápido Atenas–Mykonos debe añadirse el suplemento obligatorio.</li></ul></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: MARAVILLAS DE EGIPTO ==================== -->
+  <div class="page-section" id="section-tour-maravillas-egipto">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Maravillas de <span>Egipto</span></h1><p>El Cairo y crucero por el Nilo</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Sábados · 1 abril 2026 al 31 marzo 2027</span><h3>Maravillas de Egipto · Código Oriente</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 8 días / 7 noches</li><li><i class="fas fa-hotel"></i> 3 noches en El Cairo</li><li><i class="fas fa-ship"></i> 4 noches de crucero con pensión completa</li><li><i class="fas fa-plane"></i> Vuelos internos incluidos</li><li><i class="fas fa-language"></i> Guía profesional de habla hispana</li></ul><div class="package-price">USD 1.250 <span>por persona</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=760&q=80" alt="Maravillas de Egipto"></div></div>
+      <div class="tour-detail-card"><h2>Itinerario</h2><div class="tour-itinerary">
+        <div class="itinerary-day"><strong>Día 1 – El Cairo</strong><p>Recepción, traslado al hotel según categoría elegida y alojamiento.</p></div>
+        <div class="itinerary-day"><strong>Día 2 – El Cairo / Pirámides (D)</strong><p>Pirámides de Keops, Kefrén y Micerinos, Templo del Valle y Esfinge. Saqqara y Menfis o espectáculo de luz y sonido opcionales.</p></div>
+        <div class="itinerary-day"><strong>Día 3 – El Cairo / Luxor (D/C)</strong><p>Mañana libre o visita opcional al GEM, Ciudadela, Mezquita de Alabastro, Barrio Copto y Khan El-Khalili. Vuelo incluido a Luxor, embarque y visita a Karnak y Luxor. Cena a bordo.</p></div>
+        <div class="itinerary-day"><strong>Día 4 – Luxor / Esna / Edfu (D/A/C)</strong><p>Valle de los Reyes con tres tumbas, Templo de Hatshepsut y Colosos de Memnón. Navegación por Esna hacia Edfu.</p></div>
+        <div class="itinerary-day"><strong>Día 5 – Edfu / Kom Ombo / Aswan (D/A/C)</strong><p>Templo de Horus, navegación y templos de Sobek y Haroeris en Kom Ombo. Noche en Aswan.</p></div>
+        <div class="itinerary-day"><strong>Día 6 – Aswan (D/A/C)</strong><p>Alta Presa, Templo de Philae y paseo en faluca. Abu Simbel opcional.</p></div>
+        <div class="itinerary-day"><strong>Día 7 – Aswan / El Cairo (D)</strong><p>Desembarque, vuelo doméstico incluido y traslado al hotel.</p></div>
+        <div class="itinerary-day"><strong>Día 8 – El Cairo / Aeropuerto (D)</strong><p>Desayuno y traslado al aeropuerto. Fin de servicios.</p></div>
+      </div></div>
+      <div class="tour-detail-card"><h2>Servicios incluidos</h2><ul class="package-details"><li><i class="fas fa-check"></i> 3 noches en El Cairo con desayuno y 4 noches de crucero por el Nilo con pensión completa.</li><li><i class="fas fa-plane"></i> Vuelos domésticos El Cairo–Luxor y Aswan–El Cairo.</li><li><i class="fas fa-landmark"></i> Pirámides, Esfinge, Templo del Valle, entradas y visitas indicadas.</li><li><i class="fas fa-language"></i> Guía hispano, traslados de llegada y salida y asistencia 24/7 en español.</li></ul></div>
+      <div class="tour-detail-card"><h2>Hoteles previstos</h2><ul class="package-details"><li><i class="fas fa-hotel"></i> <strong>El Cairo A:</strong> Movenpick Media City, Hilton Pyramids Golf, Radisson Blu, Ramses Hilton o Swiss Inn Pyramids. <strong>C:</strong> Semiramis Intercontinental, Sheraton Cairo, Hyatt Centric, Triumph Luxury o Hyatt Regency.</li><li><i class="fas fa-ship"></i> <strong>Crucero A:</strong> Princess Sarah I/II, Semiramis III, Symphony o Nile Crown I/II. <strong>C:</strong> Royal La Terrassa, Nile Story, Grand Rose o Solaris I/II.</li></ul></div>
+      <div class="tour-detail-card"><h2>No incluido y suplementos</h2><ul class="package-details"><li><i class="fas fa-info-circle"></i> Opcionales, gastos personales, servicios no indicados y visado cuando corresponda.</li><li><i class="fas fa-hand-holding-usd"></i> Propinas del crucero: categoría A USD 60 pp; categoría C USD 80 pp, excepto guía.</li><li><i class="fas fa-calendar"></i> Suplementos en Semana Santa 2026–2027, Navidad y Año Nuevo 2026–2027.</li></ul></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: EGIPTO Y MAR ROJO ==================== -->
+  <div class="page-section" id="section-tour-encantos-egipto-mar-rojo">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Encantos de Egipto <span>y el Mar Rojo</span></h1><p>El Cairo, crucero por el Nilo y playas de Hurgada</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Martes y domingos · 1 abril 2026 al 31 marzo 2027</span><h3>Encantos de Egipto y el Mar Rojo · Código Oriente</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 11 días / 10 noches</li><li><i class="fas fa-ship"></i> 3 noches de crucero</li><li><i class="fas fa-umbrella-beach"></i> 3 noches All Inclusive en Hurgada</li><li><i class="fas fa-plane"></i> Vuelos internos incluidos</li></ul><div class="package-price">USD 1.790 <span>por persona en doble</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=760&q=80" alt="Egipto y Mar Rojo"></div></div>
+      <div class="tour-detail-card"><h2>Itinerario</h2><div class="tour-itinerary">
+        <div class="itinerary-day"><strong>Día 1 – El Cairo</strong><p>Recepción, traslado y alojamiento.</p></div><div class="itinerary-day"><strong>Día 2 – El Cairo / Pirámides (D)</strong><p>Giza, Keops, Kefrén, Micerinos, Templo del Valle y Esfinge. Saqqara, Menfis y luz y sonido opcionales.</p></div><div class="itinerary-day"><strong>Día 3 – El Cairo (D)</strong><p>Día libre. Opcional GEM, Ciudadela de Saladino, Mezquita de Alabastro, Barrio Copto y Khan El-Khalili.</p></div><div class="itinerary-day"><strong>Día 4 – El Cairo / Aswan (D/A/C)</strong><p>Vuelo incluido, embarque, Alta Presa, Philae y paseo en faluca con vistas a Elefantina, Jardín Botánico y Mausoleo del Agha Khan.</p></div><div class="itinerary-day"><strong>Día 5 – Aswan / Kom Ombo / Edfu (D/A/C)</strong><p>Abu Simbel opcional; templo doble de Sobek y Haroeris y navegación.</p></div><div class="itinerary-day"><strong>Día 6 – Edfu / Esna / Luxor (D/A/C)</strong><p>Templo de Horus, esclusa de Esna y navegación a Luxor.</p></div><div class="itinerary-day"><strong>Día 7 – Luxor / Hurgada (D/C)</strong><p>Valle de los Reyes, Hatshepsut, Colosos de Memnón, Luxor y Karnak. Traslado terrestre a Hurgada y All Inclusive sin alcohol.</p></div><div class="itinerary-day"><strong>Días 8 y 9 – Hurgada (D/A/C)</strong><p>Días libres para la playa y las instalaciones del hotel. Excursiones opcionales.</p></div><div class="itinerary-day"><strong>Día 10 – Hurgada / El Cairo (D)</strong><p>Vuelo doméstico incluido y traslado.</p></div><div class="itinerary-day"><strong>Día 11 – El Cairo / Aeropuerto (D)</strong><p>Desayuno y traslado.</p></div>
+      </div></div>
+      <div class="tour-detail-card"><h2>Servicios incluidos</h2><ul class="package-details"><li><i class="fas fa-check"></i> 4 noches en El Cairo con desayuno, 3 de crucero con pensión completa y 3 en Hurgada All Inclusive sin bebidas alcohólicas.</li><li><i class="fas fa-plane"></i> Vuelos internos El Cairo–Aswan y Hurgada–El Cairo.</li><li><i class="fas fa-check"></i> Pirámides, Esfinge, Templo del Valle, visitas, entradas, guía hispano, traslados y asistencia 24/7.</li><li><i class="fas fa-hotel"></i> Hoteles y cruceros categorías A/C: Movenpick Media City, Hilton Pyramids Golf, Semiramis Intercontinental, Sheraton Cairo, Princess Sarah, Semiramis III, Royal La Terrassa, Nile Story o similares.</li></ul></div>
+      <div class="tour-detail-card"><h2>No incluido y suplementos</h2><ul class="package-details"><li><i class="fas fa-info-circle"></i> Opcionales, gastos personales, servicios no indicados y visado cuando corresponda.</li><li><i class="fas fa-hand-holding-usd"></i> Propinas: categoría A USD 60 pp; categoría C USD 80 pp, excepto guía.</li><li><i class="fas fa-calendar"></i> Suplementos en Semana Santa 2026–2027, Navidad y Año Nuevo 2026–2027.</li></ul></div>
+    </section>
+  </div>
+
+  <!-- ==================== TOURS SIN AEREOS: TURQUIA Y EGIPTO ==================== -->
+  <div class="page-section" id="section-tour-mejor-turquia-egipto">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=1920&q=80') center/cover"><div class="dest-hero-content"><h1>Lo Mejor de Turquía <span>y Egipto</span></h1><p>Dos civilizaciones legendarias en un gran recorrido</p><a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div></section>
+    <section class="packages"><div class="section-header"><h2>Tour sin Aéreos</h2><div class="section-divider"></div></div>
+      <div class="package-card"><div class="package-info"><span class="package-tag">Viernes · 1 abril 2026 al 31 marzo 2027</span><h3>Lo Mejor de Turquía y Egipto · Código Oriente</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> 17 días / 16 noches</li><li><i class="fas fa-hotel"></i> Turquía y El Cairo</li><li><i class="fas fa-ship"></i> 4 noches de crucero por el Nilo</li><li><i class="fas fa-language"></i> Guías de habla hispana</li></ul><div class="package-price">USD 1.999 <span>por persona</span></div></div><div class="package-image"><img src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=760&q=80" alt="Turquía y Egipto"></div></div>
+      <div class="tour-detail-card"><h2>Itinerario</h2><div class="tour-itinerary">
+        <div class="itinerary-day"><strong>Días 1 a 3 – Estambul</strong><p>Llegada y traslado; Mezquita de Solimán; paseo por el Bósforo y Bazar de las Especias. Santa Sofía, Topkapi, Mezquita Azul, Gran Bazar y lado asiático opcionales.</p></div><div class="itinerary-day"><strong>Día 4 – Estambul / Ankara (D/C)</strong><p>Ruta por Bolu, panorámica y Mausoleo Anitkabir.</p></div><div class="itinerary-day"><strong>Día 5 – Ankara / Capadocia (D/C)</strong><p>Lago Salado, caravanserai y safari en jeep opcional.</p></div><div class="itinerary-day"><strong>Día 6 – Capadocia (D/C)</strong><p>Göreme, Avcilar, Güvercinlik, chimeneas de hadas y talleres.</p></div><div class="itinerary-day"><strong>Día 7 – Capadocia / Pamukkale (D/C)</strong><p>Hierápolis y Castillo de Algodón.</p></div><div class="itinerary-day"><strong>Día 8 – Pamukkale / Éfeso / Kusadasi o Izmir (D/C)</strong><p>Éfeso, templos, teatro, Biblioteca de Celso, Casa de la Virgen y cuero.</p></div><div class="itinerary-day"><strong>Día 9 – Izmir / Bursa / Estambul (D)</strong><p>Ulucamii, Bazar de Seda y Mausoleo Verde. El tramo puede operarse en vuelo sin Bursa.</p></div><div class="itinerary-day"><strong>Día 10 – Estambul / El Cairo (D)</strong><p>Traslado y vuelo internacional no incluido. Recepción en El Cairo.</p></div><div class="itinerary-day"><strong>Día 11 – El Cairo / Luxor (D/C)</strong><p>Mañana libre u opcional de El Cairo. Vuelo incluido, embarque, Karnak y Luxor.</p></div><div class="itinerary-day"><strong>Día 12 – Luxor / Esna / Edfu (D/A/C)</strong><p>Valle de los Reyes, Hatshepsut y Colosos de Memnón.</p></div><div class="itinerary-day"><strong>Día 13 – Edfu / Kom Ombo / Aswan (D/A/C)</strong><p>Templos de Horus, Sobek y Haroeris.</p></div><div class="itinerary-day"><strong>Día 14 – Aswan (D/A/C)</strong><p>Alta Presa, Philae y faluca. Abu Simbel opcional.</p></div><div class="itinerary-day"><strong>Día 15 – Aswan / El Cairo (D)</strong><p>Vuelo incluido y traslado.</p></div><div class="itinerary-day"><strong>Día 16 – El Cairo / Pirámides (D)</strong><p>Keops, Kefrén, Micerinos, Templo del Valle y Esfinge. Saqqara, Menfis y luz y sonido opcionales.</p></div><div class="itinerary-day"><strong>Día 17 – El Cairo / Aeropuerto (D)</strong><p>Desayuno y traslado.</p></div>
+      </div></div>
+      <div class="tour-detail-card"><h2>Servicios incluidos</h2><ul class="package-details"><li><i class="fas fa-check"></i> Turquía: 4 noches en Estambul, 5 noches de circuito con media pensión, traslados, visitas, entradas, guía hispano y asistencia.</li><li><i class="fas fa-check"></i> Egipto: 3 noches en El Cairo, 4 de crucero con pensión completa, vuelos El Cairo–Luxor y Aswan–El Cairo, pirámides, entradas, guía, traslados y asistencia.</li><li><i class="fas fa-hotel"></i> Hoteles previstos categorías A/B/C en Estambul, Ankara, Capadocia, Pamukkale, Kusadasi/Izmir y El Cairo; cruceros Princess Sarah, Semiramis III, Symphony, Nile Crown, Royal La Terrassa, Nile Story, Grand Rose o Solaris.</li></ul></div>
+      <div class="tour-detail-card"><h2>No incluido y notas</h2><ul class="package-details"><li><i class="fas fa-plane"></i> Vuelo internacional Estambul–El Cairo no incluido.</li><li><i class="fas fa-dollar-sign"></i> Turquía: tasas USD 15 pp y propinas USD 45 pp. SAW requiere suplemento obligatorio.</li><li><i class="fas fa-hand-holding-usd"></i> Egipto: propinas crucero A/B USD 60 pp y C USD 80 pp, excepto guía; visado cuando corresponda.</li><li><i class="fas fa-calendar"></i> Suplementos en Semana Santa 2026 y Navidad/Año Nuevo 2026–2027.</li></ul></div>
+    </section>
+  </div>
+
   <!-- ==================== TOURS SIN AEREOS: FICHA PROVISIONAL ==================== -->
   <div class="page-section" id="section-tour-sin-aereos">
     <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80') center/cover">
@@ -6636,12 +6848,176 @@
       'maravillas-japon': {name:'Maravillas de Japón', duration:'10 días / 9 noches', departures:'Circuito regular con guías en español', prices:['USD 4100 por persona en doble'], route:['Incluye 3 noches en Tokio, 3 en Kioto, 1 en Kanazawa, 1 en Gero y 1 en Osaka; desayunos, 3 almuerzos, 1 cena japonesa, excursiones, trenes y traslados.','Días 1–3: llegada a Tokio con asistencia, city tour por Meiji, Senso-ji, Nakamise y Shibuya; excursión a Hakone con Lago Ashi, santuario y museo al aire libre.','Días 4–6: tren bala a Kioto, Nara, Todai-ji, Parque de los Ciervos, Sanjusangendo, Fushimi Inari, Kinkaku-ji, Tenryu-ji y Arashiyama. Hiroshima y Miyajima opcional en preventa.','Días 7–9: Kanazawa, Omicho, Higashichaya, Kenrokuen, Shirakawago, Takayama, ryokan con onsen en Gero o Gifu, trenes a Osaka, Dotonbori y Castillo de Osaka.','Día 10: Airport Limousine Bus a Kansai o Itami. Para vuelos muy tempranos, taxi con suplemento de USD 135 por pasajero; pasajero solo abona el doble.']},
       'vietnam-camboya-tailandia-playas': {name:'Vietnam, Camboya, Tailandia y Playas', duration:'18 días / 17 noches', departures:'Circuito regular con guías de habla hispana', prices:['USD 3990 por persona en doble'], route:['Incluye Hanoi 2 noches, crucero Halong 1, Hoi An 2, Hue 2, Ho Chi Minh 2, Siem Reap 2, Bangkok 3 y Phuket 3; vuelos internos, traslados, 10 comidas y 1 brunch.','Días 1–4: Hanoi, visita de la ciudad, café vietnamita, Barrio Antiguo, crucero en Halong y vuelo a Danang.','Días 5–10: Hoi An, Hue, Ciudadela Imperial, mausoleos, vuelo a Ho Chi Minh, city tour, Delta del Mekong, túneles de Cu Chi y vuelo a Siem Reap.','Días 11–14: Angkor Thom, Bayon, Ta Prohm, Angkor Wat, cena Apsara, Tonle Sap, vuelo a Bangkok, templos, Palacio Real y día libre.','Días 15–18: vuelo a Phuket, dos días libres y vuelo final a Bangkok.']},
       'marruecos-completo': {name:'Marruecos al Completo', duration:'8 días / 7 noches', departures:'Circuito regular · Guía acompañante con mínimo 7 pasajeros', prices:['USD 2100 por persona en doble'], route:['Incluye 1 noche en Tánger, 2 en Fez, 1 en Erfoud, 1 en Ouarzazate y 2 en Marrakech con media pensión; traslados con chofer y visitas con guías locales en español.','Días 1–3: Tánger, Tetuán, Chauen, Meknes y Fez; Palacio Real, medina, Medrasa, Karaouine, Moulay Idriss y curtidores.','Días 4–5: Ifrane, Midelt, Errachidia, Erfoud, opciones en Merzouga, Rissani, Gargantas del Todra y Ruta de las Kasbahs hasta Ouarzazate.','Días 6–8: Ait Ben Haddou, Alto Atlas, Marrakech, Menara, Kutubia, Palacio de la Bahía, farmacia bereber, Jemaa el Fna y traslado de salida.','Llegada opcional por Casablanca: traslado privado a Tánger por EUR 85 por persona desde 2 pasajeros.']}
+      ,'china-tren-alta-velocidad': {
+        name:'China en Tren de Alta Velocidad', duration:'9 días / 8 noches', departures:'Sábados de marzo a noviembre · Mínimo 2 personas', prices:['USD 2200 por persona en doble'], route:[
+          'Día 1 · Beijing: llegada, recepción, traslado y alojamiento en New Otani Chang Fu Gong o similar.',
+          'Día 2 · Beijing (D/A): Ciudad Prohibida, Plaza Tian An Men y Palacio de Verano. Almuerzo incluido.',
+          'Día 3 · Beijing (D/A/C): Gran Muralla, almuerzo, fotos en el Nido del Pájaro y Cubo del Agua, y cena de Pato Laqueado.',
+          'Día 4 · Beijing–Hangzhou (D): Templo del Cielo y tren de alta velocidad a Hangzhou, aproximadamente 6 horas. Hotel Grand Metropark o similar.',
+          'Día 5 · Hangzhou (D/A): crucero por el Lago del Oeste, Templo del Alma Escondida y Pagoda de las Seis Armonías.',
+          'Día 6 · Hangzhou–Suzhou (D/A): tren a Suzhou, Colina del Tigre y Jardín del Pescador. Hotel Pan Pacific o similar. El equipaje viaja separado a Shanghái; llevar bolso para una noche.',
+          'Día 7 · Suzhou–Shanghái (D/A): tren, Torre Jinmao, Malecón, Templo del Buda de Jade y casco antiguo. Hotel Jin Jiang o similar.',
+          'Día 8 · Shanghái (D): día libre.',
+          'Día 9 · Shanghái (D): check-out, tiempo libre y traslado al aeropuerto.'
+        ]
+      },
+      'china-express': {
+        name:'China Express', duration:'8 días / 7 noches', departures:'Lunes, martes y jueves programados · Mínimo 2 personas', prices:['USD 1690 por persona en doble'], route:[
+          'Día 1 · Beijing: llegada, recepción, traslado y resto del día libre.',
+          'Día 2 · Beijing (D/A): Ciudad Prohibida, Plaza Tian An Men y Palacio de Verano.',
+          'Día 3 · Beijing (D/A/C): Gran Muralla, almuerzo, Nido del Pájaro, Cubo del Agua y cena de Pato Laqueado.',
+          'Día 4 · Beijing–Xi’an (D): Templo del Cielo y tren de alta velocidad a Xi’an.',
+          'Día 5 · Xi’an (D/A): Guerreros y Corceles de Terracota, Gran Pagoda de la Oca Silvestre y Barrio Musulmán.',
+          'Día 6 · Xi’an–Shanghái (D): vuelo incluido y traslado al hotel.',
+          'Día 7 · Shanghái (D/A): Torre Jinmao, Malecón, Templo del Buda de Jade y casco antiguo.',
+          'Día 8 · Shanghái (D): check-out, tiempo libre y traslado al aeropuerto.'
+        ]
+      },
+      'maravillas-china': {
+        name:'Maravillas de China', duration:'13 días / 12 noches', departures:'Lunes y martes programados · Mínimo 2 personas', prices:['USD 3100 por persona en doble'], route:[
+          'Días 1–3 · Beijing: llegada; Ciudad Prohibida, Tian An Men y Palacio de Verano; Gran Muralla, Nido del Pájaro, Cubo del Agua y cena de Pato Laqueado.',
+          'Día 4 · Beijing–Xi’an: Templo del Cielo y tren de alta velocidad.',
+          'Día 5 · Xi’an: Guerreros de Terracota, Pagoda de la Oca Silvestre y Barrio Musulmán.',
+          'Día 6 · Xi’an–Guilin: vuelo incluido y traslado.',
+          'Día 7 · Guilin: crucero por el Río Li Jiang con lunch box, Yangshuo y Calle Oeste.',
+          'Día 8 · Guilin–Hangzhou: Gruta de las Flautas de Caña y vuelo incluido.',
+          'Día 9 · Hangzhou: Lago del Oeste, Templo del Alma Escondida y Pagoda de las Seis Armonías.',
+          'Día 10 · Hangzhou–Suzhou: tren, Colina del Tigre y Jardín del Pescador. El equipaje viaja separado a Shanghái; llevar bolso para una noche.',
+          'Día 11 · Suzhou–Shanghái: tren, Torre Jinmao, Malecón, Buda de Jade y casco antiguo.',
+          'Día 12 · Shanghái: día libre.',
+          'Día 13 · Shanghái: check-out y traslado al aeropuerto.'
+        ]
+      },
+      'explorando-china': {
+        name:'Explorando China', duration:'13 días / 12 noches', departures:'Martes y jueves programados · Mínimo 2 personas', prices:['USD 4290 por persona en doble'], route:[
+          'Días 1–3 · Beijing: New Otani Chang Fu Gong; Ciudad Prohibida, Tian An Men, Palacio de Verano, Gran Muralla, complejos olímpicos y Pato Laqueado.',
+          'Día 4 · Beijing–Xi’an: Templo del Cielo y tren rápido. Hilton High-Tech Zone o similar.',
+          'Día 5 · Xi’an: Guerreros de Terracota, Pagoda de la Oca Silvestre y Barrio Musulmán.',
+          'Días 6–7 · Shanghái: vuelo incluido; Torre Jinmao, Malecón, Buda de Jade y casco antiguo. Jin Jiang o similar.',
+          'Día 8 · Shanghái–Guilin: vuelo incluido y Gruta de las Flautas de Caña. Sheraton o similar.',
+          'Día 9 · Guilin–Guangzhou: crucero por el Río Li, Yangshuo, Calle Oeste y tren rápido. China Hotel o similar.',
+          'Día 10 · Guangzhou–Hong Kong: Casa Chen, Mercado Pingping, Plaza Huacheng, almuerzo y ferry; recepción en español. Harbour Grand Kowloon o similar.',
+          'Día 11 · Hong Kong: visita en español a Aberdeen, Muelle de Pescadores, Bahía Repulse, Monte Victoria y fábrica de joyas.',
+          'Día 12 · Hong Kong: día libre.',
+          'Día 13 · Hong Kong: check-out y traslado al aeropuerto.'
+        ]
+      },
+      'china-misteriosa-tibet': {
+        name:'China Misteriosa con Tíbet', duration:'13 días / 12 noches', departures:'Jueves programados · Mínimo 2 personas', prices:['USD 5800 por persona en doble'], route:[
+          'Guías en español en Beijing, Xi’an, Guilin y Shanghái; guías en inglés en Lhasa y Chengdu.',
+          'Días 1–3 · Beijing: Ciudad Prohibida, Tian An Men, Palacio de Verano, Gran Muralla, complejos olímpicos y Pato Laqueado. New Otani o similar.',
+          'Días 4–5 · Xi’an: tren rápido, Templo del Cielo, Guerreros de Terracota, Pagoda de la Oca Silvestre y Barrio Musulmán. Hilton High-Tech Zone o similar.',
+          'Día 6 · Xi’an–Lhasa: vuelo incluido, recepción en inglés y tarde de aclimatación. Lhasa Tse Dang o similar.',
+          'Días 7–8 · Lhasa: Palacio Potala, Monasterio Sera, Jokhang, Mercado Barkhor y Palacio Norbulingkha, con almuerzos.',
+          'Día 9 · Lhasa–Chengdu: vuelo incluido y panorámica en inglés. Sheraton Lido o similar.',
+          'Día 10 · Chengdu–Guilin: Centro del Oso Panda y tren rápido de unas 7 horas. El contacto o fotos con pandas depende del centro y se paga allí.',
+          'Día 11 · Guilin–Shanghái: crucero por el Río Li con lunch box y vuelo incluido. Jin Jiang o similar.',
+          'Día 12 · Shanghái: Torre Jinmao, Malecón, Buda de Jade y casco antiguo.',
+          'Día 13 · Shanghái: check-out y traslado al aeropuerto.'
+        ]
+      },
+      'china-japon': {
+        name:'China & Japón', duration:'15 días / 14 noches', departures:'Lunes programados · Mínimo 2 personas', prices:['USD 3999 por persona en doble'], route:[
+          'Guías locales en español, excepto traslados de entrada y salida en Japón.',
+          'Días 1–3 · Beijing: Landmark Towers; Ciudad Prohibida, Tian An Men, Palacio de Verano, Gran Muralla, complejos olímpicos y Pato Laqueado.',
+          'Días 4–5 · Xi’an: Templo del Cielo, tren rápido, Guerreros de Terracota, Pagoda de la Oca Silvestre y Barrio Musulmán. Titan Times o similar.',
+          'Días 6–8 · Shanghái: vuelo incluido, Torre Jinmao, Malecón, Buda de Jade, casco antiguo y día libre. Golden Tulip Rainbow o similar.',
+          'Día 9 · Shanghái–Tokio: traslado y vuelo no incluido. Recepción en Narita y traslado regular en inglés; Haneda tiene suplemento de USD 50 pp. New Otani o similar.',
+          'Día 10 · Tokio: Meiji, Palacio Imperial, Senso-ji y Nakamise; final en Ginza hasta marzo 2027 o Shibuya desde abril 2027.',
+          'Día 11 · Tokio–Hakone–Tokio: Lago Ashi, vistas del Monte Fuji y almuerzo.',
+          'Día 12 · Tokio–Nara–Kioto: tren bala Nozomi, Fushimi Inari, Todai-ji y Parque de los Ciervos. Kyoto Tokyu o similar.',
+          'Día 13 · Kioto: Tenryu-ji, Arashiyama, Kinkaku-ji y Sanjusangendo, con almuerzo.',
+          'Día 14 · Kioto: día libre; Hiroshima opcional.',
+          'Día 15 · Kioto–Osaka: check-out y traslado en inglés al aeropuerto.'
+        ]
+      },
+      'cinco-capitales-europa': {name:'Cinco Capitales (Europa)', duration:'14 días / 13 noches', departures:'Inicio los jueves en Madrid', prices:['USD 2390 por persona en doble'], route:[
+        'Días 1–2 · Madrid: traslado de llegada, panorámica, Plaza Mayor y día libre; Toledo opcional.',
+        'Días 3–4 · Madrid–San Sebastián–Burdeos–Blois–París: País Vasco, costa de La Concha, campiña francesa y Valle del Loira.',
+        'Días 5–6 · París: panorámica, Montmartre, Louvre, traslado a Versalles y tiempo libre; Sena y Barrio Latino opcionales.',
+        'Días 7–9 · París–Canterbury–Londres: ferry por el Canal de la Mancha, Canterbury, panorámica de Londres, paseo nocturno por Soho y días libres.',
+        'Días 10–12 · Londres–Brujas–Gante–La Haya–Ámsterdam: ferries, ciudades flamencas, Scheveningen y panorámica de Ámsterdam con museo de diamantes.',
+        'Días 13–14 · Delft–Bruselas–París: cerámica de Delft, panorámica de Bruselas y regreso a París. Desayuno y fin.',
+        'Incluye autocar con guía español/portugués, desayuno, seguro básico, traslado de llegada, panorámicas, traslados nocturnos, Montmartre, museo de diamantes y ferries. No incluye aéreos, salida, comidas no indicadas, opcionales, gastos, propinas, entradas ni tasas.'
+      ]},
+      'clasicos-europeos': {name:'Clásicos Europeos', duration:'19 días / 18 noches', departures:'Inicio los miércoles en Madrid', prices:['USD 3650 por persona'], route:[
+        'Días 1–3 · Madrid–Toledo–Zaragoza–Barcelona: panorámica, Plaza Mayor, excursión a Toledo, Basílica del Pilar y recorrido de Barcelona.',
+        'Días 4–7 · Costa Azul–Mónaco–Venecia–Florencia–Roma: Niza, Fragonard, Mónaco, barco a San Marcos, Murano, panorámica de Florencia y llegada a Roma.',
+        'Días 8–11 · Roma–Pisa–Turín–Ginebra–París: Roma imperial y Vaticano, Trastevere, día libre, Pisa, Alpes, Chamonix y Ginebra.',
+        'Días 12–16 · París–Brujas–Ámsterdam–Kinderdijk–Bruselas–París: Versalles, Montmartre, panorámicas y molinos UNESCO; Schiedam sustituye Kinderdijk si no hay cupo.',
+        'Días 17–19 · París–Blois–Tours–Burdeos–San Sebastián–Madrid: Valle del Loira, País Vasco y fin en Madrid.',
+        'Incluye autocar, guía español/portugués, desayuno buffet, traslado de llegada, Toledo, Versalles, barco en Venecia, panorámicas, traslados nocturnos, Murano y museo de diamantes. No incluye aéreos, comidas no indicadas, opcionales, gastos, propinas ni tasas.'
+      ]},
+      'eco-europa-clasica': {name:'Eco Europa Clásica', duration:'15 días / 14 noches', departures:'Inicio los lunes en Madrid', prices:['USD 2450 por persona en doble'], route:[
+        'Días 1–3 · Madrid–Zaragoza–Barcelona: traslados, panorámica de Madrid, Toledo opcional y recorrido de Barcelona.',
+        'Días 4–8 · Costa Azul–Pisa–Roma–Florencia–Venecia: panorámicas con guías locales, Vaticano opcional, fábrica de cristal y góndola opcional.',
+        'Días 9–12 · Annemasse–París: Alpes, Ginebra opcional, panorámica parisina y días libres; Sena, Montmartre y Versalles opcionales.',
+        'Días 13–15 · París–Lourdes–San Sebastián–Madrid: Gruta y procesión de abril a octubre, panorámica de San Sebastián y traslado al aeropuerto.',
+        'Incluye seguro, traslados in/out, alojamiento con desayuno buffet, guía hispano y guías locales en Barcelona, Roma, Florencia, Venecia, París y Madrid. No incluye aéreos, comidas no indicadas, opcionales, gastos, propinas ni tasas.'
+      ]},
+      'eco-madrid-santiago-portugal': {name:'Eco Madrid, Santiago y Portugal', duration:'9 días / 8 noches', departures:'Inicio los lunes en Madrid', prices:['USD 1390 por persona en doble'], route:[
+        'Días 1–2 · Madrid: llegada, traslado, panorámica y tarde libre; Toledo opcional.',
+        'Días 3–4 · Segovia–Ávila–Salamanca–Santiago: ciudades monumentales, Plaza del Obradoiro y Catedral.',
+        'Días 5–6 · Rías Baixas–Viana do Castelo–Oporto: llegada a Portugal, visita de Oporto y tarde libre.',
+        'Días 7–9 · Aveiro–Fátima–Lisboa: canales y moliceiros, santuario, panorámica de Lisboa, Belém y Jerónimos; Sintra y Cascais opcionales; traslado al aeropuerto.',
+        'Incluye seguro, traslados, desayuno, guía hispano y guías locales en Madrid, Oporto y Lisboa. No incluye aéreos, comidas no indicadas, opcionales, gastos, propinas ni tasas.'
+      ]},
+      'escapada-europea-mad-lon': {name:'Escapada Europea MAD/LON', duration:'16 días / 15 noches', departures:'Inicio los lunes en Madrid', prices:['USD 3250 por persona en doble'], route:[
+        'Días 1–3 · Madrid–Zaragoza–Barcelona: traslado, panorámica de Madrid, Toledo opcional, Pilar y panorámica de Barcelona.',
+        'Días 4–9 · Costa Azul–Pisa–Roma–Florencia–Padua–Venecia: Mónaco opcional, Roma, Nápoles y Capri opcional, Florencia, San Antonio, vaporetto y cristal veneciano.',
+        'Días 10–12 · Innsbruck–Lucerna–Zúrich–Basilea–París: Dolomitas, Tejadito de Oro, Kapellbrücke y llegada a París.',
+        'Días 13–16 · París–Londres: panorámica de París, ferry Calais–Dover, visita de Londres, Buckingham y traslado al aeropuerto.',
+        'Incluye alojamiento y desayuno, traslados in/out, guía hispano, ferry, guías locales y seguro. No incluye tasa de alojamiento, aéreos, comidas no indicadas, opcionales, gastos, propinas ni tasas.'
+      ]},
+      'balcanes-capitales-imperiales': {name:'Balcanes y Capitales Imperiales', duration:'20 días / 19 noches', departures:'Categoría Premium · Inicio los domingos en Viena', prices:['USD 5800 por persona en doble'], route:[
+        'Días 1–2 · Viena: traslado, cena austríaca de bienvenida con bebidas, panorámica, Belvedere, Ringstrasse y Catedral de San Esteban.',
+        'Días 3–8 · Ljubljana–Postojna–Bled–Zadar–Split–Dubrovnik: cascos históricos, cuevas, lago, Forum Romano, Palacio de Diocleciano y costa dálmata; Montenegro opcional.',
+        'Días 9–14 · Medjugorje–Mostar–Sarajevo–Zagreb–Graz–Viena: centros históricos, mezquita, bazar, capital croata y tiempo libre; Plitvice y Valle del Danubio opcionales.',
+        'Días 15–20 · Budapest–Bratislava–Praga: Buda, Pest, castillo, San Vito, Callejón del Oro, Puente de Carlos, reloj astronómico y día libre; Karlovy Vary opcional; traslado al aeropuerto.',
+        'Incluye guía exclusivo hispano, 19 noches con desayuno buffet, entradas y experiencias indicadas y cena de bienvenida. No incluye propinas, traslados no contemplados, tasas, exceso de equipaje ni gastos personales.'
+      ]},
+      'capitales-imperiales-alcance': {name:'Capitales Imperiales a su Alcance', duration:'9 días / 8 noches', departures:'Inicio los jueves en Viena', prices:['USD 2990 por persona en doble'], route:[
+        'Días 1–3 · Viena: traslado, cena de bienvenida con bebidas, panorámica, Belvedere, Catedral, Schönbrunn, concierto clásico y excursión al Valle del Danubio con crucero, almuerzo y Abadía de Melk.',
+        'Días 4–5 · Budapest: Buda, Iglesia de Matías, Bastión de Pescadores, Palacio Real, Pest, Plaza de los Héroes, Andrássy, Parlamento y Basílica; comidas indicadas.',
+        'Días 6–8 · Bratislava–Praga–Karlovy Vary: almuerzo en Bratislava, ruta de coronación, Castillo, San Vito, Callejón del Oro, Puente de Carlos, barrio judío, almuerzo en cervecería y excursión a Karlovy Vary.',
+        'Día 9 · Praga: desayuno y traslado al aeropuerto.',
+        'Incluye guía exclusivo hispano, 8 noches con desayuno buffet, 7 comidas, entradas y experiencias y cena de bienvenida. No incluye propinas, traslados no contemplados, tasas, exceso de equipaje ni gastos personales.'
+      ]},
+      'belle-europa-serie-clasica': {name:'Belle Europa Serie Clásica', duration:'15 días / 14 noches', departures:'Inicio los sábados en Viena', prices:['USD 2690 por persona en doble'], route:[
+        'Días 1–6 · Viena–Cracovia–Czestochowa–Varsovia: traslados, panorámicas, casco medieval de Cracovia, Jasna Gora y capital polaca.',
+        'Días 7–12 · Poznan–Berlín–Dresde–Praga: visitas de Berlín y Praga, tiempo libre y Karlovy Vary opcional.',
+        'Días 13–15 · Bratislava–Budapest–Viena: centro de Bratislava, panorámica de Buda y Pest, regreso a Viena y traslado al aeropuerto.',
+        'Incluye alojamiento con desayuno, traslados in/out, guía hispano, guías locales en Viena, Cracovia, Varsovia, Berlín, Praga y Budapest y seguro. No incluye tasa de alojamiento, aéreos, comidas no indicadas, opcionales, gastos, propinas ni tasas.'
+      ]}
     };
 
-    function tourDetailHtml(tour) {
+    const midasTourKeys = new Set(['marruecos-completo', 'vietnam-camboya-tailandia-playas', 'maravillas-japon', 'paraiso-china', 'esencias-kenia-tanzania']);
+    const crownTourKeys = new Set([
+      'mauritius-seychelles', 'maldivas', 'mauritius', 'seychelles', 'sudafrica-mauritius',
+      'explorando-sudafrica', 'sudafrica-ruta-jardin', 'sudafrica-cabo', 'kenia-zanzibar',
+      'safari-kenia-tanzania', 'kenia-tanzania-playas', 'tahiti-moorea', 'tahiti-bora-bora',
+      'filipinas', 'descubriendo-indonesia', 'tailandia-vietnam-camboya', 'vietnam-tailandia',
+      'camboya-tailandia', 'bali-tailandia', 'norte-tailandia-playas', 'bangkok-phi-phi-krabi',
+      'bangkok-playas', 'tailandia-clasica', 'china-tren-alta-velocidad', 'china-express',
+      'maravillas-china', 'explorando-china', 'china-misteriosa-tibet', 'china-japon'
+    ]);
+    const tourCodeByKey = {
+      'cinco-capitales-europa':'EUROPAMUNDO',
+      'clasicos-europeos':'EUROPAMUNDO',
+      'eco-europa-clasica':'WAMOS',
+      'eco-madrid-santiago-portugal':'WAMOS',
+      'escapada-europea-mad-lon':'WAMOS',
+      'balcanes-capitales-imperiales':'SATO',
+      'capitales-imperiales-alcance':'SATO',
+      'belle-europa-serie-clasica':'WAMOS'
+    };
+
+    function tourDetailHtml(tour, key) {
       const prices = tour.prices.map((price, index) => `<div class="package-price"${index ? ' style="margin-top:10px"' : ''}>${price}</div>`).join('');
       const route = tour.route.map(item => `<div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);text-align:left"><p style="font-size:.88rem;color:var(--text);line-height:1.65">${item}</p></div>`).join('');
-      return `<div class="package-card"><div class="package-info"><span class="package-tag">${tour.departures}</span><h3>${tour.name}</h3><ul class="package-details"><li><i class="fas fa-calendar-alt"></i> ${tour.duration}</li><li><i class="fas fa-plane-slash"></i> Programa sin aéreo internacional</li></ul>${prices}</div><div class="package-image"><img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=760&q=80" alt="${tour.name}"></div></div><div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:20px">Itinerario e incluye</h2><div style="display:grid;gap:16px">${route}</div></div>`;
+      const supplierCode = tourCodeByKey[key] || (midasTourKeys.has(key) ? 'MIDAS' : crownTourKeys.has(key) ? 'Crown' : '');
+      const code = supplierCode ? `<p style="margin:0 0 12px;color:var(--accent);font-weight:700">(código ${supplierCode})</p>` : '';
+      return `<div class="package-card"><div class="package-info"><span class="package-tag">${tour.departures}</span><h3>${tour.name}</h3>${code}<ul class="package-details"><li><i class="fas fa-calendar-alt"></i> ${tour.duration}</li><li><i class="fas fa-plane-slash"></i> Programa sin aéreo internacional</li></ul>${prices}</div><div class="package-image"><img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=760&q=80" alt="${tour.name}"></div></div><div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:20px">Itinerario e incluye</h2><div style="display:grid;gap:16px">${route}</div></div>`;
     }
 
     function showLoadedTour(key) {
@@ -6649,7 +7025,7 @@
       if (!tour) return;
       document.getElementById('tourSinAereosTitle').textContent = tour.name;
       document.getElementById('tourSinAereosHeading').textContent = tour.name;
-      document.getElementById('tourSinAereosContent').innerHTML = tourDetailHtml(tour);
+      document.getElementById('tourSinAereosContent').innerHTML = tourDetailHtml(tour, key);
       showSection('tour-sin-aereos');
     }
 
