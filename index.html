@@ -352,6 +352,21 @@
         </ul>
       </li>
 
+      <!-- TOURS LOW COST -->
+      <li class="nav-item">
+        <span class="nav-link-btn" onclick="toggleDropdown(event, this)"><i class="fas fa-tags"></i> Tours Low Cost <i class="fas fa-chevron-down"></i></span>
+        <ul class="dropdown">
+          <li class="dropdown-header">Circuitos Low Cost</li>
+          <li><a onclick="showLowCost('Europa Chic')"><span class="dest-icon">✨</span> Europa Chic</a></li>
+          <li><a onclick="showLowCost('Eurojet')"><span class="dest-icon">✈️</span> Eurojet</a></li>
+          <li><a onclick="showLowCost('Ronda Europea')"><span class="dest-icon">🚌</span> Ronda Europea</a></li>
+          <li><a onclick="showLowCost('Capitales Europeas')"><span class="dest-icon">🇪🇺</span> Capitales Europeas</a></li>
+          <li><a onclick="showLowCost('Europa Esplendida')"><span class="dest-icon">💫</span> Europa Esplendida</a></li>
+          <li><a onclick="showLowCost('Todos a Europa')"><span class="dest-icon">🌐</span> Todos a Europa</a></li>
+          <li><a onclick="showLowCost('Magia Europea')"><span class="dest-icon">🪄</span> Magia Europea</a></li>
+        </ul>
+      </li>
+
       <!-- USA -->
       <li class="nav-item">
         <span class="nav-link-btn" onclick="toggleDropdown(event, this)"><i class="fas fa-flag-usa"></i> USA <i class="fas fa-chevron-down"></i></span>
@@ -6785,6 +6800,24 @@
     </section>
   </div>
 
+  <!-- ==================== TOURS LOW COST: FICHA PROVISIONAL ==================== -->
+  <div class="page-section" id="section-tour-low-cost">
+    <section class="dest-hero" style="background:linear-gradient(135deg,rgba(26,54,93,.9),rgba(44,82,130,.85)),url('https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1920&q=80') center/cover">
+      <div class="dest-hero-content">
+        <h1 id="lowCostTitle">Tours <span>Low Cost</span></h1>
+        <p>Circuitos europeos a precios accesibles</p>
+        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+      </div>
+    </section>
+    <section class="packages">
+      <div class="section-header"><h2 id="lowCostHeading">Información próximamente</h2><div class="section-divider"></div></div>
+      <div id="lowCostContent" style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;text-align:center">
+        <i class="fas fa-tags" style="font-size:2.4rem;color:var(--accent);margin-bottom:16px"></i>
+        <p style="color:var(--text);font-size:1rem;line-height:1.7">Estamos preparando los detalles de este circuito Low Cost.</p>
+      </div>
+    </section>
+  </div>
+
   <!-- ==================== FOOTER ==================== -->
   <footer id="mainFooter">
     <div class="footer-content">
@@ -7037,6 +7070,67 @@
       heading.textContent = nombre;
       content.innerHTML = '<i class="fas fa-map-marked-alt" style="font-size:2.4rem;color:var(--accent);margin-bottom:16px"></i><p style="color:var(--text);font-size:1rem;line-height:1.7">Estamos preparando los detalles de este tour sin aéreos.</p>';
       showSection('tour-sin-aereos');
+    }
+
+    const lowCostTours = {
+      'Europa Chic': {
+        code: 'RUTAS',
+        duration: '19 días / 18 noches',
+        price: 'USD 2.200 por persona en doble',
+        notice: 'NO INCLUYE VUELO INTERNACIONAL',
+        itinerary: [
+          ['Día 1 – América / Madrid', 'Vuelo con destino a Madrid. Noche a bordo. El vuelo internacional no está incluido.'],
+          ['Día 2 – Madrid', 'Llegada a Madrid-Barajas, traslado al hotel y día libre para actividades personales. Alojamiento.'],
+          ['Día 3 – Madrid', 'Desayuno. Panorámica con guía local por Plaza de España, Fuente de Cibeles, Plaza de Oriente, Puerta de Alcalá y Ciudad Universitaria. Tarde libre.'],
+          ['Día 4 – Madrid / San Sebastián / Burdeos', 'Viaje por Castilla y León y el País Vasco. Tiempo para recorrer San Sebastián y continuación por la región vinícola francesa hasta Burdeos.'],
+          ['Día 5 – Burdeos / Blois / París', 'Viaje hacia el Valle del Loira. Parada en Blois y su castillo. Continuación a París.'],
+          ['Día 6 – París', 'Panorámica por Campos Elíseos, Arco del Triunfo, Ópera, Torre Eiffel, Barrio Latino, Luxemburgo e Inválidos. Tiempo para la Medalla Milagrosa y tarde libre. Cabaret opcional.'],
+          ['Día 7 – París', 'Día libre para recorrer la ciudad o subir a la Torre Eiffel. Excursión opcional a Brujas.'],
+          ['Día 8 – París / Luxemburgo / Valle del Rin / Frankfurt', 'Ruta por Champagne hasta Luxemburgo. Continuación por Coblenza, Valle del Rin, castillos y Roca de Loreley hasta Frankfurt.'],
+          ['Día 9 – Frankfurt / Heidelberg / Selva Negra / Zúrich', 'Visita libre de Heidelberg y su casco universitario. Continuación a Friburgo y por los pueblos de la Selva Negra hasta Zúrich.'],
+          ['Día 10 – Zúrich / Lucerna / Venecia', 'Visita de Lucerna. Excursión opcional al monte Titlis en teleférico. Viaje a Venecia y alojamiento.'],
+          ['Día 11 – Venecia / Padova / Florencia', 'Vaporetto a San Marcos y paseo por Palacio Ducal y Puente de los Suspiros. Góndola opcional. Salida a Padova y continuación a Florencia.'],
+          ['Día 12 – Florencia / Asís / Roma', 'Panorámica de Florencia: Catedral, Baptisterio, Ponte Vecchio, Señoría y Santa Croce. Visita de las basílicas de Asís y continuación a Roma. Roma Barroca opcional.'],
+          ['Día 13 – Roma', 'Día libre. Excursión opcional de día completo a Capri, Nápoles y Pompeya.'],
+          ['Día 14 – Roma / Audiencia Papal', 'Audiencia del Santo Padre si se encuentra en Roma. Panorámica por Foros Romanos, Coliseo, Arco de Constantino, Plaza Venecia y San Pedro. Museos Vaticanos y Capilla Sixtina por cuenta propia.'],
+          ['Día 15 – Roma / Pisa / Costa Azul', 'Plaza de los Milagros, Catedral, Baptisterio y Torre Inclinada. Continuación a la Costa Azul. Mónaco y Montecarlo opcionales.'],
+          ['Día 16 – Costa Azul / Nimes / Barcelona', 'Visita a la casa de perfumes Fragonard. Tiempo en Nimes para la Arena y Maison Carrée. Continuación a Barcelona.'],
+          ['Día 17 – Barcelona', 'Panorámica en bus por Plaza Cataluña, Paseo de Gracia, Casa Batlló, La Pedrera, Sagrada Familia, Plaza de España, Torres Venecianas y Palacio Nacional.'],
+          ['Día 18 – Barcelona / Zaragoza / Madrid', 'Panorámica de Barcelona si no se realizó el día anterior. Salida a Zaragoza, tiempo para la Basílica del Pilar y continuación a Madrid.'],
+          ['Día 19 – Madrid / América', 'Desayuno y traslado al aeropuerto para tomar el vuelo de regreso, no incluido.']
+        ]
+      },
+      'Eurojet': {code:'RUTAS', duration:'15 días / 14 noches', price:'USD 1.900 por persona en doble', notice:'NO INCLUYE VUELO INTERNACIONAL', itinerary:[
+        ['Día 1 – América / Madrid','Salida en vuelo internacional no incluido. Noche a bordo.'],['Día 2 – Madrid','Llegada, recepción, traslado y alojamiento.'],['Día 3 – Madrid','Panorámica con guía local y tarde libre; Toledo opcional.'],['Día 4 – Madrid / San Sebastián / Burdeos','Tiempo en San Sebastián y continuación a Burdeos. Sin mayoría suficiente, el tramo se hará en avión y no se visitará San Sebastián.'],['Día 5 – Burdeos / París','Ruta por el Valle del Loira y llegada a París. Sin mayoría suficiente, viaje en tren y visita previa de Burdeos.'],['Día 6 – París','Panorámica, Medalla Milagrosa y tarde libre.'],['Día 7 – París / Dijon / Zúrich','Tiempo en Dijon y continuación a Zúrich.'],['Día 8 – Zúrich / Lucerna / Venecia','Lucerna y Titlis opcional; viaje a Venecia.'],['Día 9 – Venecia / Padova / Florencia','Vaporetto, San Marcos, Palacio Ducal y Suspiros; góndola opcional, Padova y Florencia.'],['Día 10 – Florencia / Asís / Roma','Panorámica de Florencia, Basílica de San Francisco y llegada a Roma.'],['Día 11 – Roma','Panorámica imperial y Vaticano; Museos Vaticanos opcionales.'],['Día 12 – Roma / Pisa / Costa Azul','Pisa y Niza. Sin mayoría suficiente, vuelo y sin visita a Pisa.'],['Día 13 – Costa Azul / Barcelona','Fragonard, Nimes y Barcelona. Sin mayoría suficiente, vuelo, visita de Niza y sin Nimes.'],['Día 14 – Barcelona / Zaragoza / Madrid','Panorámica, Zaragoza y Madrid. Sin mayoría suficiente, tren y sin Zaragoza.'],['Día 15 – Madrid / América','Desayuno y traslado al aeropuerto; vuelo no incluido.']
+      ]},
+      'Ronda Europea': {code:'RUTAS', duration:'18 días / 17 noches', price:'USD 2.300 por persona en doble', notice:'NO INCLUYE VUELO INTERNACIONAL', itinerary:[
+        ['Día 1 – América / Madrid','Vuelo internacional no incluido. Noche a bordo.'],['Día 2 – Madrid','Llegada, traslado y alojamiento.'],['Día 3 – Madrid','Panorámica con guía local; Toledo opcional.'],['Día 4 – Madrid / San Sebastián / Lourdes','Tiempo en San Sebastián, llegada a Lourdes, Gruta y procesión cuando opere.'],['Día 5 – Lourdes / Blois / Orleans','Campiña francesa, Blois y Castillo Real.'],['Día 6 – Orleans / París','Llegada y panorámica de París; Medalla Milagrosa.'],['Día 7 – París','Día libre y excursiones opcionales.'],['Día 8 – París / Dijon / Zúrich','Centro medieval de Dijon y continuación a Suiza.'],['Día 9 – Zúrich / Lucerna / Vaduz / Innsbruck','Lucerna, Titlis opcional, Vaduz e Innsbruck; danzas tirolesas opcionales.'],['Día 10 – Innsbruck / Padova / Venecia','Paso de Brenner, Padova y llegada a Venecia.'],['Día 11 – Venecia / Ferrara / Florencia','Vaporetto, San Marcos, paseo a pie, Ferrara y Florencia.'],['Día 12 – Florencia / Asís / Roma','Panorámica de Florencia, basílicas de Asís y Roma; Roma Barroca opcional.'],['Día 13 – Roma / Audiencia Papal','Audiencia si opera, panorámica imperial y Vaticano.'],['Día 14 – Roma','Día libre; Nápoles y Capri opcionales.'],['Día 15 – Roma / Pisa / Costa Azul','Plaza de los Milagros y Costa Azul; Mónaco opcional.'],['Día 16 – Costa Azul / Nimes / Barcelona','Fragonard, Nimes y Barcelona.'],['Día 17 – Barcelona / Zaragoza / Madrid','Panorámica de Barcelona, Pilar y Madrid.'],['Día 18 – Madrid / América','Desayuno y traslado al aeropuerto; vuelo no incluido.']
+      ]},
+      'Capitales Europeas': {code:'RUTAS', duration:'11 días / 10 noches', price:'USD 2.050 por persona en doble', notice:'NO INCLUYE VUELO INTERNACIONAL', itinerary:[
+        ['Día 1 – América / Londres','Vuelo internacional no incluido. Noche a bordo.'],['Día 2 – Londres','Llegada, recepción, traslado y alojamiento.'],['Día 3 – Londres','Panorámica: Piccadilly, Oxford Street, Trafalgar, Westminster y Buckingham.'],['Día 4 – Londres / París','Tren rápido o autocar y ferry a París.'],['Día 5 – París','Panorámica, Medalla Milagrosa, tarde libre y cabaret opcional.'],['Día 6 – París','Día libre; Torre Eiffel o Brujas opcional.'],['Día 7 – París / Barcelona','Tren de alta velocidad o avión y traslado.'],['Día 8 – Barcelona','Día libre.'],['Día 9 – Barcelona / Zaragoza / Madrid','Panorámica de Barcelona, Basílica del Pilar y continuación a Madrid.'],['Día 10 – Madrid','Panorámica con guía local; Toledo opcional.'],['Día 11 – Madrid / América','Desayuno y traslado al aeropuerto; vuelo no incluido.']
+      ]},
+      'Europa Esplendida': {code:'RUTAS', duration:'18 días / 17 noches', price:'USD 2.690 por persona en doble', notice:'NO INCLUYE VUELO INTERNACIONAL', itinerary:[
+        ['Día 1 – América / Londres','Vuelo internacional no incluido. Noche a bordo.'],['Días 2 a 4 – Londres','Llegada, traslado, panorámica, Buckingham y día libre.'],['Día 5 – Londres / París','Tren rápido o autocar y ferry.'],['Días 6 y 7 – París','Panorámica, Medalla Milagrosa y días libres; Sena, cabaret, Versalles, Louvre y Montmartre opcionales.'],['Día 8 – París / Dijon / Zúrich','Dijon y llegada a Zúrich.'],['Día 9 – Zúrich / Lucerna / Vaduz / Innsbruck','Lucerna, Titlis opcional, Vaduz e Innsbruck.'],['Día 10 – Innsbruck / Padova / Venecia','Brenner, Padova y Venecia.'],['Día 11 – Venecia / Ferrara / Florencia','Vaporetto, San Marcos, góndola opcional, Ferrara y Florencia.'],['Día 12 – Florencia / Asís / Roma','Panorámica, Asís y Roma Barroca opcional.'],['Día 13 – Roma / Audiencia Papal','Audiencia si opera, panorámica imperial y Vaticano.'],['Día 14 – Roma / Pisa / Costa Azul','Pisa y Costa Azul.'],['Día 15 – Costa Azul / Nimes / Barcelona','Fragonard, Nimes y Barcelona.'],['Día 16 – Barcelona / Zaragoza / Madrid','Panorámica, Pilar y Madrid.'],['Día 17 – Madrid','Panorámica y Toledo opcional.'],['Día 18 – Madrid / América','Traslado al aeropuerto; vuelo no incluido.']
+      ]},
+      'Todos a Europa': {code:'RUTAS', duration:'18 días / 17 noches', price:'USD 2.290 por persona en doble', notice:'NO INCLUYE VUELO INTERNACIONAL', itinerary:[
+        ['Días 1 a 3 – América / Madrid','Vuelo no incluido, llegada, traslado y panorámica de Madrid.'],['Día 4 – Madrid / San Sebastián / Burdeos','San Sebastián y región vinícola hasta Burdeos.'],['Día 5 – Burdeos / Blois / París','Valle del Loira y Blois.'],['Días 6 y 7 – París','Panorámica, Medalla Milagrosa, tiempo libre, cabaret o Brujas opcionales.'],['Día 8 – París / Luxemburgo / Rin / Frankfurt','Champagne, Luxemburgo, Coblenza y Roca de Loreley.'],['Día 9 – Frankfurt / Heidelberg / Friburgo / Zúrich','Heidelberg y Selva Negra.'],['Día 10 – Zúrich / Lucerna / Venecia','Lucerna, Titlis opcional y Venecia.'],['Día 11 – Venecia / Padova / Florencia','Vaporetto, San Marcos, Padova y Florencia.'],['Día 12 – Florencia / Asís / Roma','Panorámica, Asís y Roma Barroca opcional.'],['Días 13 y 14 – Roma','Día libre, Capri/Nápoles/Pompeya opcional, audiencia papal y panorámica imperial.'],['Día 15 – Roma / Pisa / Costa Azul','Pisa y Costa Azul.'],['Día 16 – Costa Azul / Nimes / Barcelona','Fragonard, Nimes y Barcelona.'],['Día 17 – Barcelona / Zaragoza / Madrid','Panorámica, Zaragoza y Madrid.'],['Día 18 – Madrid / América','Traslado al aeropuerto; vuelo no incluido.']
+      ]},
+      'Magia Europea': {code:'RUTAS', duration:'19 días / 18 noches', price:'USD 2.700 por persona en doble', notice:'NO INCLUYE VUELO INTERNACIONAL', itinerary:[
+        ['Días 1 a 3 – América / Londres','Vuelo no incluido, recepción, traslado y panorámica de Londres.'],['Día 4 – Londres / París','Tren rápido o autocar y ferry.'],['Días 5 y 6 – París','Panorámica, Medalla Milagrosa, tiempo libre y Brujas opcional.'],['Día 7 – París / Luxemburgo / Rin / Frankfurt','Champagne, Luxemburgo, Coblenza y Loreley.'],['Día 8 – Frankfurt / Heidelberg / Friburgo / Zúrich','Heidelberg y Selva Negra.'],['Día 9 – Zúrich / Lucerna / Vaduz / Innsbruck','Lucerna, Titlis opcional, Vaduz e Innsbruck.'],['Día 10 – Innsbruck / Padova / Venecia','Brenner, Padova y Venecia.'],['Día 11 – Venecia / Ferrara / Florencia','Vaporetto, San Marcos, góndola opcional y Ferrara.'],['Día 12 – Florencia / Asís / Roma','Panorámica, Asís y Roma.'],['Días 13 y 14 – Roma','Audiencia papal, panorámica imperial, día libre y Nápoles/Capri opcional.'],['Día 15 – Roma / Pisa / Costa Azul','Pisa y Costa Azul.'],['Día 16 – Costa Azul / Nimes / Barcelona','Fragonard, Nimes y Barcelona.'],['Día 17 – Barcelona / Zaragoza / Madrid','Panorámica, Pilar y Madrid.'],['Día 18 – Madrid','Panorámica con guía local y tarde libre.'],['Día 19 – Madrid / América','Traslado al aeropuerto; vuelo no incluido.']
+      ]}
+    };
+
+    function showLowCost(nombre) {
+      document.getElementById('lowCostTitle').textContent = nombre;
+      document.getElementById('lowCostHeading').textContent = nombre;
+      const tour = lowCostTours[nombre];
+      if (tour) {
+        const days = tour.itinerary.map(([day, description]) => `<div class="itinerary-day"><strong>${day}</strong><p>${description}</p></div>`).join('');
+        document.getElementById('lowCostContent').innerHTML = `<div style="text-align:left"><p style="color:var(--accent);font-weight:700;margin-bottom:8px">(código ${tour.code})</p><p style="font-size:1.1rem;font-weight:700;color:#b42318;margin-bottom:8px">${tour.notice}</p><p style="color:var(--primary);font-weight:700;margin-bottom:18px">${tour.duration}</p><div class="package-price" style="display:inline-block;margin-bottom:28px">${tour.price}</div><h2 style="font-family:'Playfair Display',serif;color:var(--primary);margin-bottom:18px">Itinerario</h2><div class="tour-itinerary">${days}</div></div>`;
+      } else {
+        document.getElementById('lowCostContent').innerHTML = '<i class="fas fa-tags" style="font-size:2.4rem;color:var(--accent);margin-bottom:16px"></i><p style="color:var(--text);font-size:1rem;line-height:1.7">Estamos preparando los detalles de este circuito Low Cost.</p>';
+      }
+      showSection('tour-low-cost');
     }
 
     function toggleMenu() {
