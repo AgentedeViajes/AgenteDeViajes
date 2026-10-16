@@ -177,6 +177,7 @@
       footer { padding: 40px 20px 20px; }
     }
   </style>
+  <link rel="stylesheet" href="premium-home.css?v=20261016d">
 </head>
 <body>
 
@@ -186,8 +187,41 @@
       <i class="fas fa-paper-plane logo-icon"></i>
       <span class="logo-text">Tu Agente de Viajes</span>
     </a>
-    <ul class="nav-links" id="navLinks">
-      <li class="nav-item"><a onclick="showSection('home')"><i class="fas fa-home"></i> Inicio</a></li>
+    <input class="nav-toggle" type="checkbox" id="navToggle" aria-label="Abrir menú">
+    <ul class="nav-links premium-nav-links" id="navLinks">
+      <li class="nav-item"><a onclick="goHomeAndReset()">Inicio</a></li>
+      <li class="nav-item">
+        <span class="nav-link-btn" onclick="toggleDropdown(event, this)">Destinos <i class="fas fa-chevron-down"></i></span>
+        <ul class="dropdown">
+          <li><a onclick="goHomeTo('destinations-home')"><span class="dest-icon">🌍</span> Explorar por región</a></li>
+          <li><a data-search-query="Europa"><span class="dest-icon">🇪🇺</span> Europa</a></li>
+          <li><a data-search-query="Caribe"><span class="dest-icon">🏝️</span> Caribe</a></li>
+          <li><a data-search-query="Brasil"><span class="dest-icon">🇧🇷</span> Brasil</a></li>
+          <li><a data-search-query="Exóticos"><span class="dest-icon">🌏</span> Exóticos: Asia, África e Índico</a></li>
+          <li><a onclick="showAllTrips()"><span class="dest-icon">🧭</span> Todos los programas</a></li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link-btn" onclick="toggleDropdown(event, this)">Experiencias <i class="fas fa-chevron-down"></i></span>
+        <ul class="dropdown">
+          <li><a data-search-type="grupal"><span class="dest-icon">👥</span> Viajes grupales</a></li>
+          <li><a data-search-type="personalizado"><span class="dest-icon">🧭</span> Viajes a medida</a></li>
+          <li><a data-search-type="sin-aereo"><span class="dest-icon">🚌</span> Circuitos sin aéreo</a></li>
+          <li><a data-search-type="lujo"><span class="dest-icon">💎</span> Viajes de lujo</a></li>
+          <li><a data-search-type="low-cost"><span class="dest-icon">🏷️</span> Low cost</a></li>
+        </ul>
+      </li>
+      <li class="nav-item"><a onclick="goHomeTo('upcoming-home')">Próximas salidas</a></li>
+      <li class="nav-item"><a onclick="goHomeTo('custom-home')">Viajes a medida</a></li>
+      <li class="nav-item"><a onclick="goHomeTo('contact-home')">Contacto</a></li>
+      <li class="nav-item nav-tools">
+        <button class="nav-search-button" onclick="goHomeTo('travel-search')" aria-label="Buscar viajes"><i class="fas fa-search"></i></button>
+        <a class="nav-whatsapp" href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i><span>Consultanos</span></a>
+      </li>
+    </ul>
+
+    <ul class="legacy-nav-links" id="legacyNavLinks" aria-hidden="true">
+      <li class="nav-item"><a onclick="goHomeAndReset()"><i class="fas fa-home"></i> Inicio</a></li>
 
       <!-- CARIBE -->
       <li class="nav-item">
@@ -516,71 +550,131 @@
       </li>
 
     </ul>
-    <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    <label class="hamburger" for="navToggle" aria-label="Abrir menú" aria-controls="navLinks"><span></span><span></span><span></span></label>
   </nav>
 
   <!-- ==================== HOME ==================== -->
   <div class="page-section active" id="section-home">
-    <section class="hero">
-      <img src="fondo.png" class="img-bg" alt="Tu Agente de Viajes">
+    <section class="premium-hero" aria-labelledby="homeHeroTitle">
+      <div class="premium-hero-content">
+        <div class="premium-kicker">Viajá · explorá · viví</div>
+        <h1 id="homeHeroTitle">El mundo te espera.<em>Nosotros te llevamos.</em></h1>
+        <p class="premium-hero-copy">Descubrí experiencias inolvidables con el respaldo y la atención personalizada de tu agencia de viajes.</p>
+      </div>
     </section>
-    <div class="hero-text">
-      <h2>Descubre el mundo con <span>Tu Agente de Viajes</span></h2>
-      <p>Explora destinos, encuentra el viaje de tus sueños y vive experiencias inolvidables diseñadas a tu medida.</p>
+
+    <div class="travel-search-wrap" id="travel-search">
+      <form class="travel-search" id="travelSearchForm" role="search">
+        <div class="search-field">
+          <label for="travelDestination"><i class="fas fa-map-marker-alt"></i> ¿A dónde querés viajar?</label>
+          <input id="travelDestination" type="search" autocomplete="off" placeholder="Destino, país, ciudad o región">
+        </div>
+        <div class="search-field">
+          <label for="travelMonth"><i class="far fa-calendar-alt"></i> ¿Cuándo?</label>
+          <select id="travelMonth">
+            <option value="">Cualquier fecha</option>
+            <option value="enero">Enero</option><option value="febrero">Febrero</option><option value="marzo">Marzo</option>
+            <option value="abril">Abril</option><option value="mayo">Mayo</option><option value="junio">Junio</option>
+            <option value="julio">Julio</option><option value="agosto">Agosto</option><option value="septiembre">Septiembre</option>
+            <option value="octubre">Octubre</option><option value="noviembre">Noviembre</option><option value="diciembre">Diciembre</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label for="travelType"><i class="fas fa-suitcase"></i> Tipo de viaje</label>
+          <select id="travelType">
+            <option value="">Todos los tipos</option>
+            <option value="con-aereo">Con aéreo</option><option value="sin-aereo">Sin aéreo</option>
+            <option value="grupal">Grupal</option><option value="personalizado">Personalizado</option>
+            <option value="luna-de-miel">Luna de miel</option><option value="lujo">Lujo</option><option value="low-cost">Low cost</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label for="travelBudget"><i class="fas fa-wallet"></i> Presupuesto</label>
+          <select id="travelBudget">
+            <option value="">Cualquier presupuesto</option>
+            <option value="hasta-2000">Hasta USD 2.000</option><option value="2000-3500">USD 2.001 a 3.500</option>
+            <option value="3500-5000">USD 3.501 a 5.000</option><option value="mas-5000">Más de USD 5.000</option>
+          </select>
+        </div>
+        <button class="travel-search-submit" type="submit"><i class="fas fa-search"></i> Buscar viajes</button>
+      </form>
     </div>
 
-    <!-- HOTEL SEARCH CTA -->
-    <section class="search-cta" id="hotel-search-home">
-      <h2>Encuentra tu hotel ideal</h2>
-      <p>Utilizá nuestro buscador online para cotizar hoteles en cualquier destino del mundo al mejor precio.</p>
-      <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:16px 36px;font-size:0.95rem;">
-        <i class="fas fa-search-location"></i> Buscador Online de Hoteles
-      </a>
+    <div class="trust-strip" aria-label="Beneficios de la agencia">
+      <div class="trust-item"><i class="fas fa-paper-plane"></i><span>Asesoramiento<br>personalizado</span></div>
+      <div class="trust-item"><i class="fas fa-shield-alt"></i><span>Compra segura<br>y confiable</span></div>
+      <div class="trust-item"><i class="far fa-credit-card"></i><span>Las mejores opciones<br>y precios</span></div>
+      <div class="trust-item"><i class="fas fa-users"></i><span>Acompañamiento<br>en todo tu viaje</span></div>
+    </div>
+
+    <section class="premium-section search-results-section soft" id="travelResults" aria-live="polite">
+      <div class="premium-container">
+        <div class="section-topline"><div><div class="premium-eyebrow">Resultados de búsqueda</div><h2 style="font-family:'Playfair Display',serif;color:var(--premium-navy);font-size:2rem">Encontrá tu próximo viaje</h2></div><a class="view-all-link" onclick="showAllTrips()">Limpiar filtros <i class="fas fa-redo-alt"></i></a></div>
+        <p class="search-results-summary" id="travelResultsSummary"></p>
+        <div class="trip-card-grid" id="travelResultsGrid"></div>
+      </div>
     </section>
 
-    <!-- DESTINOS PREVIEW -->
-    <section class="destinos-section" id="destinosPreview">
-      <div class="section-header">
-        <h2>Nuestros Destinos</h2>
-        <p>Descubrí los lugares más espectaculares del mundo con las mejores condiciones</p>
-        <div class="section-divider"></div>
-      </div>
-      <div class="destinos-grid">
-        <div class="destino-card" onclick="showSection('caribe-puntacana')">
-          <img src="https://images.unsplash.com/photo-1569700946659-fe1941c71fe4?w=600&q=80" alt="Punta Cana Verano 2027">
-          <div class="card-body"><span class="card-tag">Caribe</span><h3>Punta Cana Verano 2027</h3><p>7 noches All Inclusive con aéreos y traslados incluidos.</p><div class="price">Desde USD 2.390 <span>/persona</span></div></div>
-        </div>
-        <div class="destino-card" onclick="showSection('caribe-cancun')">
-          <img src="https://images.unsplash.com/photo-1510097467424-192d713fd8b2?w=600&q=80" alt="Cancún Verano 2027">
-          <div class="card-body"><span class="card-tag">Caribe</span><h3>Cancún Verano 2027</h3><p>7 noches All Inclusive con aéreos y traslados incluidos.</p><div class="price">Desde USD 2.490 <span>/persona</span></div></div>
-        </div>
-        <div class="destino-card" onclick="showSection('brasil-rio')">
-          <img src="https://images.unsplash.com/photo-1603213820002-d63657fe8091?w=600&q=80" alt="Búzios Verano 2027">
-          <div class="card-body"><span class="card-tag">Brasil</span><h3>Búzios Verano 2027</h3><p>7 noches con desayuno, aéreo directo y posada en playa.</p><div class="price">Desde USD 1.390 <span>/persona</span></div></div>
-        </div>
-        <div class="destino-card" onclick="showSection('europa-conociendo')">
-          <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600&q=80" alt="Conociendo Europa">
-          <div class="card-body"><span class="card-tag">Europa</span><h3>Conociendo Europa</h3><p>17 noches recorriendo Madrid, París, Roma, Barcelona y más.</p><div class="price">Desde USD 3.600 <span>/persona</span></div></div>
-        </div>
-        <div class="destino-card" onclick="showSection('europa-auroras-artico')">
-          <img src="https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=600&q=80" alt="Auroras del Ártico">
-          <div class="card-body"><span class="card-tag">Europa</span><h3>Auroras del Ártico</h3><p>9 noches + crucero Copenhague-Oslo con vista de Auroras.</p><div class="price">Desde USD 7.450 <span>/persona</span></div></div>
-        </div>
-        <div class="destino-card" onclick="showSection('europa-capitales-berlin')">
-          <img src="https://images.unsplash.com/photo-1560969184-10fe8719e047?w=600&q=80" alt="Capitales Imperiales con Berlín">
-          <div class="card-body"><span class="card-tag">Europa</span><h3>Capitales Imperiales con Berlín</h3><p>12 noches: Viena, Budapest, Praga y Berlín con 20+ entradas.</p><div class="price">Desde USD 4.800 <span>/persona</span></div></div>
-        </div>
-        <div class="destino-card" onclick="showSection('exoticos-kenia')">
-          <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600&q=80" alt="Kenia, Tanzania y Playa">
-          <div class="card-body"><span class="card-tag">Exóticos</span><h3>Kenia, Tanzania y Playa</h3><p>14 noches de safari por los mejores parques + 6 noches Zanzíbar.</p><div class="price">Desde USD 8.390 <span>/persona</span></div></div>
-        </div>
-        <div class="destino-card" onclick="showSection('exoticos-tesoros-corea-japon')">
-          <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80" alt="Tesoros de Corea y Japón">
-          <div class="card-body"><span class="card-tag">Exóticos</span><h3>Tesoros de Corea y Japón</h3><p>15 noches: Seúl, Busan, Hiroshima, Kioto y Tokio con tren bala.</p><div class="price">Desde USD 8.070 <span>/persona</span></div></div>
+    <section class="premium-section" id="destinations-home">
+      <div class="premium-container">
+        <header class="premium-heading"><div class="premium-eyebrow">Explorá por continente</div><h2>Destinos para cada tipo de viajero</h2><p>Playas paradisíacas, ciudades históricas, naturaleza, cultura y mucho más.</p></header>
+        <div class="region-grid">
+          <article class="region-card" data-search-query="Europa" tabindex="0"><img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=760&q=84" alt="Europa" loading="lazy"><div class="region-card-content"><h3>Europa</h3><p>Historia, cultura y paisajes increíbles</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
+          <article class="region-card" data-search-query="Caribe" tabindex="0"><img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=760&q=84" alt="Caribe" loading="lazy"><div class="region-card-content"><h3>Caribe</h3><p>Playas de ensueño todo el año</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
+          <article class="region-card" data-search-query="Brasil" tabindex="0"><img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=760&q=84" alt="Brasil" loading="lazy"><div class="region-card-content"><h3>Brasil</h3><p>Naturaleza, playas y mucha energía</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
+          <article class="region-card" data-search-query="Exóticos" tabindex="0"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=760&q=84" alt="Destinos exóticos de Asia, África e Islas del Índico" loading="lazy"><div class="region-card-content"><h3>Exóticos</h3><p>Asia, África e Islas del Índico</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
         </div>
       </div>
     </section>
+
+    <section class="premium-section soft" id="experiences-home">
+      <div class="premium-container">
+        <header class="premium-heading"><div class="premium-eyebrow">Viví experiencias inolvidables</div><h2>Tipos de viajes</h2><p>Elegí cómo querés viajar y nosotros encontramos las mejores propuestas.</p></header>
+        <div class="type-grid">
+          <article class="type-card" data-search-type="grupal" tabindex="0"><img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=600&q=80" alt="Viajes grupales" loading="lazy"><div class="type-card-body"><i class="fas fa-users"></i><div><h3>Viajes grupales</h3><p>Salidas programadas y guía acompañante</p></div></div></article>
+          <article class="type-card" data-search-type="personalizado" tabindex="0"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Viajes a medida" loading="lazy"><div class="type-card-body"><i class="far fa-compass"></i><div><h3>Viajes a medida</h3><p>Diseñamos tu experiencia ideal</p></div></div></article>
+          <article class="type-card" data-search-type="luna-de-miel" tabindex="0"><img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=80" alt="Luna de miel" loading="lazy"><div class="type-card-body"><i class="far fa-heart"></i><div><h3>Luna de miel</h3><p>Momentos únicos en destinos soñados</p></div></div></article>
+          <article class="type-card" data-search-type="sin-aereo" tabindex="0"><img src="https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80" alt="Circuitos sin aéreos" loading="lazy"><div class="type-card-body"><i class="far fa-map"></i><div><h3>Circuitos sin aéreos</h3><p>Recorridos espectaculares por el mundo</p></div></div></article>
+          <article class="type-card" data-search-type="lujo" tabindex="0"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="Viajes de lujo" loading="lazy"><div class="type-card-body"><i class="far fa-gem"></i><div><h3>Viajes de lujo</h3><p>Experiencias exclusivas y personalizadas</p></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="premium-section" id="featured-home">
+      <div class="premium-container">
+        <div class="section-topline"><header class="premium-heading"><div class="premium-eyebrow">Selección especial</div><h2>Viajes recomendados</h2><p>Una selección de propuestas para inspirar tu próxima aventura.</p></header><a class="view-all-link" onclick="showAllTrips()">Ver todos los programas <i class="fas fa-arrow-right"></i></a></div>
+        <div class="trip-card-grid" id="featuredTripsGrid"></div>
+      </div>
+    </section>
+
+    <section class="premium-section soft" id="upcoming-home">
+      <div class="premium-container">
+        <div class="section-topline"><header class="premium-heading"><div class="premium-eyebrow">Planificá con tiempo</div><h2>Próximas salidas</h2><p>Programas con fechas informadas, ordenados para ayudarte a elegir.</p></header><a class="view-all-link" onclick="goHomeTo('travel-search')">Buscar por mes <i class="fas fa-calendar-alt"></i></a></div>
+        <div class="departure-list" id="upcomingDepartures"></div>
+      </div>
+    </section>
+
+    <section class="premium-section" id="custom-home">
+      <div class="premium-container custom-trip-banner">
+        <div class="custom-trip-copy"><div class="premium-eyebrow">Tu viaje, a tu manera</div><h2>Europa a Medida</h2><p>Viajes personalizados que pueden adaptarse y modificarse según tus preferencias, con hotelería céntrica para recorrer cada destino por cuenta propia.</p><button class="premium-button" type="button" data-search-type="personalizado"><i class="far fa-compass"></i> Ver propuestas a medida</button></div>
+        <div class="custom-trip-image"><img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=900&q=85" alt="Viajes personalizados por Europa" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section class="premium-section soft" id="hotel-search-home">
+      <div class="premium-container hotel-home-card">
+        <div><div class="premium-eyebrow" style="justify-content:flex-start"><span style="display:none"></span>Reservas independientes</div><h2>Encontrá tu hotel ideal</h2><p>Cotizá hoteles en cualquier destino del mundo desde nuestro buscador online.</p></div>
+        <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" rel="noopener noreferrer" class="premium-button"><i class="fas fa-hotel"></i> Buscar hoteles</a>
+      </div>
+    </section>
+
+    <section class="contact-band" id="contact-home">
+      <h2>¿Listo para empezar a viajar?</h2><p>Contanos qué experiencia estás buscando y te ayudamos a encontrar la mejor opción.</p>
+      <div class="contact-actions"><a class="premium-button" href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Consultar por WhatsApp</a><a class="premium-button secondary" href="mailto:javier@tresortravel.com.ar"><i class="far fa-envelope"></i> Enviar un email</a></div>
+    </section>
   </div>
+
+  <a class="floating-whatsapp" href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer" aria-label="Consultar por WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
   <!-- ==================== HOTEL SEARCH PAGE ==================== -->
   <div class="page-section" id="section-hotel-search">
@@ -6927,6 +7021,8 @@
       if (section) section.classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       document.getElementById('navLinks').classList.remove('active');
+      const navToggle = document.getElementById('navToggle');
+      if (navToggle) navToggle.checked = false;
       document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
     }
 
@@ -7996,42 +8092,42 @@
         itinerary:[['Día 1','Buenos Aires–Estambul: salida en TK016.'],['Día 2','Estambul: llegada, traslado y hotel provisto por la aerolínea.'],['Día 3','Estambul–Delhi: día libre y vuelo TK716.'],['Día 4','Delhi: early check-in, Akshardham, Templo del Loto y Gurudwara Bangla Sahib.'],['Día 5','Delhi: Vieja Delhi, Chandni Chowk en rickshaw, Jama Masjid, Raj Ghat, Connaught Place, Dhobi Walas, Rajpath y Jardines Lodi.'],['Día 6','Delhi–Mandawa: almuerzo en ruta, havelis, pueblo y fuerte de Mandawa.'],['Día 7','Mandawa–Jaipur: Sanganer y Templo de los Monos de Galtaji.'],['Día 8','Jaipur: Hawa Mahal, Fuerte Amber, Panna Meena Ka Kund, Jagat Shiromani, Palacio de la Ciudad y Jantar Mantar.'],['Día 9','Jaipur: tuk tuk, cine Raj Mandir, bazares, ceremonia Aarti, rickshaw nocturno y cena Thali.'],['Día 10','Jaipur–Ranthambore: llegada, almuerzo y safari vespertino.'],['Día 11','Ranthambore: safaris matutino y vespertino, con almuerzo y cena.'],['Día 12','Ranthambore–Agra: safari, Fatehpur Sikri y continuación a Agra.'],['Día 13','Agra: Taj Mahal al amanecer y Fuerte de Agra.'],['Día 14','Agra–Delhi: viaje por carretera.'],['Día 15','Delhi–Maldivas: vuelo, recepción y traslado.'],['Días 16 a 18','Maldivas: días libres de playa con All Inclusive.'],['Día 19','Maldivas–Estambul: check-out y vuelo TK735.'],['Día 20','Estambul–Buenos Aires: conexión TK015 y llegada a Ezeiza.']]
       },
       'sudafrica-mauritius': {
-        name:'Sudáfrica y Mauritius', departure:'8 de febrero', duration:'13 días / 12 noches',
+        name:'Sudáfrica y Mauritius', departure:'8 de febrero', duration:'13 días / 12 noches', price:'USD 7.950 por persona en doble',
         includes:['Aéreos Buenos Aires–San Pablo–Johannesburgo–Mauritius–Ciudad del Cabo–San Pablo–Buenos Aires.','1 noche en Johannesburgo, 2 en reserva privada del área Kruger con pensión completa, 4 en Mauritius con media pensión y 4 en Ciudad del Cabo con desayuno.','Safaris 4x4, dos almuerzos, visitas, traslados y guías en español.','Seguro Universal Assistance Maximum, reunión previa y tour leader desde Argentina con mínimo 10 pasajeros.'],
         itinerary:[['Día 1','Buenos Aires–San Pablo–Johannesburgo.'],['Día 2','Johannesburgo–Mpumalanga–reserva privada del área Kruger; cena.'],['Día 3','Reserva privada: safaris 4x4 de mañana y tarde, pensión completa.'],['Día 4','Safari matutino y traslado a Johannesburgo.'],['Día 5','Vuelo Johannesburgo–Mauritius y traslado.'],['Días 6 a 8','Mauritius: días libres con media pensión.'],['Día 9','Mauritius–Johannesburgo–Ciudad del Cabo.'],['Día 10','Península del Cabo, Cabo de Buena Esperanza, focas, pingüinos y almuerzo.'],['Día 11','City tour, Bo-Kaap, Waterfront, Table Mountain, Stellenbosch o Franschhoek y degustación.'],['Día 12','Ciudad del Cabo: día libre.'],['Día 13','Ciudad del Cabo–San Pablo–Buenos Aires.']]
       },
       'kenia-tanzania': {
-        name:'Kenia y Tanzania', departure:'22 de febrero', duration:'17 días / 16 noches',
+        name:'Kenia y Tanzania', departure:'22 de febrero', duration:'17 días / 16 noches', price:'USD 9.980 por persona en base doble',
         includes:['Aéreos con Ethiopian Airlines Buenos Aires–Nairobi y Zanzíbar–Addis Abeba–Buenos Aires; vuelo Arusha–Zanzíbar.','2 noches Nairobi, 1 Lago Nakuru, 2 Masai Mara, 2 Serengeti, 2 Karatu/Ngorongoro, 1 Lago Manyara, 4 Zanzíbar All Inclusive y 1 Addis Abeba por conexión.','Safaris 4x4, entradas, traslados, guías en español, cena Carnivore y comidas según itinerario.','Visa de Kenia, seguro de ingreso a Zanzíbar, asistencia Universal Assistance y tour leader con mínimo 10 pasajeros. Equipaje blando máximo 15 kg en vuelos internos.'],
         itinerary:[['Días 1 y 2','Buenos Aires–Addis Abeba–Nairobi.'],['Día 3','Nairobi: Giraffe Centre, almuerzo, Museo Karen Blixen y cena Carnivore.'],['Día 4','Nairobi–Lago Nakuru: almuerzo y safari.'],['Día 5','Lago Nakuru–Masai Mara: almuerzo y safari.'],['Día 6','Masai Mara: safaris de mañana y tarde.'],['Día 7','Masai Mara–Isebania–Serengeti, con trámites fronterizos y box lunch.'],['Día 8','Serengeti: safari de día completo.'],['Día 9','Serengeti–Karatu/Ngorongoro: safari y traslado.'],['Día 10','Cráter de Ngorongoro y continuación al área de Lago Manyara.'],['Día 11','Karatu–Lago Manyara: almuerzo y tarde libre.'],['Día 12','Lago Manyara–Arusha–Zanzíbar.'],['Días 13 a 15','Zanzíbar: playa y All Inclusive.'],['Día 16','Zanzíbar–Addis Abeba; hotel de conexión.'],['Día 17','Addis Abeba–Buenos Aires.']]
       },
       'vietnam-camboya-tailandia': {
-        name:'Vietnam, Camboya y Tailandia', departure:'7 de marzo', duration:'20 días / 19 noches',
+        name:'Vietnam, Camboya y Tailandia', departure:'7 de marzo', duration:'20 días / 19 noches', price:'USD 7.950 por persona en doble',
         includes:['Aéreos internacionales con Turkish Airlines; vuelos Hanoi–Danang, Hue–Ho Chi Minh, Ho Chi Minh–Siem Reap–Bangkok y Bangkok–Phuket.','2 noches Hanoi, 1 crucero Lan Ha con pensión completa, 2 Hoi An, 1 Hue, 2 Ho Chi Minh, 2 Siem Reap, 3 Bangkok y 3 Phuket con late check-out.','9 almuerzos, 3 cenas, visitas, entradas, traslados y guía en español.','Seguro Universal Assistance, reunión previa y tour leader desde Argentina con mínimo 10 pasajeros.'],
         itinerary:[['Días 1 a 3','Buenos Aires–Estambul–Hanoi; recepción, traslado y cena.'],['Día 4','Hanoi: Ho Chi Minh, Templo de la Literatura, Pagoda del Pilar Único, Museo de Etnología, Barrio Antiguo y café con huevo.'],['Día 5','Hanoi–Bahía de Lan Ha: crucero, cuevas, almuerzo, atardecer y cena.'],['Día 6','Lan Ha–Hanoi–Danang–Hoi An, con brunch y vuelo.'],['Día 7','Hoi An: recorrido histórico, Puente Japonés, mercado y almuerzo.'],['Día 8','Hoi An–Hue por Hai Van; Ciudadela, Dong Ba y paseo en ciclo.'],['Día 9','Hue–Ho Chi Minh: Río Perfume, Thien Mu, Tu Duc, Khai Dinh y vuelo.'],['Día 10','Cu Chi y panorámica de Ho Chi Minh.'],['Día 11','Vuelo a Siem Reap, Angkor Wat, puesta de sol y cena.'],['Día 12','Angkor Thom, Bayon, Ta Prohm, Banteay Srei, Banteay Samre y cena Apsara.'],['Día 13','Siem Reap–Bangkok.'],['Día 14','Bangkok: Gran Palacio, Buda Esmeralda, Wat Pho y Wat Traimit.'],['Día 15','Bangkok: día libre.'],['Día 16','Vuelo Bangkok–Phuket.'],['Día 17','Phi Phi, Maya Bay, snorkel, Bamboo Island y almuerzo.'],['Día 18','Phuket: día libre.'],['Días 19 y 20','Phuket–Estambul–Buenos Aires, con late check-out.']]
       },
       'holi-india': {
-        name:'Holi India', departure:'14 de marzo', duration:'20 días / 19 noches',
+        name:'Holi India', departure:'14 de marzo', duration:'20 días / 19 noches', price:'USD 6.350 por persona en doble',
         includes:['Aéreos Buenos Aires–Delhi y Mumbai–Buenos Aires con Ethiopian; vuelos domésticos según programa y early check-in en Delhi.','3 noches Delhi, 2 Agra, 1 Chomu, 2 Jaipur, 1 Pushkar, 2 Jodhpur, 2 Udaipur, 2 Aurangabad y 2 Mumbai.','Traslados, visitas, entradas y guías locales en español.','Seguro Universal Assistance, reunión previa y tour leader con mínimo 10 pasajeros.'],
         itinerary:[['Días 1 y 2','Buenos Aires–Addis Abeba–Delhi.'],['Día 3','Nueva Delhi: Qutab, Humayun, Parlamento, Rashtrapati Bhawan y Puerta de India.'],['Día 4','Vieja Delhi: Chandni Chowk, Jama Masjid, Raj Ghat y Fuerte Rojo.'],['Día 5','Delhi: Akshardham, Gurudwara Bangla Sahib y Templo del Loto.'],['Días 6 y 7','Agra: Fuerte, Itimad-Ud-Daulah y Taj Mahal.'],['Día 8','Fatehpur Sikri–Chomu; Holika Dahan, cena y danzas.'],['Día 9','Fiesta Holi en Chomu y traslado a Jaipur.'],['Día 10','Jaipur: Amber, Hawa Mahal, Palacio, Jantar Mantar y mercado.'],['Día 11','Jaipur–Pushkar: lago, ghats, Templo de Brahma y mercados.'],['Días 12 y 13','Jodhpur: Savitri, Mehrangarh, Jaswant Thada, comunidad Bishnoi y folclore.'],['Días 14 y 15','Ranakpur y Udaipur: Palacio, Jagdish, Sahelion-ki-Bari y Lago Pichola.'],['Días 16 a 18','Vuelo a Aurangabad; Cuevas de Ajanta y Ellora; vuelo a Mumbai.'],['Día 19','Mumbai: Elephanta, Puerta de la India, Marine Drive, templos jainistas, Dhobi Ghat, Crawford y Bollywood.'],['Día 20','Mumbai–Addis Abeba–Buenos Aires.']]
       },
       'egipto-jordania': {
-        name:'Egipto y Jordania', departure:'17 de marzo', duration:'17 días / 16 noches',
+        name:'Egipto y Jordania', departure:'17 de marzo', duration:'17 días / 16 noches', price:'USD 6.580 por persona en doble',
         includes:['Aéreos internacionales con Ethiopian; vuelos El Cairo–Luxor, Aswan–El Cairo y El Cairo–Amman.','5 noches El Cairo, 4 crucero Nilo con pensión completa, 1 Amman, 2 Petra, 1 Wadi Rum y 2 Mar Muerto con media pensión.','Pirámides, GEM, Ciudadela, Khan El-Khalili, templos del Nilo, Madaba, Nebo, Shobak, Petra by Night, Petra y 4x4 en Wadi Rum.','Traslados, guías en español, seguro Universal Assistance, reunión y tour leader con mínimo 10 pasajeros.'],
         itinerary:[['Días 1 y 2','Buenos Aires–Addis Abeba–El Cairo.'],['Día 3','El Cairo: Ciudadela de Saladino, Mezquita de Alabastro y Khan El-Khalili.'],['Día 4','Pirámides, Esfinge, Templo del Valle y Gran Museo Egipcio.'],['Día 5','El Cairo libre; Alejandría opcional.'],['Día 6','Vuelo a Luxor, Karnak, Luxor y embarque.'],['Día 7','Valle de los Reyes, Hatshepsut y Colosos de Memnón; navegación a Edfu.'],['Día 8','Edfu, Kom Ombo y navegación a Aswan.'],['Día 9','Abu Simbel opcional, Represa, Obelisco Inconcluso y faluca.'],['Día 10','Aswan–El Cairo.'],['Día 11','El Cairo–Amman.'],['Día 12','Madaba, Monte Nebo, Shobak, Pequeña Petra y Petra.'],['Día 13','Petra completa y Petra by Night.'],['Día 14','Petra–Wadi Rum; alojamiento en domo.'],['Día 15','Wadi Rum–Mar Muerto.'],['Día 16','Mar Muerto libre y traslado nocturno.'],['Día 17','Amman–Addis Abeba–Buenos Aires.']]
       },
       'china-tibet': {
-        name:'China con Tíbet', departure:'6 de abril', duration:'23 días / 22 noches',
+        name:'China con Tíbet', departure:'6 de abril', duration:'23 días / 22 noches', price:'USD 8.350 por persona en doble',
         includes:['Aéreos con Turkish Buenos Aires–Beijing y Shanghai–Buenos Aires; vuelos Beijing–Xi’an–Lhasa–Chengdu–Zhangjiajie.','4 noches Beijing, 2 Xi’an, 3 Lhasa, 2 Chengdu, 2 Zhangjiajie, 1 Furong, 2 Fenghuang y 3 Shanghai con late check-out.','Tren Fenghuang–Shanghai, autorización de Tíbet, 9 almuerzos, Pato Laqueado y cena en Shanghai.','Traslados, visitas, guía en español, seguro Universal Assistance, reunión y tour leader con mínimo 10 pasajeros.'],
         itinerary:[['Días 1 a 3','Buenos Aires–Estambul–Beijing.'],['Días 4 a 6','Beijing: Ciudad Prohibida, Tian An Men, Palacio de Verano, Gran Muralla, Estadio Nacional, Pato Laqueado y día libre.'],['Días 7 y 8','Vuelo a Xi’an; Templo del Cielo, Terracota, muralla y caligrafía.'],['Días 9 a 11','Lhasa: aclimatación, Sera, Jokhang, Barkhor, Potala y Norbulingkha.'],['Días 12 y 13','Chengdu: vuelo, Centro del Panda, Parque del Pueblo y Kuan Zhai.'],['Días 14 y 15','Zhangjiajie: vuelo, Bailong, Yuanjiajie, Montaña Avatar y Tianzi.'],['Días 16 a 18','Tianmen, Furong y Fenghuang; visitas y día libre.'],['Día 19','Tren de alta velocidad Fenghuang–Shanghai y cena.'],['Días 20 y 21','Shanghai: Yuyuan, Buda de Jade, Bund y día libre.'],['Días 22 y 23','Shanghai–Estambul–Buenos Aires, con late check-out.']]
       },
       'hong-kong-china': {
-        name:'Hong Kong y China', departure:'10 de mayo', duration:'21 días / 20 noches',
+        name:'Hong Kong y China', departure:'10 de mayo', duration:'21 días / 20 noches', price:'USD 6.680 por persona en doble',
         includes:['Aéreos Turkish Buenos Aires–Hong Kong y Shanghai–Buenos Aires; vuelo Hong Kong–Beijing, Beijing–Xi’an y Guilin–Hangzhou.','2 noches Hong Kong, 4 Beijing, 2 Xi’an, 3 Chongqing, 2 Guilin, 1 Hangzhou y 3 Shanghai con late check-out.','Trenes Xi’an–Chongqing–Guilin y Hangzhou–Shanghai; 9 almuerzos, Pato Laqueado y espectáculo de acrobacia.','Traslados, visitas, guía en español, seguro Universal Assistance, reunión y tour leader con mínimo 10 pasajeros.'],
         itinerary:[['Días 1 a 3','Buenos Aires–Estambul–Hong Kong.'],['Día 4','Hong Kong: Pico Victoria, bahía, puerto y Deep Water Bay.'],['Día 5','Vuelo Hong Kong–Beijing.'],['Días 6 a 8','Beijing: Tian An Men, Ciudad Prohibida, Palacio de Verano, Gran Muralla, Camino Sagrado, Estadio y día libre.'],['Días 9 y 10','Xi’an: Templo del Cielo, vuelo, muralla, residencia Gao, caligrafía y Terracota.'],['Días 11 a 13','Tren a Chongqing, Hill City Trail, Hongyadong, Jiefangbei, Liziba, mirador y día libre.'],['Días 14 y 15','Tren a Guilin, Flauta de Caña, crucero Li Jiang y Yangshuo.'],['Días 16 y 17','Vuelo a Hangzhou, Lago Oeste, Pagoda de la Armonía, Alma Escondida y tren a Shanghai.'],['Días 18 y 19','Shanghai: Buda de Jade, Yuyuan, casco antiguo, Bund, acrobacia y día libre.'],['Días 20 y 21','Shanghai–Estambul–Buenos Aires, con late check-out.']]
       },
       'malasia-singapur-bali': {
-        name:'Malasia, Singapur y Bali', departure:'24 de mayo', duration:'20 días / 19 noches',
+        name:'Malasia, Singapur y Bali', departure:'24 de mayo', duration:'20 días / 19 noches', price:'USD 7.820 por persona en doble',
         includes:['Aéreos Turkish Buenos Aires–Kuala Lumpur y Denpasar–Buenos Aires; vuelo Singapur–Denpasar.','3 noches Kuala Lumpur, 1 Malaca, 4 Singapur, 3 Ubud y 5 Nusa Dua.','Cinco almuerzos, dos cenas, visitas, excursiones, entradas y traslados con guía en español.','Seguro Universal Assistance, reunión previa y tour leader desde Argentina con mínimo 10 pasajeros.'],
         itinerary:[
           ['Día 01. Buenos Aires – Kuala Lumpur','Salida desde Ezeiza en el vuelo TK 016 de las 23.55hs. Noche en vuelo.'],
@@ -8348,5 +8444,6 @@
       }
     });
   </script>
+  <script src="travel-search.js?v=20261016i"></script>
 </body>
 </html>
