@@ -257,7 +257,7 @@ body {
 }
 .premium-heading p { max-width: 650px; margin: 10px auto 0; color: var(--premium-muted); line-height: 1.6; }
 
-.region-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.region-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
 .region-card {
   position:relative;
   min-height:250px;

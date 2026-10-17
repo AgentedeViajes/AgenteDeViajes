@@ -26,6 +26,46 @@
     default: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=760&q=82'
   };
 
+  // Used only when a program does not already provide its own photograph.
+  // The earliest destination mentioned in the title wins for multi-destination tours.
+  const DESTINATION_IMAGES = [
+    {keys:['costa amalfitana','napoles','italia'], image:'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=760&q=82'},
+    {keys:['malasia','kuala lumpur'], image:'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=760&q=82'},
+    {keys:['singapur'], image:'https://images.unsplash.com/photo-1525625293386-3f8f99389edd8?w=760&q=82'},
+    {keys:['bali','indonesia'], image:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=760&q=82'},
+    {keys:['tailandia','bangkok'], image:'https://images.unsplash.com/photo-1528181304800-259b08848526?w=760&q=82'},
+    {keys:['vietnam','hanoi'], image:'https://images.unsplash.com/photo-1528127269322-539801943592?w=760&q=82'},
+    {keys:['camboya','siem reap'], image:'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=760&q=82'},
+    {keys:['laos'], image:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=760&q=82'},
+    {keys:['china','beijing','hong kong'], image:'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=760&q=82'},
+    {keys:['japon','tokyo'], image:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=760&q=82'},
+    {keys:['corea','seul'], image:'https://images.unsplash.com/photo-1538485399081-7c897b5f3f94?w=760&q=82'},
+    {keys:['india','delhi'], image:'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=760&q=82'},
+    {keys:['maldivas'], image:'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=760&q=82'},
+    {keys:['egipto','cairo','nilo'], image:'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=760&q=82'},
+    {keys:['turquia','estambul'], image:'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=760&q=82'},
+    {keys:['grecia','atenas'], image:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=760&q=82'},
+    {keys:['sudafrica','kenia','tanzania','uganda','ruanda'], image:'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=760&q=82'},
+    {keys:['marruecos'], image:'https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=760&q=82'},
+    {keys:['mauritius','mauricio'], image:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=760&q=82'},
+    {keys:['seychelles'], image:'https://images.unsplash.com/photo-1540202404-a2f29016b523?w=760&q=82'},
+    {keys:['zanzibar'], image:'https://images.unsplash.com/photo-1528275646751-ff237d1cd935?w=760&q=82'},
+    {keys:['filipinas'], image:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=760&q=82'},
+    {keys:['tahiti','bora bora','moorea'], image:'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=760&q=82'},
+    {keys:['noruega','fiordos'], image:'https://images.unsplash.com/photo-1520769669658-f07657f5a307?w=760&q=82'},
+    {keys:['suiza','zurich','lucerna'], image:'https://images.unsplash.com/photo-1527668752968-14dc70a27c95?w=760&q=82'},
+    {keys:['portugal','lisboa'], image:'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=760&q=82'},
+    {keys:['sicilia'], image:'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?w=760&q=82'},
+    {keys:['provenza'], image:'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=760&q=82'},
+    {keys:['balcanes'], image:'https://images.unsplash.com/photo-1530841377377-3ff06c0ca713?w=760&q=82'},
+    {keys:['galicia'], image:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=760&q=82'},
+    {keys:['espana','madrid'], image:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=760&q=82'},
+    {keys:['francia','paris'], image:'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=760&q=82'},
+    {keys:['reino unido','londres'], image:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=760&q=82'},
+    {keys:['estados unidos','nueva york'], image:'https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=760&q=82'},
+    {keys:['europa'], image:'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=760&q=82'}
+  ];
+
   const catalog = [];
   const catalogById = new Map();
 
@@ -45,7 +85,7 @@
     const n = normalize(`${source} ${text}`);
     if (/\b(?:caribe|punta cana|cancun|jamaica|aruba|curazao|colombia)\b/.test(n)) return 'Caribe';
     if (/\b(?:brasil|buzios|rio de janeiro|maceio|florianopolis|porto de galinhas|imbassai)\b/.test(n)) return 'Brasil';
-    if (/\b(?:usa|estados unidos|miami|orlando|new york|nueva york|las vegas|los angeles)\b/.test(n)) return 'Estados Unidos';
+    if (/\b(?:estados unidos|miami|orlando|new york|nueva york|las vegas|los angeles)\b/.test(n)) return 'Estados Unidos';
     if (/\b(?:africa|sudafrica|kenia|tanzania|uganda|ruanda|rwanda|mauritius|mauricio|seychelles|marruecos|egipto|zanzibar|madagascar|etiopia|namibia|botswana|zimbabue|zimbabwe|mozambique|senegal|tunez)\b|\b(?:isla reunion|reunion island)\b/.test(n)) return 'África';
     if (/\b(?:asia|japon|china|tailandia|vietnam|camboya|india|nepal|bali|indonesia|filipinas|maldivas|corea|laos|dubai|emiratos|jordania|israel|butan|bhutan|myanmar|birmania|malasia|singapur|qatar|oman|mongolia|tibet)\b|\bsri lanka\b/.test(n)) return 'Asia y Exóticos';
     if (/\b(?:australia|nueva zelanda|tahiti|bora bora|moorea|polinesia)\b/.test(n)) return 'Oceanía';
@@ -62,6 +102,20 @@
     if (region === 'Oceanía') return REGION_IMAGES.oceania;
     if (region === 'Asia y Exóticos') return REGION_IMAGES.asia;
     return REGION_IMAGES.default;
+  }
+
+  function imageForTitle(title, region) {
+    const name = normalize(title);
+    let selected = null;
+    DESTINATION_IMAGES.forEach(destination => {
+      destination.keys.forEach(key => {
+        const position = name.indexOf(normalize(key));
+        if (position !== -1 && (!selected || position < selected.position)) {
+          selected = {position, image:destination.image};
+        }
+      });
+    });
+    return selected ? selected.image : imageFor(region);
   }
 
   function inferTypes(text, source) {
@@ -104,11 +158,62 @@
     return match ? match[0] : '';
   }
 
+  function hasConcreteDepartureDate(text) {
+    const normalized = normalize(text);
+    const months = 'enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre';
+    return new RegExp(`\\b(?:[0-3]?\\d)\\s*(?:de\\s+)?(?:${months})\\b|\\b(?:${months})\\s+(?:[0-3]?\\d)\\b`).test(normalized)
+      || /\b\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?\b/.test(normalized);
+  }
+
+  function hasProgramCode(text, code) {
+    return new RegExp(`\\bcodigo\\s+${normalize(code)}\\b`).test(normalize(text));
+  }
+
+  function applyClassificationRules(record) {
+    const name = normalize(record.name);
+    const allText = record.name;
+    const source = normalize(record.source);
+
+    // Explicit business rules have priority over inferred words such as
+    // "premium", "a medida" or "circuito" found inside descriptions.
+    if (hasProgramCode(allText, 'oriente') || name.includes('balcanes y capitales imperiales')) {
+      return ['sin-aereo'];
+    }
+    if (['cancun','riviera maya','costa mujeres'].includes(name)) {
+      return ['programa'];
+    }
+    if (name.includes('costa amalfitana') && name.includes('sicilia') && name.includes('malta')) {
+      return ['lujo','con-aereo'];
+    }
+    if (name.includes('malasia singapur y bali') || name.includes('china con tibet')) {
+      return ['lujo','con-aereo'];
+    }
+    if (name.includes('paraiso de tailandia y playas')) {
+      return ['grupal','con-aereo'];
+    }
+    if (['eba','btw','vips','pi'].some(code => hasProgramCode(allText, code))) {
+      return ['grupal','con-aereo'];
+    }
+    if (source === 'luxury') {
+      return ['lujo','con-aereo'];
+    }
+    if (hasConcreteDepartureDate(record.departureText)) {
+      return ['grupal','con-aereo'];
+    }
+
+    const types = record.types || [];
+    if (types.includes('sin-aereo')) {
+      return ['sin-aereo', ...types.filter(type => !['sin-aereo','grupal','con-aereo','lujo','personalizado'].includes(type))];
+    }
+    return types.length ? types : ['programa'];
+  }
+
   function addRecord(record) {
     if (!record || !record.name || catalogById.has(record.id)) return;
     record.region = record.region || inferRegion(record.searchText || record.name, record.source);
-    record.image = record.image || imageFor(record.region);
+    record.image = record.image || imageForTitle(record.name, record.region);
     record.types = record.types || inferTypes(record.searchText || record.name, record.source);
+    record.types = applyClassificationRules(record);
     record.months = record.months || extractMonths(record.departureText);
     record.priceFrom = record.priceFrom == null ? parsePrice(record.priceText) : record.priceFrom;
     record.duration = record.duration || extractDuration(record.searchText);
@@ -128,6 +233,7 @@
         const tag = card.querySelector('.package-tag');
         const price = card.querySelector('.package-price');
         const img = card.querySelector('img');
+        const explicitTypes = (card.dataset.travelTypes || section.dataset.travelTypes || '').split(',').map(type => type.trim()).filter(Boolean);
         const id = `static:${sectionKey}:${index}`;
         card.dataset.tripId = id;
         addRecord({
@@ -138,6 +244,7 @@
           departureText: `${tag ? tag.textContent : ''} ${info.textContent}`,
           priceText: price ? price.textContent : '',
           image: img ? img.src : '',
+          types: explicitTypes.length ? explicitTypes : undefined,
           duration: extractDuration(info.textContent),
           open: function () {
             showSection(sectionKey);
@@ -147,6 +254,26 @@
             }, 120);
           }
         });
+      });
+    });
+  }
+
+  function collectCustomDestinations() {
+    document.querySelectorAll('[data-custom-destination]').forEach(section => {
+      const name = section.dataset.customDestination;
+      const region = section.dataset.customRegion || inferRegion(name, 'custom');
+      const sectionKey = section.id.replace('section-', '');
+      addRecord({
+        id: `custom:${sectionKey}`,
+        name,
+        source: 'custom personalizado',
+        searchText: `${name} ${region} EEUU Estados Unidos viaje a medida personalizado`,
+        departureText: 'Viaje a medida',
+        priceText: '',
+        image: section.dataset.customImage || imageFor(region),
+        region,
+        types: ['personalizado'],
+        open: function () { showSection(sectionKey); }
       });
     });
   }
@@ -179,6 +306,7 @@
 
   function buildCatalog() {
     collectStaticPrograms();
+    collectCustomDestinations();
     collectObjectPrograms(typeof loadedTours !== 'undefined' ? loadedTours : null, 'loaded', showLoadedTour, {types:['sin-aereo']});
     collectObjectPrograms(typeof europaMedidaTours !== 'undefined' ? europaMedidaTours : null, 'europa-medida', showEuropaMedida, {types:['personalizado','con-aereo']});
     collectObjectPrograms(typeof additionalMidasTours !== 'undefined' ? additionalMidasTours : null, 'midas', showTourSinAereos, {types:['sin-aereo']});
@@ -207,6 +335,19 @@
       || /\b(?:islas? del indico|oceano indico|maldivas|mauritius|mauricio|seychelles|zanzibar|madagascar|isla reunion|reunion island)\b/.test(record.normalized);
   }
 
+  function exactRegionForQuery(query) {
+    const regions = {
+      europa: 'Europa',
+      caribe: 'Caribe',
+      brasil: 'Brasil',
+      'estados unidos': 'Estados Unidos',
+      eeuu: 'Estados Unidos',
+      usa: 'Estados Unidos',
+      oceania: 'Oceanía'
+    };
+    return regions[query] || '';
+  }
+
   function score(record, query) {
     if (!query) return 1;
     const name = normalize(record.name);
@@ -233,9 +374,12 @@
   }
 
   function filterCatalog(filters) {
+    const exactRegion = exactRegionForQuery(filters.query);
     return catalog
       .map(record => ({record, score:score(record, filters.query)}))
-      .filter(item => !filters.query || (isExoticQuery(filters.query) ? isExoticRecord(item.record) : item.score > 0))
+      .filter(item => !filters.query || (isExoticQuery(filters.query)
+        ? isExoticRecord(item.record)
+        : exactRegion ? item.record.region === exactRegion : item.score > 0))
       .filter(item => !filters.month || item.record.months.includes(filters.month))
       .filter(item => !filters.type || item.record.types.includes(filters.type))
       .filter(item => budgetMatches(item.record, filters.budget))

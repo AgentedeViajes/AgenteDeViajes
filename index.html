@@ -197,6 +197,7 @@
           <li><a data-search-query="Europa"><span class="dest-icon">🇪🇺</span> Europa</a></li>
           <li><a data-search-query="Caribe"><span class="dest-icon">🏝️</span> Caribe</a></li>
           <li><a data-search-query="Brasil"><span class="dest-icon">🇧🇷</span> Brasil</a></li>
+          <li><a data-search-query="Estados Unidos"><span class="dest-icon">🇺🇸</span> EEUU</a></li>
           <li><a data-search-query="Exóticos"><span class="dest-icon">🌏</span> Exóticos: Asia, África e Índico</a></li>
           <li><a onclick="showAllTrips()"><span class="dest-icon">🧭</span> Todos los programas</a></li>
         </ul>
@@ -455,17 +456,8 @@
         </ul>
       </li>
 
-      <!-- USA -->
-      <li class="nav-item">
-        <span class="nav-link-btn" onclick="toggleDropdown(event, this)"><i class="fas fa-flag-usa"></i> USA <i class="fas fa-chevron-down"></i></span>
-        <ul class="dropdown">
-          <li class="dropdown-header">Destinos en USA</li>
-          <li><a onclick="showSection('usa-miami')"><span class="dest-icon">🌴</span> Miami</a></li>
-          <li><a onclick="showSection('usa-ny')"><span class="dest-icon">🗽</span> Nueva York</a></li>
-          <li><a onclick="showSection('usa-orlando')"><span class="dest-icon">🎢</span> Orlando</a></li>
-          <li><a onclick="showSection('usa-west')"><span class="dest-icon">🌵</span> Sueños del Oeste</a></li>
-        </ul>
-      </li>
+      <!-- EEUU -->
+      <li class="nav-item"><a data-search-query="Estados Unidos"><i class="fas fa-flag-usa"></i> EEUU</a></li>
 
       <!-- LUJO -->
       <li class="nav-item">
@@ -622,6 +614,7 @@
           <article class="region-card" data-search-query="Europa" tabindex="0"><img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=760&q=84" alt="Europa" loading="lazy"><div class="region-card-content"><h3>Europa</h3><p>Historia, cultura y paisajes increíbles</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
           <article class="region-card" data-search-query="Caribe" tabindex="0"><img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=760&q=84" alt="Caribe" loading="lazy"><div class="region-card-content"><h3>Caribe</h3><p>Playas de ensueño todo el año</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
           <article class="region-card" data-search-query="Brasil" tabindex="0"><img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=760&q=84" alt="Brasil" loading="lazy"><div class="region-card-content"><h3>Brasil</h3><p>Naturaleza, playas y mucha energía</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
+          <article class="region-card" data-search-query="Estados Unidos" tabindex="0"><img src="https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=760&q=84" alt="Estados Unidos" loading="lazy"><div class="region-card-content"><h3>EEUU</h3><p>Miami, Nueva York, Orlando y el Oeste</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
           <article class="region-card" data-search-query="Exóticos" tabindex="0"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=760&q=84" alt="Destinos exóticos de Asia, África e Islas del Índico" loading="lazy"><div class="region-card-content"><h3>Exóticos</h3><p>Asia, África e Islas del Índico</p></div><span class="arrow"><i class="fas fa-arrow-right"></i></span></article>
         </div>
       </div>
@@ -4457,7 +4450,7 @@
   </div>
 
   <!-- ==================== USA: MIAMI ==================== -->
-  <div class="page-section" id="section-usa-miami">
+  <div class="page-section" id="section-usa-miami" data-custom-destination="Miami" data-custom-region="Estados Unidos" data-custom-image="https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=760&q=82">
     <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=1920&q=80') center/cover;">
       <div class="dest-hero-content">
         <h1>Miami</h1>
@@ -4470,23 +4463,23 @@
       <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:40px;max-width:800px;margin:0 auto;text-align:center;">
         <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.6rem;color:var(--white);"><i class="fas fa-plane-departure"></i></div>
         <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--primary);margin-bottom:12px;">Cotizá tu destino a medida</h3>
-        <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Podes cotizar tu destino <strong>individual</strong> o combinarlo con otro destino de <strong>EEUU</strong> o <strong>Caribe</strong>.</p>
+        <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Cotizá este destino a medida.</p>
         <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:24px;">Contactanos y armamos el viaje perfecto para vos.</p>
         <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;">
-          <a href="https://wa.me/5491134821978" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#25D366;color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#25D366;color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
           <a href="mailto:javier@tresortravel.com.ar" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--primary);color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-envelope"></i> Email</a>
         </div>
         <div style="border-top:1px solid #e2e8f0;padding-top:24px;margin-top:8px;">
           <h4 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--primary);margin-bottom:12px;">Buscador Online de Hoteles</h4>
           <p style="color:var(--text-light);font-size:0.85rem;margin-bottom:14px;">Buscá y reservá el hotel ideal para tu estadía</p>
-          <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--accent);color:var(--white);border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-hotel"></i> Buscar Hoteles</a>
+          <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--accent);color:var(--white);border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-hotel"></i> Buscar Hoteles</a>
         </div>
       </div>
     </section>
   </div>
 
   <!-- ==================== USA: NUEVA YORK ==================== -->
-  <div class="page-section" id="section-usa-ny">
+  <div class="page-section" id="section-usa-ny" data-custom-destination="Nueva York" data-custom-region="Estados Unidos" data-custom-image="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=760&q=82">
     <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1920&q=80') center/cover;">
       <div class="dest-hero-content">
         <h1>Nueva York</h1>
@@ -4499,24 +4492,24 @@
       <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:40px;max-width:800px;margin:0 auto;text-align:center;">
         <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.6rem;color:var(--white);"><i class="fas fa-city"></i></div>
         <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--primary);margin-bottom:12px;">Cotizá tu destino a medida</h3>
-        <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Podes cotizar tu destino <strong>individual</strong> o combinarlo con otro destino de <strong>EEUU</strong> o <strong>Caribe</strong>.</p>
+        <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Cotizá este destino a medida.</p>
         <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:24px;">Contactanos y armamos el viaje perfecto para vos.</p>
         <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;">
-          <a href="https://wa.me/5491134821978" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#25D366;color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#25D366;color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
           <a href="mailto:javier@tresortravel.com.ar" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--primary);color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-envelope"></i> Email</a>
         </div>
         <div style="border-top:1px solid #e2e8f0;padding-top:24px;margin-top:8px;">
           <h4 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--primary);margin-bottom:12px;">Buscador Online de Hoteles</h4>
           <p style="color:var(--text-light);font-size:0.85rem;margin-bottom:14px;">Buscá y reservá el hotel ideal para tu estadía</p>
-          <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--accent);color:var(--white);border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-hotel"></i> Buscar Hoteles</a>
+          <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--accent);color:var(--white);border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-hotel"></i> Buscar Hoteles</a>
         </div>
       </div>
     </section>
   </div>
 
   <!-- ==================== USA: ORLANDO ==================== -->
-  <div class="page-section" id="section-usa-orlando">
-    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1575089976121-8ed774c2f9b4?w=1920&q=80') center/cover;">
+  <div class="page-section" id="section-usa-orlando" data-custom-destination="Orlando" data-custom-region="Estados Unidos" data-custom-image="https://images.unsplash.com/photo-1612215449115-8a0b7a123321?w=760&q=82">
+    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.78), rgba(44,82,130,0.68)), url('https://images.unsplash.com/photo-1612215449115-8a0b7a123321?w=1920&q=84') center/cover;">
       <div class="dest-hero-content">
         <h1>Orlando</h1>
         <p>Los parques temáticos más famosos del mundo te esperan</p>
@@ -4528,23 +4521,23 @@
       <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:40px;max-width:800px;margin:0 auto;text-align:center;">
         <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.6rem;color:var(--white);"><i class="fas fa-magic"></i></div>
         <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--primary);margin-bottom:12px;">Cotizá tu destino a medida</h3>
-        <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Podes cotizar tu destino <strong>individual</strong> o combinarlo con otro destino de <strong>EEUU</strong> o <strong>Caribe</strong>.</p>
+        <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Cotizá este destino a medida con pases de Disney y Universal.</p>
         <p style="color:var(--text);font-size:0.95rem;line-height:1.7;margin-bottom:24px;">Contactanos y armamos el viaje perfecto para vos.</p>
         <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;">
-          <a href="https://wa.me/5491134821978" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#25D366;color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#25D366;color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
           <a href="mailto:javier@tresortravel.com.ar" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--primary);color:#fff;border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-envelope"></i> Email</a>
         </div>
         <div style="border-top:1px solid #e2e8f0;padding-top:24px;margin-top:8px;">
           <h4 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--primary);margin-bottom:12px;">Buscador Online de Hoteles</h4>
           <p style="color:var(--text-light);font-size:0.85rem;margin-bottom:14px;">Buscá y reservá el hotel ideal para tu estadía</p>
-          <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--accent);color:var(--white);border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-hotel"></i> Buscar Hoteles</a>
+          <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--accent);color:var(--white);border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:transform .2s;"><i class="fas fa-hotel"></i> Buscar Hoteles</a>
         </div>
       </div>
     </section>
   </div>
 
   <!-- ==================== USA: SUEÑOS DEL OESTE ==================== -->
-  <div class="page-section" id="section-usa-west">
+  <div class="page-section" id="section-usa-west" data-travel-types="con-aereo">
     <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?w=1920&q=80') center/cover;">
       <div class="dest-hero-content">
         <h1>Sueños del <span>Oeste</span></h1>
@@ -5241,7 +5234,7 @@
       <div class="package-card">
         <div class="package-info">
           <span class="package-tag">Salida Grupal Acompañada</span>
-          <h3>Costa Amalfitana, Sicilia y Malta - Categoría Classic</h3>
+          <h3>Costa Amalfitana, Sicilia y Malta - Categoría Classic (Código Julia)</h3>
           <p style="font-size:0.9rem;color:var(--text);margin-bottom:12px;line-height:1.5;">Nápoles, Sorrento, Palermo, Taormina, Ragusa, Selinunte y Malta</p>
           <ul class="package-details">
             <li><i class="fas fa-plane"></i> Lufthansa EZE/FRA/NAP + FRA/EZE</li>
@@ -8444,6 +8437,6 @@
       }
     });
   </script>
-  <script src="travel-search.js?v=20261016i"></script>
+  <script src="travel-search.js?v=20261016o"></script>
 </body>
 </html>
