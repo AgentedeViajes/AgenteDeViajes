@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Modo Rumbo | Viajes & Experiencias</title>
+  <link rel="preload" as="image" href="assets/hero/santorini.webp" type="image/webp" fetchpriority="high">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -178,7 +179,7 @@
       footer { padding: 40px 20px 20px; }
     }
   </style>
-  <link rel="stylesheet" href="premium-home.css?v=20261017b">
+  <link rel="stylesheet" href="premium-home.css?v=20261017c">
 </head>
 <body>
 
@@ -547,11 +548,35 @@
 
   <!-- ==================== HOME ==================== -->
   <div class="page-section active" id="section-home">
-    <section class="premium-hero" aria-labelledby="homeHeroTitle">
+    <section class="premium-hero" aria-labelledby="homeHeroTitle" aria-roledescription="carrusel">
+      <div class="hero-carousel" aria-hidden="true">
+        <div class="hero-slide is-active" data-destination="Santorini, Grecia" data-loaded="true" style="--hero-position:72% center;--hero-position-mobile:72% center;background-image:url('assets/hero/santorini.webp')"></div>
+        <div class="hero-slide" data-destination="Roma, Italia" data-src="assets/hero/roma.webp" style="--hero-position:72% center;--hero-position-mobile:78% center"></div>
+        <div class="hero-slide" data-destination="Japón" data-src="assets/hero/japon.webp" style="--hero-position:68% center;--hero-position-mobile:68% center"></div>
+        <div class="hero-slide" data-destination="Caribe" data-src="assets/hero/caribe.webp" style="--hero-position:70% center;--hero-position-mobile:70% center"></div>
+        <div class="hero-slide" data-destination="China" data-src="assets/hero/china.webp" style="--hero-position:58% center;--hero-position-mobile:56% center"></div>
+        <div class="hero-slide" data-destination="Egipto" data-src="assets/hero/egipto.webp" style="--hero-position:58% center;--hero-position-mobile:54% center"></div>
+        <div class="hero-slide" data-destination="París, Francia" data-src="assets/hero/paris.webp" style="--hero-position:70% center;--hero-position-mobile:72% center"></div>
+        <div class="hero-slide" data-destination="Tailandia" data-src="assets/hero/tailandia.webp" style="--hero-position:68% center;--hero-position-mobile:68% center"></div>
+        <div class="hero-slide" data-destination="Río de Janeiro, Brasil" data-src="assets/hero/brasil.webp" style="--hero-position:72% center;--hero-position-mobile:80% center"></div>
+        <div class="hero-slide" data-destination="Kenia" data-src="assets/hero/kenia.webp" style="--hero-position:55% center;--hero-position-mobile:52% center"></div>
+      </div>
       <div class="premium-hero-content">
         <div class="premium-kicker">Viajá · explorá · viví</div>
         <h1 id="homeHeroTitle">El mundo te espera.<em>Nosotros te llevamos.</em></h1>
         <p class="premium-hero-copy">Descubrí experiencias inolvidables con el respaldo y la atención personalizada de tu agente de viajes.</p>
+      </div>
+      <div class="hero-carousel-dots" role="group" aria-label="Elegir fotografía del destino">
+        <button class="hero-carousel-dot is-active" type="button" data-slide="0" aria-label="Mostrar Santorini, Grecia" aria-current="true"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="1" aria-label="Mostrar Roma, Italia"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="2" aria-label="Mostrar Japón"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="3" aria-label="Mostrar Caribe"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="4" aria-label="Mostrar China"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="5" aria-label="Mostrar Egipto"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="6" aria-label="Mostrar París, Francia"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="7" aria-label="Mostrar Tailandia"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="8" aria-label="Mostrar Río de Janeiro, Brasil"></button>
+        <button class="hero-carousel-dot" type="button" data-slide="9" aria-label="Mostrar Kenia"></button>
       </div>
     </section>
 
@@ -8464,5 +8489,6 @@
     });
   </script>
   <script src="travel-search.js?v=20261017q"></script>
+  <script src="hero-carousel.js?v=20261017a"></script>
 </body>
 </html>

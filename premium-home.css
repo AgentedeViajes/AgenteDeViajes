@@ -84,18 +84,45 @@ body {
   margin-top: 74px;
   display: flex;
   align-items: center;
-  background:
-    linear-gradient(90deg, rgba(4,31,56,.88) 0%, rgba(4,31,56,.66) 42%, rgba(4,31,56,.10) 76%),
-    url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=88') center 46%/cover no-repeat;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--premium-navy-deep);
 }
 
+.premium-hero::before,
 .premium-hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 62%, rgba(4,31,56,.22));
+  z-index: 1;
   pointer-events: none;
 }
+
+.premium-hero::before {
+  background: linear-gradient(90deg,rgba(4,31,56,.9) 0%,rgba(4,31,56,.68) 42%,rgba(4,31,56,.18) 72%,rgba(4,31,56,.04) 100%);
+}
+
+.premium-hero::after { background: linear-gradient(180deg,transparent 58%,rgba(4,31,56,.3)); }
+
+.hero-carousel,
+.hero-slide { position:absolute; inset:0; }
+.hero-carousel { z-index:0; overflow:hidden; }
+.hero-slide {
+  opacity:0;
+  background-color:var(--premium-navy-deep);
+  background-position:var(--hero-position,center);
+  background-size:cover;
+  background-repeat:no-repeat;
+  transform:scale(1.015);
+  transition:opacity 1.2s ease;
+  will-change:opacity,transform;
+}
+.hero-slide.is-active {
+  opacity:1;
+  z-index:1;
+  animation:hero-cinematic-zoom 8.2s ease-out both;
+}
+@keyframes hero-cinematic-zoom { from { transform:scale(1.015); } to { transform:scale(1.065); } }
 
 .premium-hero-content {
   position: relative;
@@ -104,6 +131,28 @@ body {
   margin: 0 auto;
   padding-bottom: 112px;
 }
+
+.hero-carousel-dots {
+  position:absolute;
+  z-index:3;
+  right:clamp(24px,5vw,72px);
+  bottom:94px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.hero-carousel-dot {
+  width:8px;
+  height:8px;
+  padding:0;
+  border:1px solid rgba(255,255,255,.75);
+  border-radius:999px;
+  background:rgba(255,255,255,.24);
+  cursor:pointer;
+  transition:width .3s ease,background .3s ease,transform .3s ease;
+}
+.hero-carousel-dot:hover,.hero-carousel-dot:focus-visible { transform:scale(1.25); outline:2px solid rgba(255,255,255,.7); outline-offset:3px; }
+.hero-carousel-dot.is-active { width:24px; background:var(--premium-gold-light); border-color:var(--premium-gold-light); }
 
 .premium-kicker {
   margin-bottom: 18px;
@@ -491,8 +540,10 @@ body {
   #navbar .premium-nav-links .dropdown { background:#f7f9fb; }
   #navbar .premium-nav-links .dropdown li a { color:var(--premium-navy); }
   #navbar .premium-nav-links .nav-tools { display:flex; align-items:center; gap:10px; padding:8px 12px; }
-  .premium-hero { margin-top:66px; min-height:580px; background-position:62% center; }
+  .premium-hero { margin-top:66px; min-height:580px; }
+  .hero-slide { background-position:var(--hero-position-mobile,var(--hero-position,center)); }
   .premium-hero-content { padding-bottom:150px; }
+  .hero-carousel-dots { right:24px; bottom:128px; }
   .travel-search-wrap { margin:-108px auto 0; }
   .trust-strip { grid-template-columns:repeat(2,1fr); }
   .trust-item:nth-child(2) { border-right:0; }
@@ -508,11 +559,14 @@ body {
   #navbar { padding:0 14px; }
   #navbar .logo-icon { font-size:24px; }
   #navbar .brand-logo-img { height:54px; }
-  .premium-hero { min-height:530px; align-items:flex-start; padding-top:72px; background-position:66% center; }
+  .premium-hero { min-height:530px; align-items:flex-start; padding-top:72px; }
   .premium-hero-content { width:calc(100% - 32px); padding-bottom:160px; }
   .premium-kicker { font-size:.6rem; letter-spacing:.24em; }
   .premium-hero h1 { font-size:2.72rem; }
   .premium-hero-copy { max-width:330px; font-size:.91rem; }
+  .hero-carousel-dots { left:16px; right:auto; bottom:142px; gap:6px; }
+  .hero-carousel-dot { width:7px; height:7px; }
+  .hero-carousel-dot.is-active { width:20px; }
   .travel-search-wrap { width:calc(100% - 24px); margin:-126px auto 0; }
   .travel-search { grid-template-columns:1fr; padding:16px; border-radius:18px; }
   .search-field,.search-field:first-child { padding:10px 4px; border-right:0; border-bottom:1px solid var(--premium-border); }
@@ -537,5 +591,10 @@ body {
   .hotel-home-card { align-items:flex-start; flex-direction:column; padding:28px 24px; }
   .hotel-home-card .premium-button { width:100%; justify-content:center; }
   .floating-whatsapp { right:16px; bottom:72px; width:50px; height:50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { transition:none; transform:none; animation:none !important; }
+  .hero-carousel-dot { transition:none; }
 }
 
