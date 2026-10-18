@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tu Agente de Viajes</title>
+  <title>Modo Rumbo | Viajes & Experiencias</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -29,6 +29,7 @@
     .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
     .logo-icon { font-size: 24px; color: var(--accent); }
     .logo-text { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1.3rem; font-weight: 700; }
+    .brand-logo-img { display: block; width: auto; height: 62px; object-fit: contain; }
     .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
     .nav-item { position: relative; }
     .nav-item > a, .nav-item > span.nav-link-btn { color: rgba(255,255,255,0.85); text-decoration: none; padding: 8px 14px; font-size: 0.85rem; font-weight: 500; border-radius: 8px; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; cursor: pointer; white-space: nowrap; }
@@ -177,15 +178,14 @@
       footer { padding: 40px 20px 20px; }
     }
   </style>
-  <link rel="stylesheet" href="premium-home.css?v=20261016d">
+  <link rel="stylesheet" href="premium-home.css?v=20261017b">
 </head>
 <body>
 
   <!-- NAVBAR -->
   <nav id="navbar">
-    <a class="logo" onclick="showSection('home')">
-      <i class="fas fa-paper-plane logo-icon"></i>
-      <span class="logo-text">Tu Agente de Viajes</span>
+    <a class="logo" onclick="showSection('home')" aria-label="Modo Rumbo - Ir al inicio">
+      <img class="brand-logo-img" src="Logo de Viajes Modo Rumbo.png" alt="Modo Rumbo - Viajes y Experiencias">
     </a>
     <input class="nav-toggle" type="checkbox" id="navToggle" aria-label="Abrir menú">
     <ul class="nav-links premium-nav-links" id="navLinks">
@@ -551,7 +551,7 @@
       <div class="premium-hero-content">
         <div class="premium-kicker">Viajá · explorá · viví</div>
         <h1 id="homeHeroTitle">El mundo te espera.<em>Nosotros te llevamos.</em></h1>
-        <p class="premium-hero-copy">Descubrí experiencias inolvidables con el respaldo y la atención personalizada de tu agencia de viajes.</p>
+        <p class="premium-hero-copy">Descubrí experiencias inolvidables con el respaldo y la atención personalizada de tu agente de viajes.</p>
       </div>
     </section>
 
@@ -592,6 +592,32 @@
       </form>
     </div>
 
+    <section class="travel-modes-section" aria-labelledby="travelModesTitle">
+      <div class="premium-container">
+        <header class="premium-heading travel-modes-heading">
+          <div class="premium-eyebrow">Elegí tu próxima experiencia</div>
+          <h2 id="travelModesTitle">¿En qué modo querés viajar?</h2>
+        </header>
+        <div class="travel-modes-grid">
+          <article class="travel-mode-card mode-playa" data-search-mode="playa" tabindex="0" role="button" aria-label="Ver viajes Modo Playa">
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">🏖️</span><h3>Modo Playa</h3><p>Brasil, Caribe y playas paradisíacas.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+          </article>
+          <article class="travel-mode-card mode-europa" data-search-query="Europa" tabindex="0" role="button" aria-label="Ver viajes Modo Europa">
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">🌍</span><h3>Modo Europa</h3><p>Circuitos, cultura y grandes ciudades.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+          </article>
+          <article class="travel-mode-card mode-grupales" data-search-type="grupal" tabindex="0" role="button" aria-label="Ver viajes Modo Grupales">
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">🧳</span><h3>Modo Grupales</h3><p>Compartí experiencias inolvidables.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+          </article>
+          <article class="travel-mode-card mode-exoticos" data-search-query="Exóticos" tabindex="0" role="button" aria-label="Ver viajes Modo Exóticos">
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">🌏</span><h3>Modo Exóticos</h3><p>Descubrí destinos extraordinarios.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+          </article>
+          <article class="travel-mode-card mode-medida" data-search-type="personalizado" tabindex="0" role="button" aria-label="Ver viajes Modo a Medida">
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">✨</span><h3>Modo a Medida</h3><p>Diseñamos el viaje que imaginás.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <div class="trust-strip" aria-label="Beneficios de la agencia">
       <div class="trust-item"><i class="fas fa-paper-plane"></i><span>Asesoramiento<br>personalizado</span></div>
       <div class="trust-item"><i class="fas fa-shield-alt"></i><span>Compra segura<br>y confiable</span></div>
@@ -624,11 +650,11 @@
       <div class="premium-container">
         <header class="premium-heading"><div class="premium-eyebrow">Viví experiencias inolvidables</div><h2>Tipos de viajes</h2><p>Elegí cómo querés viajar y nosotros encontramos las mejores propuestas.</p></header>
         <div class="type-grid">
-          <article class="type-card" data-search-type="grupal" tabindex="0"><img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=600&q=80" alt="Viajes grupales" loading="lazy"><div class="type-card-body"><i class="fas fa-users"></i><div><h3>Viajes grupales</h3><p>Salidas programadas y guía acompañante</p></div></div></article>
-          <article class="type-card" data-search-type="personalizado" tabindex="0"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Viajes a medida" loading="lazy"><div class="type-card-body"><i class="far fa-compass"></i><div><h3>Viajes a medida</h3><p>Diseñamos tu experiencia ideal</p></div></div></article>
-          <article class="type-card" data-search-type="luna-de-miel" tabindex="0"><img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=80" alt="Luna de miel" loading="lazy"><div class="type-card-body"><i class="far fa-heart"></i><div><h3>Luna de miel</h3><p>Momentos únicos en destinos soñados</p></div></div></article>
-          <article class="type-card" data-search-type="sin-aereo" tabindex="0"><img src="https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80" alt="Circuitos sin aéreos" loading="lazy"><div class="type-card-body"><i class="far fa-map"></i><div><h3>Circuitos sin aéreos</h3><p>Recorridos espectaculares por el mundo</p></div></div></article>
-          <article class="type-card" data-search-type="lujo" tabindex="0"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="Viajes de lujo" loading="lazy"><div class="type-card-body"><i class="far fa-gem"></i><div><h3>Viajes de lujo</h3><p>Experiencias exclusivas y personalizadas</p></div></div></article>
+          <article class="type-card" data-search-type="grupal" tabindex="0"><img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=600&q=80" alt="Viajes grupales" loading="lazy"><div class="type-card-body"><i class="fas fa-users"></i><div><h3>Viajes grupales</h3><p>Salidas programadas con guía acompañante, pensadas para quienes prefieren viajar en grupo.</p></div></div></article>
+          <article class="type-card" data-search-type="personalizado" tabindex="0"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Viajes a medida" loading="lazy"><div class="type-card-body"><i class="far fa-compass"></i><div><h3>Viajes a medida</h3><p>Diseñamos tu itinerario con hoteles céntricos y conectamos las ciudades para que explores a tu propio ritmo.</p></div></div></article>
+          <article class="type-card" data-search-type="luna-de-miel" tabindex="0"><img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=80" alt="Luna de miel" loading="lazy"><div class="type-card-body"><i class="far fa-heart"></i><div><h3>Luna de miel</h3><p>Momentos inolvidables en destinos de ensueño.</p></div></div></article>
+          <article class="type-card" data-search-type="sin-aereo" tabindex="0"><img src="https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80" alt="Circuitos sin aéreos" loading="lazy"><div class="type-card-body"><i class="far fa-map"></i><div><h3>Circuitos sin aéreos</h3><p>Recorridos con salidas semanales y guía local. Elige tus fechas de viaje y sumamos el vuelo internacional.</p></div></div></article>
+          <article class="type-card" data-search-type="lujo" tabindex="0"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="Viajes de lujo" loading="lazy"><div class="type-card-body"><i class="far fa-gem"></i><div><h3>Viajes de lujo</h3><p>Experiencias exclusivas y personalizadas.</p></div></div></article>
         </div>
       </div>
     </section>
@@ -6987,7 +7013,7 @@
   <footer id="mainFooter">
     <div class="footer-content">
       <div class="footer-col">
-        <h3>Tu Agente de Viajes</h3>
+        <h3>Modo Rumbo</h3>
         <p>Hacemos realidad tus sueños de viaje con experiencias personalizadas y un servicio de primera calidad.</p>
       </div>
       <div class="footer-col">
@@ -7002,7 +7028,7 @@
         <div class="contact-item"><i class="fas fa-file-invoice"></i><p>CUIT 30-71420235-5</p></div>
       </div>
     </div>
-    <div class="footer-bottom">&copy; 2026 Tu Agente de Viajes. Todos los derechos reservados.</div>
+    <div class="footer-bottom">&copy; 2026 Modo Rumbo. Todos los derechos reservados.</div>
   </footer>
 
   <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
@@ -8437,6 +8463,6 @@
       }
     });
   </script>
-  <script src="travel-search.js?v=20261016o"></script>
+  <script src="travel-search.js?v=20261017q"></script>
 </body>
 </html>

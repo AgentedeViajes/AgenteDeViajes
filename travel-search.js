@@ -437,6 +437,19 @@
     renderResults(filterCatalog(filters), filters);
   }
 
+  function runTravelMode(mode) {
+    const modeLabels = {playa:'Modo Playa'};
+    let records = catalog;
+    if (mode === 'playa') {
+      records = catalog.filter(record => record.region === 'Caribe'
+        || record.region === 'Brasil');
+    }
+    clearTravelFilters();
+    renderResults(records, {query:'',month:'',type:'',budget:''});
+    const summary = document.getElementById('travelResultsSummary');
+    if (summary) summary.textContent = `${records.length} ${records.length === 1 ? 'viaje encontrado' : 'viajes encontrados'} para ${modeLabels[mode] || 'este modo'}`;
+  }
+
   function clearTravelFilters() {
     document.getElementById('travelDestination').value = '';
     document.getElementById('travelMonth').value = '';
@@ -523,9 +536,14 @@
         document.getElementById('travelType').value = type.dataset.searchType;
         runSearch();
       }
+      const mode = event.target.closest('[data-search-mode]');
+      if (mode) {
+        showSection('home');
+        runTravelMode(mode.dataset.searchMode);
+      }
     });
     document.addEventListener('keydown', event => {
-      const action = event.target.closest && event.target.closest('[data-open-trip],[data-search-query],[data-search-type]');
+      const action = event.target.closest && event.target.closest('[data-open-trip],[data-search-query],[data-search-type],[data-search-mode]');
       if (action && (event.key === 'Enter' || event.key === ' ')) {
         event.preventDefault();
         action.click();
