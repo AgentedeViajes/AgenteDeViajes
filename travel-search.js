@@ -213,7 +213,7 @@
     record.region = record.region || inferRegion(record.searchText || record.name, record.source);
     record.image = record.image || imageForTitle(record.name, record.region);
     record.types = record.types || inferTypes(record.searchText || record.name, record.source);
-    record.types = applyClassificationRules(record);
+    record.types = record.authoritativeTypes ? record.types : applyClassificationRules(record);
     record.months = record.months || extractMonths(record.departureText);
     record.priceFrom = record.priceFrom == null ? parsePrice(record.priceText) : record.priceFrom;
     record.duration = record.duration || extractDuration(record.searchText);
@@ -312,6 +312,96 @@
     collectObjectPrograms(typeof additionalMidasTours !== 'undefined' ? additionalMidasTours : null, 'midas', showTourSinAereos, {types:['sin-aereo']});
     collectObjectPrograms(typeof luxuryTours !== 'undefined' ? luxuryTours : null, 'luxury', showLuxuryTour, {types:['lujo','grupal','con-aereo']});
     collectObjectPrograms(typeof lowCostTours !== 'undefined' ? lowCostTours : null, 'lowcost', showLowCost, {types:['low-cost','sin-aereo']});
+    window.travelCatalog = catalog;
+  }
+
+  function publicPrice(program) {
+    if (program.price_prefix === 'consult' || program.price == null) return '';
+    const amount = new Intl.NumberFormat('es-AR', {maximumFractionDigits:0}).format(Number(program.price));
+    const prefix = program.price_prefix === 'from' ? 'Desde ' : '';
+    const basis = {double:' por persona en doble',single:' por persona en single',package:' por paquete'}[program.price_basis] || '';
+    return `${prefix}${program.currency || 'USD'} ${amount}${basis}`;
+  }
+
+  function publicDate(value) {
+    if (!value) return '';
+    const date = new Date(`${value}T12:00:00`);
+    return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat('es-AR', {day:'numeric',month:'long',year:'numeric'}).format(date);
+  }
+
+  function publicTypes(program) {
+    const types = new Set(program.travel_types || []);
+    if (program.flight_type === 'with-flight') types.add('con-aereo');
+    if (program.flight_type === 'without-flight') types.add('sin-aereo');
+    if (!types.size) types.add('programa');
+    return [...types];
+  }
+
+  function showPublicProgram(program) {
+    let dialog = document.getElementById('publicProgramDialog');
+    if (!dialog) {
+      dialog = document.createElement('dialog');
+      dialog.id = 'publicProgramDialog';
+      dialog.className = 'program-dialog';
+      dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+      document.body.appendChild(dialog);
+    }
+    const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
+    const itinerary = [...(program.itinerary_days || [])].sort((a,b) => a.position - b.position);
+    const includes = program.includes || [];
+    const title = escapeHtml(program.title);
+    const whatsappText = encodeURIComponent(`Hola, quiero consultar por el programa ${program.title}.`);
+    dialog.innerHTML = `<article class="program-detail">
+      <button class="program-dialog-close" type="button" aria-label="Cerrar">×</button>
+      ${program.image_path ? `<img class="program-detail-image" src="${escapeHtml(program.image_path)}" alt="${title}">` : ''}
+      <div class="program-detail-content">
+        <div class="premium-eyebrow">${program.operator_code ? `Código ${escapeHtml(program.operator_code)}` : 'Programa de viaje'}</div>
+        <h2>${title}</h2>
+        ${program.summary ? `<p class="program-detail-summary">${escapeHtml(program.summary)}</p>` : ''}
+        <div class="program-detail-facts">
+          ${program.duration ? `<span><i class="far fa-clock"></i>${escapeHtml(program.duration)}</span>` : ''}
+          ${program.region ? `<span><i class="fas fa-map-marker-alt"></i>${escapeHtml(program.region)}</span>` : ''}
+          <strong>${escapeHtml(publicPrice(program) || 'Precio a consultar')}</strong>
+        </div>
+        ${departures.length ? `<section><h3>Fechas de salida</h3><div class="program-departures">${departures.map(item => `<span>${escapeHtml(publicDate(item.departure_date))}${item.price != null ? ` · ${escapeHtml(program.currency || 'USD')} ${escapeHtml(new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(Number(item.price)))}` : ''}</span>`).join('')}</div></section>` : ''}
+        ${includes.length ? `<section><h3>Incluye</h3><ul class="program-includes">${includes.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
+        ${itinerary.length ? `<section><h3>Itinerario</h3><div class="program-itinerary">${itinerary.map(day => `<article><div class="program-day-label">Día ${day.position}</div><div><h4>${escapeHtml(day.title || `Día ${day.position}`)}</h4>${day.meals ? `<small>${escapeHtml(day.meals)}</small>` : ''}<p>${escapeHtml(day.description).replace(/\n/g,'<br>')}</p></div></article>`).join('')}</div></section>` : ''}
+        ${program.notes ? `<section class="program-notes"><h3>Notas</h3><p>${escapeHtml(program.notes).replace(/\n/g,'<br>')}</p></section>` : ''}
+        <div class="program-detail-actions"><a class="premium-button" href="https://wa.me/5491134821978?text=${whatsappText}" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Consultar por WhatsApp</a><a class="premium-button secondary" href="mailto:javier@tresortravel.com.ar?subject=${encodeURIComponent(`Consulta: ${program.title}`)}"><i class="far fa-envelope"></i> Consultar por email</a></div>
+      </div>
+    </article>`;
+    dialog.querySelector('.program-dialog-close').addEventListener('click', () => dialog.close());
+    dialog.showModal();
+  }
+
+  function collectPublicPrograms(programs) {
+    const existingNames = new Set(catalog.map(item => normalize(item.name)));
+    (programs || []).forEach(program => {
+      if (!program.title || existingNames.has(normalize(program.title))) return;
+      const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
+      const departureText = departures.map(item => publicDate(item.departure_date)).filter(Boolean).join(' · ')
+        || (program.departure_type === 'weekly' ? 'Salidas semanales' : program.departure_type === 'on-request' ? 'A solicitud' : 'Consultar salida');
+      const itineraryText = (program.itinerary_days || []).map(day => `${day.title || ''} ${day.description || ''}`).join(' ');
+      const searchText = [program.title,program.operator_code,program.region,(program.countries || []).join(' '),(program.destinations || []).join(' '),program.duration,program.summary,program.notes,(program.includes || []).join(' '),itineraryText].filter(Boolean).join(' ');
+      addRecord({
+        id:`supabase:${program.id}`,
+        name:program.title,
+        source:'supabase',
+        searchText,
+        departureText,
+        priceText:publicPrice(program),
+        priceFrom:program.price == null ? null : Number(program.price),
+        duration:program.duration || '',
+        image:program.image_path || '',
+        region:program.region || inferRegion(searchText,'supabase'),
+        types:publicTypes(program),
+        authoritativeTypes:true,
+        months:departures.map(item => MONTHS[new Date(`${item.departure_date}T12:00:00`).getMonth()]?.[0]).filter(Boolean),
+        featured:Boolean(program.featured),
+        open:function () { showPublicProgram(program); }
+      });
+      existingNames.add(normalize(program.title));
+    });
     window.travelCatalog = catalog;
   }
 
@@ -473,7 +563,7 @@
 
   function diverseFeatured() {
     const wanted = ['Punta Cana Verano 2027','Conociendo Europa','Tesoros de Corea y Japón','Tailandia Clásica'];
-    const picks = [];
+    const picks = catalog.filter(item => item.featured).slice(0,4);
     wanted.forEach(name => {
       const found = catalog.find(item => normalize(item.name) === normalize(name));
       if (found && !picks.includes(found)) picks.push(found);
@@ -571,13 +661,24 @@
     hideTravelResults();
   };
 
-  function init() {
+  async function init() {
     buildCatalog();
     bindEvents();
     renderFeatured();
     renderDepartures();
     const count = document.getElementById('catalogCount');
     if (count) count.textContent = catalog.length;
+    if (typeof window.loadModoRumboPrograms === 'function') {
+      try {
+        collectPublicPrograms(await window.loadModoRumboPrograms());
+        renderFeatured();
+        renderDepartures();
+        if (count) count.textContent = catalog.length;
+        if (document.getElementById('travelResults')?.classList.contains('visible')) runSearch();
+      } catch (error) {
+        console.warn('Los programas del panel no pudieron cargarse; se conserva el catálogo local.', error);
+      }
+    }
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

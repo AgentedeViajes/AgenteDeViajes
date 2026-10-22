@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administración | Modo Rumbo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <section class="auth-gate" id="authGate" hidden>
+    <form class="auth-card" id="loginForm">
+      <img src="../Logo de Viajes Modo Rumbo.png" alt="Modo Rumbo">
+      <p class="eyebrow">Administración privada</p>
+      <h1>Ingresar al panel</h1>
+      <p>Utilizá el usuario administrador habilitado en Modo Rumbo.</p>
+      <label>Correo electrónico<input id="loginEmail" type="email" autocomplete="username" required></label>
+      <label>Contraseña<input id="loginPassword" type="password" autocomplete="current-password" required></label>
+      <button class="primary-button" type="submit">Ingresar</button>
+      <p class="auth-error" id="loginError" role="alert"></p>
+    </form>
+  </section>
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="../Logo de Viajes Modo Rumbo.png" alt="Modo Rumbo">
+      <span>Panel de gestión</span>
+    </div>
+    <nav aria-label="Administración">
+      <button class="nav-button active" type="button" data-view="programs">Programas</button>
+      <button class="nav-button" type="button" data-view="editor">Nuevo programa</button>
+    </nav>
+    <div class="prototype-note">
+      <strong id="backendMode">Etapa de prueba</strong>
+      <p id="backendDescription">Los cambios se guardan únicamente en este navegador. La web pública todavía no está conectada.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Modo Rumbo</p>
+        <h1 id="pageTitle">Programas de viajes</h1>
+      </div>
+      <button class="primary-button" id="newProgramButton" type="button">+ Nuevo programa</button>
+      <button class="text-button" id="signOutButton" type="button" hidden>Cerrar sesión</button>
+    </header>
+
+    <section class="view active" id="programsView">
+      <div class="stats-grid">
+        <article><span>Total</span><strong id="totalCount">0</strong></article>
+        <article><span>Publicados</span><strong id="publishedCount">0</strong></article>
+        <article><span>Borradores</span><strong id="draftCount">0</strong></article>
+        <article><span>Destacados</span><strong id="featuredCount">0</strong></article>
+      </div>
+
+      <div class="panel filters">
+        <label>Buscar<input id="programSearch" type="search" placeholder="Título, código o destino"></label>
+        <label>Estado<select id="statusFilter"><option value="">Todos</option><option value="published">Publicado</option><option value="draft">Borrador</option><option value="paused">Pausado</option></select></label>
+        <label>Tipo<select id="typeFilter"><option value="">Todos</option><option value="grupal">Viaje grupal</option><option value="personalizado">Viaje a medida</option><option value="sin-aereo">Circuito sin aéreo</option><option value="lujo">Viaje de lujo</option><option value="luna-de-miel">Luna de miel</option></select></label>
+      </div>
+
+      <div class="panel table-panel">
+        <div class="empty-state" id="emptyState">
+          <h2>Todavía no hay programas cargados</h2>
+          <p>Creá el primero para probar el formulario de administración.</p>
+          <button class="primary-button" type="button" data-action="new">Crear programa</button>
+        </div>
+        <div class="table-wrap" id="programTableWrap" hidden>
+          <table>
+            <thead><tr><th>Programa</th><th>Tipo</th><th>Próxima salida</th><th>Precio</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="programTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="editorView">
+      <form id="programForm" novalidate>
+        <input type="hidden" id="programId">
+
+        <section class="form-section">
+          <div class="section-heading"><div><span>01</span><h2>Información general</h2></div><p>Datos principales con los que se identificará el programa.</p></div>
+          <div class="form-grid">
+            <label class="span-2">Nombre del programa *<input id="title" required placeholder="Ej. Japón al Completo"></label>
+            <label>Código del operador<input id="operatorCode" placeholder="MIDAS, Julia, PI..."></label>
+            <label>Estado<select id="status"><option value="draft">Borrador</option><option value="published">Publicado</option><option value="paused">Pausado</option></select></label>
+            <label>Región<select id="region"><option value="">Seleccionar</option><option>Europa</option><option>Caribe</option><option>Brasil</option><option>Estados Unidos</option><option>Asia</option><option>África</option><option>Islas del Índico</option><option>Medio Oriente</option><option>Oceanía</option></select></label>
+            <label>País o países<input id="countries" placeholder="Japón, Emiratos Árabes"></label>
+            <label class="span-2">Ciudades o destinos<input id="destinations" placeholder="Tokyo, Kyoto, Osaka, Dubai"></label>
+            <label>Duración<input id="duration" placeholder="15 días / 14 noches"></label>
+            <label class="check-label"><input id="featured" type="checkbox"> Mostrar como destacado</label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-heading"><div><span>02</span><h2>Tipo de viaje</h2></div><p>Un programa puede pertenecer a más de una categoría.</p></div>
+          <fieldset class="choice-grid" id="travelTypes">
+            <label><input type="checkbox" value="grupal"> Viaje grupal</label>
+            <label><input type="checkbox" value="personalizado"> Viaje a medida</label>
+            <label><input type="checkbox" value="sin-aereo"> Circuito sin aéreo</label>
+            <label><input type="checkbox" value="lujo"> Viaje de lujo</label>
+            <label><input type="checkbox" value="luna-de-miel"> Luna de miel</label>
+          </fieldset>
+          <div class="form-grid compact-grid">
+            <label>Servicio aéreo<select id="flightType"><option value="with-flight">Con aéreo</option><option value="without-flight">Sin aéreo</option><option value="optional">Aéreo opcional</option></select></label>
+            <label>Modalidad<select id="departureType"><option value="scheduled">Salida programada</option><option value="weekly">Salidas semanales</option><option value="on-request">A solicitud</option></select></label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-heading"><div><span>03</span><h2>Tarifa</h2></div><p>Precio principal que verá el pasajero.</p></div>
+          <div class="form-grid four-columns">
+            <label>Moneda<select id="currency"><option>USD</option><option>ARS</option><option>EUR</option></select></label>
+            <label>Valor<input id="price" type="number" min="0" step="0.01" placeholder="3200"></label>
+            <label>Presentación<select id="pricePrefix"><option value="from">Desde</option><option value="fixed">Valor</option><option value="consult">Consultar</option></select></label>
+            <label>Base<select id="priceBasis"><option value="double">Por persona en doble</option><option value="single">Por persona en single</option><option value="package">Por paquete</option></select></label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-heading action-heading"><div><span>04</span><h2>Fechas de salida</h2></div><button class="secondary-button" id="addDeparture" type="button">+ Agregar fecha</button></div>
+          <div class="repeat-list" id="departuresList"></div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-heading"><div><span>05</span><h2>Servicios incluidos</h2></div><p>Ingresá un servicio por línea. El panel los mostrará como una lista.</p></div>
+          <label><textarea id="includes" rows="9" placeholder="Ticket aéreo Buenos Aires / Madrid / Buenos Aires&#10;Traslados de llegada y salida&#10;04 noches de alojamiento con desayuno"></textarea></label>
+        </section>
+
+        <section class="form-section">
+          <div class="section-heading action-heading"><div><span>06</span><h2>Itinerario día por día</h2></div><button class="secondary-button" id="addDay" type="button">+ Agregar día</button></div>
+          <div class="repeat-list itinerary-list" id="itineraryList"></div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-heading"><div><span>07</span><h2>Contenido adicional</h2></div><p>Información comercial, notas e imagen del programa.</p></div>
+          <div class="form-grid">
+            <label class="span-2">Descripción breve<textarea id="summary" rows="3"></textarea></label>
+            <label class="span-2">Notas y condiciones<textarea id="notes" rows="5"></textarea></label>
+            <label class="span-2">Imagen principal
+              <input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif">
+              <small>Se optimizará automáticamente a WebP antes de subirla.</small>
+            </label>
+            <input id="image" type="hidden">
+            <div class="image-preview span-2" id="imagePreview" hidden><img alt="Vista previa de la imagen principal"><span>Imagen lista para publicar</span></div>
+          </div>
+        </section>
+
+        <div class="form-actions">
+          <button class="text-button" id="cancelEdit" type="button">Cancelar</button>
+          <button class="secondary-button" id="saveDraft" type="button">Guardar borrador</button>
+          <button class="primary-button" type="submit">Guardar programa</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <template id="departureTemplate">
+    <div class="repeat-card departure-row">
+      <label>Fecha<input type="date" data-field="date"></label>
+      <label>Precio especial<input type="number" min="0" step="0.01" data-field="price" placeholder="Opcional"></label>
+      <label>Cupos<input type="number" min="0" data-field="capacity" placeholder="Opcional"></label>
+      <button class="icon-button remove-row" type="button" aria-label="Eliminar fecha">×</button>
+    </div>
+  </template>
+
+  <template id="dayTemplate">
+    <article class="repeat-card itinerary-day">
+      <div class="day-number" data-day-number>Día 1</div>
+      <div class="day-fields">
+        <div class="form-grid">
+          <label>Título del día<input data-field="title" placeholder="BUENOS AIRES – MADRID"></label>
+          <label>Régimen<input data-field="meals" placeholder="D/A/-"></label>
+          <label class="span-2">Detalle completo<textarea data-field="description" rows="6" placeholder="Escribí el itinerario completo, sin resumir..."></textarea></label>
+        </div>
+      </div>
+      <div class="row-buttons"><button class="icon-button move-up" type="button" aria-label="Subir día">↑</button><button class="icon-button move-down" type="button" aria-label="Bajar día">↓</button><button class="icon-button remove-row" type="button" aria-label="Eliminar día">×</button></div>
+    </article>
+  </template>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="data-service.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
