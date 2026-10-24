@@ -130,7 +130,13 @@
         </section>
 
         <section class="form-section">
-          <div class="section-heading action-heading"><div><span>06</span><h2>Itinerario día por día</h2></div><button class="secondary-button" id="addDay" type="button">+ Agregar día</button></div>
+          <div class="section-heading action-heading">
+            <div><span>06</span><h2>Itinerario día por día</h2></div>
+            <div class="heading-actions">
+              <button class="secondary-button" id="importItinerary" type="button">Importar itinerario completo</button>
+              <button class="secondary-button" id="addDay" type="button">+ Agregar día</button>
+            </div>
+          </div>
           <div class="repeat-list itinerary-list" id="itineraryList"></div>
         </section>
 
@@ -180,9 +186,78 @@
     </article>
   </template>
 
+  <div class="import-modal" id="itineraryImportModal" hidden>
+    <section class="import-dialog" role="dialog" aria-modal="true" aria-labelledby="importDialogTitle">
+      <header class="import-dialog-header">
+        <div>
+          <p class="eyebrow">Importación local</p>
+          <h2 id="importDialogTitle">Importar itinerario completo</h2>
+          <p>El documento se procesa en este navegador y no se envía a servicios externos.</p>
+        </div>
+        <button class="icon-button" id="closeItineraryImport" type="button" aria-label="Cerrar importador">×</button>
+      </header>
+
+      <div class="import-dialog-body">
+        <section class="import-source" id="importSourceStep">
+          <label>Pegá el itinerario completo
+            <textarea id="itineraryImportText" rows="15" placeholder="Día 01: BUENOS AIRES – MADRID&#10;Detalle completo de la jornada...&#10;&#10;Día 02: MADRID&#10;Detalle completo de la jornada..."></textarea>
+          </label>
+          <div class="file-picker-row">
+            <label>O seleccioná un documento Word o PDF
+              <input id="itineraryImportFile" type="file" accept=".doc,.docx,.pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf">
+            </label>
+            <small>Formatos: DOCX, DOC o PDF · Máximo 20 MB · Procesamiento local</small>
+          </div>
+          <div class="inline-message" id="importFileMessage" hidden></div>
+          <div class="import-step-actions">
+            <button class="text-button" id="cancelItineraryImport" type="button">Cancelar</button>
+            <button class="primary-button" id="processItinerary" type="button">Procesar itinerario</button>
+          </div>
+        </section>
+
+        <section class="import-preview" id="importPreviewStep" hidden>
+          <div class="import-summary" id="importSummary" role="status"></div>
+          <div class="warning-list" id="importGlobalWarnings" hidden></div>
+
+          <fieldset class="import-mode">
+            <legend>¿Cómo incorporar las jornadas?</legend>
+            <label><input type="radio" name="itineraryImportMode" value="replace" checked> Reemplazar itinerario existente</label>
+            <label><input type="radio" name="itineraryImportMode" value="append"> Agregar al itinerario existente</label>
+            <p id="importModeHelp"></p>
+          </fieldset>
+
+          <div class="preview-days" id="importPreviewDays"></div>
+
+          <section class="import-proposals">
+            <h3>Contenido adicional detectado</h3>
+            <label class="proposal-toggle"><input id="applyImportedIncludes" type="checkbox" checked> Incorporar los servicios incluidos revisados</label>
+            <label>Servicios incluidos
+              <textarea id="importedIncludes" rows="6" placeholder="No se detectaron servicios incluidos."></textarea>
+            </label>
+            <label class="proposal-toggle"><input id="applyImportedNotes" type="checkbox" checked> Incorporar las notas y servicios no incluidos revisados</label>
+            <label>Notas y condiciones
+              <textarea id="importedNotes" rows="6" placeholder="No se detectaron notas generales."></textarea>
+            </label>
+          </section>
+
+          <div class="import-step-actions sticky-import-actions">
+            <button class="text-button" id="backToImportSource" type="button">Volver al texto</button>
+            <button class="text-button" id="discardItineraryImport" type="button">Cancelar</button>
+            <button class="primary-button" id="applyItineraryImport" type="button">Incorporar al programa</button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="vendor/mammoth.browser.min.js"></script>
+  <script src="vendor/pdf.min.js"></script>
+  <script src="itinerary-parser.js"></script>
+  <script src="document-reader.js"></script>
+  <script src="itinerary-importer.js"></script>
   <script src="data-service.js"></script>
   <script src="admin.js"></script>
 </body>

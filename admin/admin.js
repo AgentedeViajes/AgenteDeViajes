@@ -70,6 +70,15 @@
   }
   async function saveProgram(statusOverride){const program=collectProgram(statusOverride);if(!program)return;try{const file=$('#imageFile').files[0];if(file){showToast('Optimizando y subiendo imagen...');program.image=await dataService.uploadImage(file,program.id)}state.programs=await dataService.saveProgram(program,state.programs);showToast(statusOverride==='draft'?'Borrador guardado.':'Programa guardado.');resetForm();switchView('programs')}catch(error){showToast(`No se pudo guardar: ${error.message}`)}}
 
+  window.ModoRumboItineraryImporter.init({
+    addDay,
+    clearDays:()=>{$('#itineraryList').innerHTML=''},
+    getExistingDays:()=>$$('#itineraryList .itinerary-day').map(rowData).filter(item=>item.title||item.meals||item.description),
+    getFieldValue:id=>$(`#${id}`).value,
+    setFieldValue:(id,value)=>{$(`#${id}`).value=value},
+    showToast
+  });
+
   $('#programForm').addEventListener('submit',event=>{event.preventDefault();saveProgram()});
   $('#saveDraft').addEventListener('click',()=>saveProgram('draft'));
   $('#newProgramButton').addEventListener('click',openNew);$('#cancelEdit').addEventListener('click',()=>{resetForm();switchView('programs')});

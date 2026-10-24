@@ -13,6 +13,9 @@ Esta carpeta contiene una primera versión aislada del panel de carga de program
 - Múltiples fechas, precios especiales y cupos.
 - Servicios incluidos, uno por línea.
 - Itinerario completo día por día, con ordenamiento.
+- Importador local de itinerarios pegados o provenientes de DOCX, DOC de texto/RTF y PDF con texto seleccionable.
+- Parser determinista con vista previa editable, detección de jornadas, fechas internas, régimen, servicios y notas.
+- Modos para reemplazar o anexar jornadas sin guardar ni publicar automáticamente.
 - Descripción, notas e imagen principal.
 - Carga de imagen con optimización automática a WebP (máximo 1800 px de ancho, calidad 86%).
 - Buscador y filtros de administración.
@@ -40,3 +43,17 @@ Antes de conectar la web, este almacenamiento será reemplazado por:
 5. Copiar `config.example.js` sobre `config.js` y completar la URL y clave publicable.
 
 La clave publicable puede ser utilizada por el navegador porque las escrituras están protegidas por autenticación y Row Level Security. Nunca debe colocarse una clave `service_role` en estos archivos.
+
+## Importador de itinerarios
+
+El procesamiento se realiza íntegramente en el navegador. Los documentos no se suben a Supabase ni se envían a servicios de inteligencia artificial. Las copias locales de Mammoth y PDF.js están en `vendor/` junto con sus licencias.
+
+- DOCX: extracción local de texto con Mammoth.
+- PDF: extracción local con PDF.js. Los PDF escaneados sin texto seleccionable requieren pegar el contenido manualmente.
+- DOC: admite documentos que internamente sean texto, HTML o RTF. Para el formato binario antiguo de Word se solicita guardarlo como DOCX o PDF.
+
+Las fechas internas detectadas se muestran en la vista previa, pero no se guardan porque el modelo actual no posee un campo compatible. Para ejecutar las pruebas del parser:
+
+```sh
+node --test tests/itinerary-parser.test.js
+```
