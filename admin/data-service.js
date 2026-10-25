@@ -13,13 +13,14 @@
   function fromDatabase(row){
     return{
       id:row.id,title:row.title,operatorCode:row.operator_code||'',status:row.status,region:row.region||'',countries:joinList(row.countries),destinations:joinList(row.destinations),duration:row.duration||'',featured:Boolean(row.featured),travelTypes:row.travel_types||[],flightType:row.flight_type,departureType:row.departure_type,currency:row.currency,price:row.price??'',pricePrefix:row.price_prefix,priceBasis:row.price_basis,includes:(row.includes||[]).join('\n'),summary:row.summary||'',notes:row.notes||'',image:row.image_path||'',updatedAt:row.updated_at,
+      dateMode:window.ModoRumboDateMode.normalizeMode(row.date_mode),rangeStartDate:row.travel_start_date||'',rangeEndDate:row.travel_end_date||'',
       departures:(row.departures||[]).sort((a,b)=>(a.departure_date||'').localeCompare(b.departure_date||'')).map(item=>({date:item.departure_date||'',price:item.price??'',capacity:item.capacity??''})),
       itinerary:(row.itinerary_days||[]).sort((a,b)=>a.position-b.position).map(item=>({title:item.title||'',meals:item.meals||'',description:item.description||''}))
     };
   }
 
   function toDatabase(program){
-    return{id:program.id,title:program.title,operator_code:program.operatorCode||null,status:program.status,region:program.region||null,countries:splitList(program.countries),destinations:splitList(program.destinations),duration:program.duration||null,featured:Boolean(program.featured),travel_types:program.travelTypes||[],flight_type:program.flightType,departure_type:program.departureType,currency:program.currency,price:program.price===''?null:Number(program.price),price_prefix:program.pricePrefix,price_basis:program.priceBasis,includes:String(program.includes||'').split('\n').map(item=>item.trim()).filter(Boolean),summary:program.summary||null,notes:program.notes||null,image_path:program.image||null};
+    return{id:program.id,title:program.title,operator_code:program.operatorCode||null,status:program.status,region:program.region||null,countries:splitList(program.countries),destinations:splitList(program.destinations),duration:program.duration||null,featured:Boolean(program.featured),travel_types:program.travelTypes||[],flight_type:program.flightType,departure_type:program.departureType,date_mode:window.ModoRumboDateMode.normalizeMode(program.dateMode),travel_start_date:program.rangeStartDate||null,travel_end_date:program.rangeEndDate||null,currency:program.currency,price:program.price===''?null:Number(program.price),price_prefix:program.pricePrefix,price_basis:program.priceBasis,includes:String(program.includes||'').split('\n').map(item=>item.trim()).filter(Boolean),summary:program.summary||null,notes:program.notes||null,image_path:program.image||null};
   }
 
   async function initialize(){

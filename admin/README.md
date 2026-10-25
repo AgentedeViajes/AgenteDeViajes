@@ -11,6 +11,7 @@ Esta carpeta contiene una primera versión aislada del panel de carga de program
 - Identificación de programas con o sin aéreo.
 - Tarifa, moneda, modalidad y base de precio.
 - Múltiples fechas, precios especiales y cupos.
+- Dos modalidades de disponibilidad: fechas específicas o un único rango flexible de fechas de inicio.
 - Servicios incluidos, uno por línea.
 - Itinerario completo día por día, con ordenamiento.
 - Importador local de itinerarios pegados o provenientes de DOCX, DOC de texto/RTF y PDF con texto seleccionable.
@@ -43,6 +44,8 @@ Antes de conectar la web, este almacenamiento será reemplazado por:
 5. Copiar `config.example.js` sobre `config.js` y completar la URL y clave publicable.
 
 La clave publicable puede ser utilizada por el navegador porque las escrituras están protegidas por autenticación y Row Level Security. Nunca debe colocarse una clave `service_role` en estos archivos.
+
+Antes de publicar la modalidad de rangos en una base existente, ejecutar `supabase/date-range-migration.sql` en el SQL Editor. Los programas anteriores se interpretan como `specific_dates` mediante el valor predeterminado y no requieren edición manual.
 
 ## Importador de itinerarios
 

@@ -120,8 +120,23 @@
         </section>
 
         <section class="form-section">
-          <div class="section-heading action-heading"><div><span>04</span><h2>Fechas de salida</h2></div><button class="secondary-button" id="addDeparture" type="button">+ Agregar fecha</button></div>
-          <div class="repeat-list" id="departuresList"></div>
+          <div class="section-heading"><div><span>04</span><h2>Fechas de salida</h2></div><p>Elegí fechas puntuales o un período flexible para iniciar el viaje.</p></div>
+          <fieldset class="date-mode-selector" id="dateModeSelector">
+            <legend>Modalidad de fechas</legend>
+            <label><input type="radio" name="dateMode" value="specific_dates" checked> <span><strong>Fechas específicas</strong><small>Salidas individuales con precio especial y cupos.</small></span></label>
+            <label><input type="radio" name="dateMode" value="date_range"> <span><strong>Rango de fechas / Paquete flexible</strong><small>El pasajero puede iniciar el viaje dentro del período.</small></span></label>
+          </fieldset>
+          <div id="specificDatesPanel">
+            <div class="subsection-heading"><p>Fechas individuales del programa.</p><button class="secondary-button" id="addDeparture" type="button">+ Agregar fecha</button></div>
+            <div class="repeat-list" id="departuresList"></div>
+          </div>
+          <div class="date-range-panel" id="dateRangePanel" hidden>
+            <div class="form-grid">
+              <label>Disponible para viajar desde<input id="rangeStartDate" type="date"></label>
+              <label>Disponible para viajar hasta<input id="rangeEndDate" type="date"></label>
+            </div>
+            <p><strong>Importante:</strong> la fecha final es el último día posible para iniciar el viaje, no la fecha de regreso.</p>
+          </div>
         </section>
 
         <section class="form-section">
@@ -251,6 +266,7 @@
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="../date-mode.js"></script>
   <script src="config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="vendor/mammoth.browser.min.js"></script>
