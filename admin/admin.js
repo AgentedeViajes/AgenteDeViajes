@@ -3,7 +3,8 @@
   const $=selector=>document.querySelector(selector);
   const $$=selector=>Array.from(document.querySelectorAll(selector));
   const dataService=window.ModoRumboData;
-  const state={programs:[],editingId:null,mode:'local',user:null};
+  const dateMode=window.ModoRumboDateMode;
+  const state={programs:[],editingId:null,mode:'local',user:null,activeDateMode:dateMode.SPECIFIC_DATES};
   const views={programs:$('#programsView'),editor:$('#editorView')};
 
   function uid(){return crypto.randomUUID?crypto.randomUUID():`program-${Date.now()}-${Math.random().toString(16).slice(2)}`}
@@ -36,7 +37,8 @@
     $('#programTableWrap').hidden=filtered.length===0;
     $('#programTableBody').innerHTML=filtered.map(program=>{
       const next=(program.departures||[]).map(item=>item.date).filter(Boolean).sort()[0];
-      return`<tr><td><strong>${escapeHtml(program.title)}</strong><small>${escapeHtml(program.operatorCode||'Sin código')} · ${escapeHtml(program.region||'Sin región')}</small></td><td>${escapeHtml((program.travelTypes||[]).map(typeLabel).join(', ')||'Sin asignar')}</td><td>${next?new Date(`${next}T12:00:00`).toLocaleDateString('es-AR'):'A solicitud'}</td><td>${escapeHtml(priceLabel(program))}</td><td><span class="status-pill ${escapeHtml(program.status)}">${escapeHtml(statusLabel(program.status))}</span></td><td><div class="table-actions"><button class="icon-button" data-action="edit" data-id="${program.id}" aria-label="Editar">✎</button><button class="icon-button" data-action="duplicate" data-id="${program.id}" aria-label="Duplicar">⧉</button><button class="icon-button remove-row" data-action="delete" data-id="${program.id}" aria-label="Eliminar">×</button></div></td></tr>`;
+      const availability=dateMode.normalizeMode(program.dateMode)===dateMode.DATE_RANGE?dateMode.rangeLabel(program.rangeStartDate,program.rangeEndDate):(next?new Date(`${next}T12:00:00`).toLocaleDateString('es-AR'):'A solicitud');
+      return`<tr><td><strong>${escapeHtml(program.title)}</strong><small>${escapeHtml(program.operatorCode||'Sin código')} · ${escapeHtml(program.region||'Sin región')}</small></td><td>${escapeHtml((program.travelTypes||[]).map(typeLabel).join(', ')||'Sin asignar')}</td><td>${escapeHtml(availability||'Rango incompleto')}</td><td>${escapeHtml(priceLabel(program))}</td><td><span class="status-pill ${escapeHtml(program.status)}">${escapeHtml(statusLabel(program.status))}</span></td><td><div class="table-actions"><button class="icon-button" data-action="edit" data-id="${program.id}" aria-label="Editar">✎</button><button class="icon-button" data-action="duplicate" data-id="${program.id}" aria-label="Duplicar">⧉</button><button class="icon-button remove-row" data-action="delete" data-id="${program.id}" aria-label="Eliminar">×</button></div></td></tr>`;
     }).join('');
   }
 
@@ -45,9 +47,22 @@
   function renumberDays(){$$('#itineraryList .itinerary-day').forEach((day,index)=>day.querySelector('[data-day-number]').textContent=`Día ${index+1}`)}
   function rowData(row){return Object.fromEntries(Array.from(row.querySelectorAll('[data-field]')).map(field=>[field.dataset.field,field.value.trim()]))}
   function updateImagePreview(source){const preview=$('#imagePreview');const image=preview.querySelector('img');if(source){image.src=source;preview.hidden=false}else{image.removeAttribute('src');preview.hidden=true}}
+  function hasSpecificDateData(){return $$('#departuresList .departure-row').some(row=>{const item=rowData(row);return item.date||item.price||item.capacity})}
+  function hasRangeData(){return Boolean($('#rangeStartDate').value||$('#rangeEndDate').value)}
+  function setDateMode(mode,{confirmChange=false,autoPrice=false}={}){
+    const next=dateMode.normalizeMode(mode);const current=state.activeDateMode;
+    if(confirmChange&&next!==current&&((current===dateMode.SPECIFIC_DATES&&hasSpecificDateData())||(current===dateMode.DATE_RANGE&&hasRangeData()))){
+      const message=current===dateMode.SPECIFIC_DATES?'Las fechas específicas cargadas dejarán de guardarse si confirmás el programa con rango flexible. Se conservarán en pantalla mientras editás. ¿Querés cambiar de modalidad?':'El rango cargado dejará de guardarse si confirmás el programa con fechas específicas. Se conservará en pantalla mientras editás. ¿Querés cambiar de modalidad?';
+      if(!window.confirm(message)){$$('[name="dateMode"]').forEach(input=>input.checked=input.value===current);return false}
+    }
+    state.activeDateMode=next;$$('[name="dateMode"]').forEach(input=>input.checked=input.value===next);
+    $('#specificDatesPanel').hidden=next!==dateMode.SPECIFIC_DATES;$('#dateRangePanel').hidden=next!==dateMode.DATE_RANGE;
+    if(autoPrice&&next===dateMode.DATE_RANGE)$('#pricePrefix').value='from';
+    return true;
+  }
 
   function resetForm(){
-    $('#programForm').reset();state.editingId=null;$('#programId').value='';$('#departuresList').innerHTML='';$('#itineraryList').innerHTML='';updateImagePreview('');addDeparture();addDay();
+    $('#programForm').reset();state.editingId=null;$('#programId').value='';$('#departuresList').innerHTML='';$('#itineraryList').innerHTML='';$('#rangeStartDate').value='';$('#rangeEndDate').value='';updateImagePreview('');addDeparture();addDay();setDateMode(dateMode.SPECIFIC_DATES);
   }
   function openNew(){resetForm();switchView('editor')}
   function editProgram(id){
@@ -57,15 +72,20 @@
     updateImagePreview(program.image);
     $('#featured').checked=Boolean(program.featured);$$('#travelTypes input').forEach(input=>input.checked=(program.travelTypes||[]).includes(input.value));
     $('#departuresList').innerHTML='';(program.departures?.length?program.departures:[{}]).forEach(addDeparture);
+    $('#rangeStartDate').value=program.rangeStartDate||'';$('#rangeEndDate').value=program.rangeEndDate||'';setDateMode(program.dateMode);
     $('#itineraryList').innerHTML='';(program.itinerary?.length?program.itinerary:[{}]).forEach(addDay);
     switchView('editor');
   }
   function collectProgram(statusOverride){
     const title=$('#title').value.trim();if(!title){$('#title').focus();showToast('Ingresá el nombre del programa.');return null}
+    const status=statusOverride||$('#status').value;
+    const availability=dateMode.activeAvailability({mode:state.activeDateMode,rangeStartDate:$('#rangeStartDate').value,rangeEndDate:$('#rangeEndDate').value,departures:$$('#departuresList .departure-row').map(rowData).filter(item=>item.date||item.price||item.capacity)});
+    const validation=dateMode.validateAvailability({mode:availability.dateMode,start:availability.rangeStartDate,end:availability.rangeEndDate,status});
+    if(!validation.valid){showToast(validation.errors[0]);if(!availability.rangeStartDate)$('#rangeStartDate').focus();else $('#rangeEndDate').focus();return null}
     return{
-      id:state.editingId||uid(),title,operatorCode:$('#operatorCode').value.trim(),status:statusOverride||$('#status').value,region:$('#region').value,countries:$('#countries').value.trim(),destinations:$('#destinations').value.trim(),duration:$('#duration').value.trim(),featured:$('#featured').checked,
+      id:state.editingId||uid(),title,operatorCode:$('#operatorCode').value.trim(),status,region:$('#region').value,countries:$('#countries').value.trim(),destinations:$('#destinations').value.trim(),duration:$('#duration').value.trim(),featured:$('#featured').checked,
       travelTypes:$$('#travelTypes input:checked').map(input=>input.value),flightType:$('#flightType').value,departureType:$('#departureType').value,currency:$('#currency').value,price:$('#price').value,pricePrefix:$('#pricePrefix').value,priceBasis:$('#priceBasis').value,
-      departures:$$('#departuresList .departure-row').map(rowData).filter(item=>item.date||item.price||item.capacity),includes:$('#includes').value.trim(),itinerary:$$('#itineraryList .itinerary-day').map(rowData).filter(item=>item.title||item.meals||item.description),summary:$('#summary').value.trim(),notes:$('#notes').value.trim(),image:$('#image').value.trim(),updatedAt:new Date().toISOString()
+      dateMode:availability.dateMode,rangeStartDate:availability.rangeStartDate,rangeEndDate:availability.rangeEndDate,departures:availability.departures,includes:$('#includes').value.trim(),itinerary:$$('#itineraryList .itinerary-day').map(rowData).filter(item=>item.title||item.meals||item.description),summary:$('#summary').value.trim(),notes:$('#notes').value.trim(),image:$('#image').value.trim(),updatedAt:new Date().toISOString()
     };
   }
   async function saveProgram(statusOverride){const program=collectProgram(statusOverride);if(!program)return;try{const file=$('#imageFile').files[0];if(file){showToast('Optimizando y subiendo imagen...');program.image=await dataService.uploadImage(file,program.id)}state.programs=await dataService.saveProgram(program,state.programs);showToast(statusOverride==='draft'?'Borrador guardado.':'Programa guardado.');resetForm();switchView('programs')}catch(error){showToast(`No se pudo guardar: ${error.message}`)}}
@@ -83,6 +103,7 @@
   $('#saveDraft').addEventListener('click',()=>saveProgram('draft'));
   $('#newProgramButton').addEventListener('click',openNew);$('#cancelEdit').addEventListener('click',()=>{resetForm();switchView('programs')});
   $('#addDeparture').addEventListener('click',()=>addDeparture());$('#addDay').addEventListener('click',()=>addDay());
+  $$('[name="dateMode"]').forEach(input=>input.addEventListener('change',()=>setDateMode(input.value,{confirmChange:true,autoPrice:true})));
   $('#imageFile').addEventListener('change',event=>{const file=event.target.files[0];if(!file)return;updateImagePreview(URL.createObjectURL(file))});
   $$('.nav-button').forEach(button=>button.addEventListener('click',()=>button.dataset.view==='editor'?openNew():switchView(button.dataset.view)));
   ['programSearch','statusFilter','typeFilter'].forEach(id=>$(`#${id}`).addEventListener('input',renderPrograms));

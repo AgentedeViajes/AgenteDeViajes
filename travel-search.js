@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  const dateMode = window.ModoRumboDateMode;
+
   const MONTHS = [
     ['enero','Enero'],['febrero','Febrero'],['marzo','Marzo'],['abril','Abril'],
     ['mayo','Mayo'],['junio','Junio'],['julio','Julio'],['agosto','Agosto'],
@@ -329,6 +331,17 @@
     return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat('es-AR', {day:'numeric',month:'long',year:'numeric'}).format(date);
   }
 
+  function isRangeProgram(program) {
+    return dateMode.normalizeMode(program && program.date_mode) === dateMode.DATE_RANGE;
+  }
+
+  function publicAvailability(program) {
+    if (isRangeProgram(program)) return dateMode.rangeLabel(program.travel_start_date, program.travel_end_date);
+    const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
+    return departures.map(item => publicDate(item.departure_date)).filter(Boolean).join(' · ')
+      || (program.departure_type === 'weekly' ? 'Salidas semanales' : program.departure_type === 'on-request' ? 'A solicitud' : 'Consultar salida');
+  }
+
   function publicTypes(program) {
     const types = new Set(program.travel_types || []);
     if (program.flight_type === 'with-flight') types.add('con-aereo');
@@ -347,6 +360,7 @@
       document.body.appendChild(dialog);
     }
     const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
+    const rangeAvailability = isRangeProgram(program) ? publicAvailability(program) : '';
     const itinerary = [...(program.itinerary_days || [])].sort((a,b) => a.position - b.position);
     const includes = program.includes || [];
     const title = escapeHtml(program.title);
@@ -363,7 +377,7 @@
           ${program.region ? `<span><i class="fas fa-map-marker-alt"></i>${escapeHtml(program.region)}</span>` : ''}
           <strong>${escapeHtml(publicPrice(program) || 'Precio a consultar')}</strong>
         </div>
-        ${departures.length ? `<section><h3>Fechas de salida</h3><div class="program-departures">${departures.map(item => `<span>${escapeHtml(publicDate(item.departure_date))}${item.price != null ? ` · ${escapeHtml(program.currency || 'USD')} ${escapeHtml(new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(Number(item.price)))}` : ''}</span>`).join('')}</div></section>` : ''}
+        ${rangeAvailability ? `<section class="program-range"><h3>Período de viaje</h3><div class="program-departures"><span>${escapeHtml(rangeAvailability)}</span></div><p>${escapeHtml(dateMode.RANGE_NOTICE)}</p></section>` : departures.length ? `<section><h3>Fechas de salida</h3><div class="program-departures">${departures.map(item => `<span>${escapeHtml(publicDate(item.departure_date))}${item.price != null ? ` · ${escapeHtml(program.currency || 'USD')} ${escapeHtml(new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(Number(item.price)))}` : ''}</span>`).join('')}</div></section>` : ''}
         ${includes.length ? `<section><h3>Incluye</h3><ul class="program-includes">${includes.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
         ${itinerary.length ? `<section><h3>Itinerario</h3><div class="program-itinerary">${itinerary.map(day => `<article><div class="program-day-label">Día ${day.position}</div><div><h4>${escapeHtml(day.title || `Día ${day.position}`)}</h4>${day.meals ? `<small>${escapeHtml(day.meals)}</small>` : ''}<p>${escapeHtml(day.description).replace(/\n/g,'<br>')}</p></div></article>`).join('')}</div></section>` : ''}
         ${program.notes ? `<section class="program-notes"><h3>Notas</h3><p>${escapeHtml(program.notes).replace(/\n/g,'<br>')}</p></section>` : ''}
@@ -379,10 +393,9 @@
     (programs || []).forEach(program => {
       if (!program.title || existingNames.has(normalize(program.title))) return;
       const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
-      const departureText = departures.map(item => publicDate(item.departure_date)).filter(Boolean).join(' · ')
-        || (program.departure_type === 'weekly' ? 'Salidas semanales' : program.departure_type === 'on-request' ? 'A solicitud' : 'Consultar salida');
+      const departureText = publicAvailability(program);
       const itineraryText = (program.itinerary_days || []).map(day => `${day.title || ''} ${day.description || ''}`).join(' ');
-      const searchText = [program.title,program.operator_code,program.region,(program.countries || []).join(' '),(program.destinations || []).join(' '),program.duration,program.summary,program.notes,(program.includes || []).join(' '),itineraryText].filter(Boolean).join(' ');
+      const searchText = [program.title,program.operator_code,program.region,(program.countries || []).join(' '),(program.destinations || []).join(' '),program.duration,departureText,program.summary,program.notes,(program.includes || []).join(' '),itineraryText].filter(Boolean).join(' ');
       addRecord({
         id:`supabase:${program.id}`,
         name:program.title,
@@ -396,7 +409,7 @@
         region:program.region || inferRegion(searchText,'supabase'),
         types:publicTypes(program),
         authoritativeTypes:true,
-        months:departures.map(item => MONTHS[new Date(`${item.departure_date}T12:00:00`).getMonth()]?.[0]).filter(Boolean),
+        months:isRangeProgram(program)?dateMode.rangeMonths(program.travel_start_date,program.travel_end_date):departures.map(item => MONTHS[new Date(`${item.departure_date}T12:00:00`).getMonth()]?.[0]).filter(Boolean),
         featured:Boolean(program.featured),
         open:function () { showPublicProgram(program); }
       });

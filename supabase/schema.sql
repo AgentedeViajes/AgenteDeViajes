@@ -22,6 +22,9 @@ create table if not exists public.programs (
   travel_types text[] not null default '{}',
   flight_type text not null default 'with-flight' check (flight_type in ('with-flight','without-flight','optional')),
   departure_type text not null default 'scheduled' check (departure_type in ('scheduled','weekly','on-request')),
+  date_mode text not null default 'specific_dates' check (date_mode in ('specific_dates','date_range')),
+  travel_start_date date,
+  travel_end_date date,
   currency text not null default 'USD' check (currency in ('USD','ARS','EUR')),
   price numeric(12,2),
   price_prefix text not null default 'from' check (price_prefix in ('from','fixed','consult')),
@@ -33,7 +36,15 @@ create table if not exists public.programs (
   sort_order integer not null default 0,
   created_by uuid references auth.users(id) on delete set null default auth.uid(),
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  constraint programs_date_range_valid check (
+    (date_mode='specific_dates' and travel_start_date is null and travel_end_date is null)
+    or
+    (date_mode='date_range'
+      and (travel_start_date is null or travel_end_date is null or travel_end_date>=travel_start_date)
+      and (status<>'published' or (travel_start_date is not null and travel_end_date is not null))
+    )
+  )
 );
 
 create table if not exists public.departures (

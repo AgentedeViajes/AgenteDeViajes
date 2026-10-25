@@ -43,6 +43,7 @@ body:has(.program-dialog[open]) { overflow: hidden; }
 .program-includes li::before { content: '✓'; position: absolute; left: 0; color: #a87316; font-weight: 800; }
 .program-departures { display: flex; flex-wrap: wrap; gap: 9px; }
 .program-departures span { padding: 9px 13px; border-radius: 999px; background: #f4f7fa; color: var(--premium-navy); font-size: .8rem; font-weight: 700; }
+.program-range p { max-width: 760px; margin: 12px 0 0; padding: 13px 15px; border-left: 3px solid var(--premium-gold); border-radius: 0 9px 9px 0; background: #fff8e9; color: #66512b; font-size: .8rem; line-height: 1.55; }
 .program-itinerary { display: grid; gap: 13px; }
 .program-itinerary article { display: grid; grid-template-columns: 76px 1fr; gap: 18px; padding: 19px; border: 1px solid var(--premium-border); border-radius: 14px; }
 .program-day-label { color: #a87316; font-weight: 800; }
