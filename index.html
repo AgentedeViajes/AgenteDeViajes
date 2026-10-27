@@ -2970,16 +2970,21 @@
       'section-tour-maravillas-egipto', 'section-tour-encantos-egipto-mar-rojo',
       'section-tour-mejor-turquia-egipto'
     ]);
+    const retiredRutasSectionIds = new Set([
+      'section-europa-turquia-griegas'
+    ]);
 
     retiredCrownTourKeys.forEach(key => delete loadedTours[key]);
     retiredCrownSectionIds.forEach(id => document.getElementById(id)?.remove());
     retiredOrienteSectionIds.forEach(id => document.getElementById(id)?.remove());
+    retiredRutasSectionIds.forEach(id => document.getElementById(id)?.remove());
     document.querySelectorAll('a[onclick]').forEach(link => {
       const action = link.getAttribute('onclick') || '';
       const opensRetiredTour = [...retiredCrownTourKeys].some(key => action.includes(`showLoadedTour('${key}')`));
       const opensRetiredSection = [...retiredCrownSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
       const opensRetiredOrienteSection = [...retiredOrienteSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
-      if (opensRetiredTour || opensRetiredSection || opensRetiredOrienteSection) link.closest('li')?.remove();
+      const opensRetiredRutasSection = [...retiredRutasSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
+      if (opensRetiredTour || opensRetiredSection || opensRetiredOrienteSection || opensRetiredRutasSection) link.closest('li')?.remove();
     });
     const tourCodeByKey = {
       'cinco-capitales-europa':'EUROPAMUNDO',
@@ -3172,6 +3177,18 @@
         ['Días 1 a 3 – América / Londres','Vuelo no incluido, recepción, traslado y panorámica de Londres.'],['Día 4 – Londres / París','Tren rápido o autocar y ferry.'],['Días 5 y 6 – París','Panorámica, Medalla Milagrosa, tiempo libre y Brujas opcional.'],['Día 7 – París / Luxemburgo / Rin / Frankfurt','Champagne, Luxemburgo, Coblenza y Loreley.'],['Día 8 – Frankfurt / Heidelberg / Friburgo / Zúrich','Heidelberg y Selva Negra.'],['Día 9 – Zúrich / Lucerna / Vaduz / Innsbruck','Lucerna, Titlis opcional, Vaduz e Innsbruck.'],['Día 10 – Innsbruck / Padova / Venecia','Brenner, Padova y Venecia.'],['Día 11 – Venecia / Ferrara / Florencia','Vaporetto, San Marcos, góndola opcional y Ferrara.'],['Día 12 – Florencia / Asís / Roma','Panorámica, Asís y Roma.'],['Días 13 y 14 – Roma','Audiencia papal, panorámica imperial, día libre y Nápoles/Capri opcional.'],['Día 15 – Roma / Pisa / Costa Azul','Pisa y Costa Azul.'],['Día 16 – Costa Azul / Nimes / Barcelona','Fragonard, Nimes y Barcelona.'],['Día 17 – Barcelona / Zaragoza / Madrid','Panorámica, Pilar y Madrid.'],['Día 18 – Madrid','Panorámica con guía local y tarde libre.'],['Día 19 – Madrid / América','Traslado al aeropuerto; vuelo no incluido.']
       ]}
     };
+
+    const retiredRutasLowCostNames = new Set(
+      Object.entries(lowCostTours)
+        .filter(([, tour]) => ['RUTAS', 'EURORUTAS'].includes(String(tour.code || '').trim().toUpperCase()))
+        .map(([name]) => name)
+    );
+    retiredRutasLowCostNames.forEach(name => delete lowCostTours[name]);
+    document.querySelectorAll('a[onclick]').forEach(link => {
+      const action = link.getAttribute('onclick') || '';
+      const opensRetiredRutasTour = [...retiredRutasLowCostNames].some(name => action.includes(`showLowCost('${name}')`));
+      if (opensRetiredRutasTour) link.closest('li')?.remove();
+    });
 
     function showLowCost(nombre) {
       document.getElementById('lowCostTitle').textContent = nombre;
