@@ -389,6 +389,7 @@
   function collectPublicPrograms(programs) {
     const existingNames = new Set(catalog.map(item => normalize(item.name)));
     (programs || []).forEach(program => {
+      if (normalize(program.operator_code) === 'crown') return;
       if (!program.title || existingNames.has(normalize(program.title))) return;
       const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
       const departureText = publicAvailability(program);
