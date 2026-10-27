@@ -127,12 +127,6 @@
     .tour-detail-card { background: var(--white); border-radius: 14px; box-shadow: var(--shadow); padding: 36px; margin-top: 30px; }
     .tour-detail-card h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--primary); margin-bottom: 18px; }
     .tour-itinerary { display: grid; gap: 16px; }
-    #section-tour-india-nepal .package-info h3::after,
-    #section-tour-egipto-clasico .package-info h3::after,
-    #section-tour-marruecos-clasico .package-info h3::after,
-    #section-tour-vuelta-marruecos .package-info h3::after,
-    #section-tour-japon-tren .package-info h3::after,
-    #section-tour-japon .package-info h3::after { content: "(código Crown)"; display: block; margin-top: 8px; color: var(--accent); font-family: 'Montserrat', sans-serif; font-size: .92rem; font-weight: 700; }
     .package-price { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--accent-hover); font-weight: 700; }
     .package-price span { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 400; color: var(--text-light); display: block; }
     .package-image { position: relative; overflow: hidden; }
@@ -2955,7 +2949,7 @@
       'DÍA 15 · KYOTO–OSAKA (D/-/-): Check-out, tiempo libre y traslado con chofer en inglés al aeropuerto de Osaka.'
     ];
 
-    const crownTourKeys = new Set([
+    const retiredCrownTourKeys = new Set([
       'mauritius-seychelles', 'maldivas', 'mauritius', 'seychelles', 'sudafrica-mauritius',
       'explorando-sudafrica', 'sudafrica-ruta-jardin', 'sudafrica-cabo', 'kenia-zanzibar',
       'safari-kenia-tanzania', 'kenia-tanzania-playas', 'tahiti-moorea', 'tahiti-bora-bora',
@@ -2964,6 +2958,20 @@
       'bangkok-playas', 'tailandia-clasica', 'china-tren-alta-velocidad', 'china-express',
       'maravillas-china', 'explorando-china', 'china-misteriosa-tibet', 'china-japon'
     ]);
+    const retiredCrownSectionIds = new Set([
+      'section-tour-india-nepal', 'section-tour-egipto-clasico', 'section-tour-marruecos-clasico',
+      'section-tour-vuelta-marruecos', 'section-tour-japon-tren', 'section-tour-japon',
+      'section-exoticos-india', 'section-exoticos-kenia', 'section-exoticos-sudeste-asiatico'
+    ]);
+
+    retiredCrownTourKeys.forEach(key => delete loadedTours[key]);
+    retiredCrownSectionIds.forEach(id => document.getElementById(id)?.remove());
+    document.querySelectorAll('a[onclick]').forEach(link => {
+      const action = link.getAttribute('onclick') || '';
+      const opensRetiredTour = [...retiredCrownTourKeys].some(key => action.includes(`showLoadedTour('${key}')`));
+      const opensRetiredSection = [...retiredCrownSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
+      if (opensRetiredTour || opensRetiredSection) link.closest('li')?.remove();
+    });
     const tourCodeByKey = {
       'cinco-capitales-europa':'EUROPAMUNDO',
       'clasicos-europeos':'EUROPAMUNDO',
@@ -2978,7 +2986,7 @@
     function tourDetailHtml(tour, key) {
       const prices = tour.prices.map((price, index) => `<div class="package-price"${index ? ' style="margin-top:10px"' : ''}>${price}</div>`).join('');
       const route = tour.route.map(item => `<div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);text-align:left"><p style="font-size:.88rem;color:var(--text);line-height:1.65">${item}</p></div>`).join('');
-      const supplierCode = tourCodeByKey[key] || (crownTourKeys.has(key) ? 'Crown' : '');
+      const supplierCode = tourCodeByKey[key] || '';
       const code = supplierCode ? `<p style="margin:0 0 12px;color:var(--accent);font-weight:700">(código ${supplierCode})</p>` : '';
       return `<div class="package-card"><div class="package-info"><span class="package-tag">${tour.departures}</span><h3>${tour.name}</h3>${code}<ul class="package-details"><li><i class="fas fa-calendar-alt"></i> ${tour.duration}</li><li><i class="fas fa-plane-slash"></i> Programa sin aéreo internacional</li></ul>${prices}</div><div class="package-image"><img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=760&q=80" alt="${tour.name}"></div></div><div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px"><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:20px">Itinerario e incluye</h2><div style="display:grid;gap:16px">${route}</div></div>`;
     }
