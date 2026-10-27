@@ -2963,14 +2963,23 @@
       'section-tour-vuelta-marruecos', 'section-tour-japon-tren', 'section-tour-japon',
       'section-exoticos-india', 'section-exoticos-kenia', 'section-exoticos-sudeste-asiatico'
     ]);
+    const retiredOrienteSectionIds = new Set([
+      'section-europa-todo-turquia', 'section-exoticos-japon-dubai', 'section-tour-toda-turquia',
+      'section-tour-leyendas-turquia-grecia-crucero', 'section-tour-grecia-completo',
+      'section-tour-gran-turquia-islas-griegas', 'section-tour-gran-islas-griegas',
+      'section-tour-maravillas-egipto', 'section-tour-encantos-egipto-mar-rojo',
+      'section-tour-mejor-turquia-egipto'
+    ]);
 
     retiredCrownTourKeys.forEach(key => delete loadedTours[key]);
     retiredCrownSectionIds.forEach(id => document.getElementById(id)?.remove());
+    retiredOrienteSectionIds.forEach(id => document.getElementById(id)?.remove());
     document.querySelectorAll('a[onclick]').forEach(link => {
       const action = link.getAttribute('onclick') || '';
       const opensRetiredTour = [...retiredCrownTourKeys].some(key => action.includes(`showLoadedTour('${key}')`));
       const opensRetiredSection = [...retiredCrownSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
-      if (opensRetiredTour || opensRetiredSection) link.closest('li')?.remove();
+      const opensRetiredOrienteSection = [...retiredOrienteSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
+      if (opensRetiredTour || opensRetiredSection || opensRetiredOrienteSection) link.closest('li')?.remove();
     });
     const tourCodeByKey = {
       'cinco-capitales-europa':'EUROPAMUNDO',
