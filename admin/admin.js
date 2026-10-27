@@ -10,7 +10,7 @@
   function uid(){return crypto.randomUUID?crypto.randomUUID():`program-${Date.now()}-${Math.random().toString(16).slice(2)}`}
   function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]))}
   function showToast(message){const toast=$('#toast');toast.textContent=message;toast.classList.add('visible');window.setTimeout(()=>toast.classList.remove('visible'),2600)}
-  function typeLabel(type){return({grupal:'Viaje grupal',personalizado:'Viaje a medida','sin-aereo':'Circuito sin aéreo',lujo:'Viaje de lujo','luna-de-miel':'Luna de miel'})[type]||type}
+  function typeLabel(type){return({grupal:'Viaje grupal',personalizado:'Viaje a medida','sin-aereo':'Circuito sin aéreo',lujo:'Viaje de lujo','luna-de-miel':'Luna de miel','low-cost':'Low Cost'})[type]||type}
   function statusLabel(status){return({published:'Publicado',draft:'Borrador',paused:'Pausado'})[status]||status}
   function priceLabel(program){if(program.pricePrefix==='consult'||!program.price)return'Consultar';return`${program.pricePrefix==='from'?'Desde ':''}${program.currency} ${Number(program.price).toLocaleString('es-AR')}`}
 
