@@ -126,7 +126,7 @@
     if (/europa medida|personaliz|a medida/.test(n)) result.add('personalizado');
     if (/lujo|premium|experience/.test(n)) result.add('lujo');
     if (/low cost|economico|promo/.test(n)) result.add('low-cost');
-    if (/sin aereo|no incluye vuelo internacional|plane slash|circuito/.test(n) || /loaded|midas|lowcost/.test(source)) result.add('sin-aereo');
+    if (/sin aereo|no incluye vuelo internacional|plane slash|circuito/.test(n) || /loaded|lowcost/.test(source)) result.add('sin-aereo');
     if (/con aereo|aereos internacionales|ticket aereo|vuelos internacionales/.test(n) || /luxury/.test(source)) result.add('con-aereo');
     if (/grupal|salida grupal|guia acompanante/.test(n) || /luxury/.test(source)) result.add('grupal');
     if (/luna de miel|romantic/.test(n)) result.add('luna-de-miel');
@@ -311,8 +311,6 @@
     collectCustomDestinations();
     collectObjectPrograms(typeof loadedTours !== 'undefined' ? loadedTours : null, 'loaded', showLoadedTour, {types:['sin-aereo']});
     collectObjectPrograms(typeof europaMedidaTours !== 'undefined' ? europaMedidaTours : null, 'europa-medida', showEuropaMedida, {types:['personalizado','con-aereo']});
-    collectObjectPrograms(typeof additionalMidasTours !== 'undefined' ? additionalMidasTours : null, 'midas', showTourSinAereos, {types:['sin-aereo']});
-    collectObjectPrograms(typeof luxuryTours !== 'undefined' ? luxuryTours : null, 'luxury', showLuxuryTour, {types:['lujo','grupal','con-aereo']});
     collectObjectPrograms(typeof lowCostTours !== 'undefined' ? lowCostTours : null, 'lowcost', showLowCost, {types:['low-cost','sin-aereo']});
     window.travelCatalog = catalog;
   }
