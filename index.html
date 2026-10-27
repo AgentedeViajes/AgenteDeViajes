@@ -2973,18 +2973,31 @@
     const retiredRutasSectionIds = new Set([
       'section-europa-turquia-griegas'
     ]);
+    const retiredLegacySupplierTourKeys = new Set([
+      'cinco-capitales-europa', 'clasicos-europeos',
+      'eco-europa-clasica', 'eco-madrid-santiago-portugal', 'escapada-europea-mad-lon',
+      'balcanes-capitales-imperiales', 'capitales-imperiales-alcance',
+      'belle-europa-serie-clasica'
+    ]);
+    const retiredImperatoreSectionIds = new Set([
+      'section-europa-puglia', 'section-europa-dos-sicilias'
+    ]);
 
     retiredCrownTourKeys.forEach(key => delete loadedTours[key]);
+    retiredLegacySupplierTourKeys.forEach(key => delete loadedTours[key]);
     retiredCrownSectionIds.forEach(id => document.getElementById(id)?.remove());
     retiredOrienteSectionIds.forEach(id => document.getElementById(id)?.remove());
     retiredRutasSectionIds.forEach(id => document.getElementById(id)?.remove());
+    retiredImperatoreSectionIds.forEach(id => document.getElementById(id)?.remove());
     document.querySelectorAll('a[onclick]').forEach(link => {
       const action = link.getAttribute('onclick') || '';
       const opensRetiredTour = [...retiredCrownTourKeys].some(key => action.includes(`showLoadedTour('${key}')`));
+      const opensRetiredLegacySupplierTour = [...retiredLegacySupplierTourKeys].some(key => action.includes(`showLoadedTour('${key}')`));
       const opensRetiredSection = [...retiredCrownSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
       const opensRetiredOrienteSection = [...retiredOrienteSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
       const opensRetiredRutasSection = [...retiredRutasSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
-      if (opensRetiredTour || opensRetiredSection || opensRetiredOrienteSection || opensRetiredRutasSection) link.closest('li')?.remove();
+      const opensRetiredImperatoreSection = [...retiredImperatoreSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
+      if (opensRetiredTour || opensRetiredLegacySupplierTour || opensRetiredSection || opensRetiredOrienteSection || opensRetiredRutasSection || opensRetiredImperatoreSection) link.closest('li')?.remove();
     });
     const tourCodeByKey = {
       'cinco-capitales-europa':'EUROPAMUNDO',
