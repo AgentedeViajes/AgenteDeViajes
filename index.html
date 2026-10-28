@@ -2986,6 +2986,10 @@
       'section-caribe-puntacana', 'section-caribe-cancun', 'section-caribe-jamaica',
       'section-caribe-colombia', 'section-caribe-aruba'
     ]);
+    const retiredBrazilSectionIds = new Set([
+      'section-brasil-rio', 'section-brasil-imbassai',
+      'section-brasil-floripa', 'section-brasil-porto'
+    ]);
 
     retiredCrownTourKeys.forEach(key => delete loadedTours[key]);
     retiredLegacySupplierTourKeys.forEach(key => delete loadedTours[key]);
@@ -2994,6 +2998,7 @@
     retiredRutasSectionIds.forEach(id => document.getElementById(id)?.remove());
     retiredImperatoreSectionIds.forEach(id => document.getElementById(id)?.remove());
     retiredCaribbeanSectionIds.forEach(id => document.getElementById(id)?.remove());
+    retiredBrazilSectionIds.forEach(id => document.getElementById(id)?.remove());
     document.querySelectorAll('a[onclick]').forEach(link => {
       const action = link.getAttribute('onclick') || '';
       const opensRetiredTour = [...retiredCrownTourKeys].some(key => action.includes(`showLoadedTour('${key}')`));
@@ -3003,7 +3008,8 @@
       const opensRetiredRutasSection = [...retiredRutasSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
       const opensRetiredImperatoreSection = [...retiredImperatoreSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
       const opensRetiredCaribbeanSection = [...retiredCaribbeanSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
-      if (opensRetiredTour || opensRetiredLegacySupplierTour || opensRetiredSection || opensRetiredOrienteSection || opensRetiredRutasSection || opensRetiredImperatoreSection || opensRetiredCaribbeanSection) link.closest('li')?.remove();
+      const opensRetiredBrazilSection = [...retiredBrazilSectionIds].some(id => action.includes(`showSection('${id.replace('section-', '')}')`));
+      if (opensRetiredTour || opensRetiredLegacySupplierTour || opensRetiredSection || opensRetiredOrienteSection || opensRetiredRutasSection || opensRetiredImperatoreSection || opensRetiredCaribbeanSection || opensRetiredBrazilSection) link.closest('li')?.remove();
     });
     const tourCodeByKey = {
       'cinco-capitales-europa':'EUROPAMUNDO',
