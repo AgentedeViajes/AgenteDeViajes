@@ -3133,6 +3133,22 @@
       }
     });
 
+    const retiredEuropaMedidaKeys = new Set([
+      'provenza-costa-azul', 'sicilia-malta', 'suiza-austria-eslovenia',
+      'portugal-andalucia', 'espana-italia-esencial', 'suiza-eslovenia-natural',
+      'norte-italia-suiza', 'espana-paris-londres', 'espana-marruecos',
+      'galicia-portugal', 'tutta-italia', 'espana-norte-italia', 'gran-bretana',
+      'espana-balear', 'espana-italia-amalfitana', 'amalfitana-islas-griegas',
+      'europa-romantica', 'espana-italia-clasicos', 'capitales',
+      'tutta-italia-sicilia', 'tutta-italia-puglia'
+    ]);
+    retiredEuropaMedidaKeys.forEach(key => delete europaMedidaTours[key]);
+    document.querySelectorAll('a[onclick]').forEach(link => {
+      const action = link.getAttribute('onclick') || '';
+      const opensRetiredEuropaMedida = [...retiredEuropaMedidaKeys].some(key => action.includes(`showEuropaMedida('${key}')`));
+      if (opensRetiredEuropaMedida) link.closest('li')?.remove();
+    });
+
     function showEuropaMedida(key) {
       const tour = europaMedidaTours[key];
       if (!tour) return;
