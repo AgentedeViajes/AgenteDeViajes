@@ -23,11 +23,12 @@
 
   function renderPrograms(){
     const query=$('#programSearch').value.trim().toLowerCase();
+    const operatorCode=$('#operatorCodeFilter').value.trim().toLowerCase();
     const status=$('#statusFilter').value;
     const type=$('#typeFilter').value;
     const filtered=state.programs.filter(program=>{
       const haystack=[program.title,program.operatorCode,program.countries,program.destinations].join(' ').toLowerCase();
-      return(!query||haystack.includes(query))&&(!status||program.status===status)&&(!type||program.travelTypes.includes(type));
+      return(!query||haystack.includes(query))&&(!operatorCode||String(program.operatorCode||'').trim().toLowerCase()===operatorCode)&&(!status||program.status===status)&&(!type||program.travelTypes.includes(type));
     });
     $('#totalCount').textContent=state.programs.length;
     $('#publishedCount').textContent=state.programs.filter(item=>item.status==='published').length;
@@ -106,7 +107,7 @@
   $$('[name="dateMode"]').forEach(input=>input.addEventListener('change',()=>setDateMode(input.value,{confirmChange:true,autoPrice:true})));
   $('#imageFile').addEventListener('change',event=>{const file=event.target.files[0];if(!file)return;updateImagePreview(URL.createObjectURL(file))});
   $$('.nav-button').forEach(button=>button.addEventListener('click',()=>button.dataset.view==='editor'?openNew():switchView(button.dataset.view)));
-  ['programSearch','statusFilter','typeFilter'].forEach(id=>$(`#${id}`).addEventListener('input',renderPrograms));
+  ['programSearch','operatorCodeFilter','statusFilter','typeFilter'].forEach(id=>$(`#${id}`).addEventListener('input',renderPrograms));
   document.addEventListener('click',event=>{
     const action=event.target.closest('[data-action]');if(action?.dataset.action==='new')openNew();
     const remove=event.target.closest('.remove-row');if(remove&&!remove.dataset.action){remove.closest('.repeat-card').remove();renumberDays()}
