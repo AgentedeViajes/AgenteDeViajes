@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=20261105a">
+  <link rel="stylesheet" href="admin.css?v=20261105b">
 </head>
 <body>
   <section class="auth-gate" id="authGate" hidden>
@@ -70,7 +70,7 @@
         </div>
         <div class="table-wrap" id="programTableWrap" hidden>
           <table>
-            <thead><tr><th>Programa</th><th>Tipo</th><th>Próxima salida</th><th>Precio</th><th>Estado</th><th></th></tr></thead>
+            <thead><tr><th>Programa</th><th>Tipo</th><th aria-sort="ascending" id="departureSortHeader"><button class="table-sort-button" id="sortDepartureButton" type="button" aria-label="Ordenar por próxima salida, ascendente">Próxima salida <span aria-hidden="true">↑</span></button></th><th>Precio</th><th>Estado</th><th></th></tr></thead>
             <tbody id="programTableBody"></tbody>
           </table>
         </div>
@@ -277,6 +277,6 @@
   <script src="document-reader.js"></script>
   <script src="itinerary-importer.js"></script>
   <script src="data-service.js?v=20261025b"></script>
-  <script src="admin.js?v=20261105a"></script>
+  <script src="admin.js?v=20261105b"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
   const $$=selector=>Array.from(document.querySelectorAll(selector));
   const dataService=window.ModoRumboData;
   const dateMode=window.ModoRumboDateMode;
-  const state={programs:[],editingId:null,mode:'local',user:null,activeDateMode:dateMode.SPECIFIC_DATES};
+  const state={programs:[],editingId:null,mode:'local',user:null,activeDateMode:dateMode.SPECIFIC_DATES,departureSort:'asc'};
   const views={programs:$('#programsView'),editor:$('#editorView')};
 
   function uid(){return crypto.randomUUID?crypto.randomUUID():`program-${Date.now()}-${Math.random().toString(16).slice(2)}`}
@@ -13,6 +13,7 @@
   function typeLabel(type){return({grupal:'Viaje grupal',personalizado:'Viaje a medida','sin-aereo':'Circuito sin aéreo',lujo:'Viaje de lujo','luna-de-miel':'Luna de miel','low-cost':'Low Cost'})[type]||type}
   function statusLabel(status){return({published:'Publicado',draft:'Borrador',paused:'Pausado'})[status]||status}
   function priceLabel(program){if(program.pricePrefix==='consult'||!program.price)return'Consultar';return`${program.pricePrefix==='from'?'Desde ':''}${program.currency} ${Number(program.price).toLocaleString('es-AR')}`}
+  function nextDepartureDate(program){if(dateMode.normalizeMode(program.dateMode)===dateMode.DATE_RANGE)return program.rangeStartDate||'';return(program.departures||[]).map(item=>item.date).filter(Boolean).sort()[0]||''}
 
   function switchView(name){
     Object.entries(views).forEach(([key,view])=>view.classList.toggle('active',key===name));
@@ -29,7 +30,18 @@
     const filtered=state.programs.filter(program=>{
       const haystack=[program.title,program.operatorCode,program.countries,program.destinations].join(' ').toLowerCase();
       return(!query||haystack.includes(query))&&(!operatorCode||String(program.operatorCode||'').trim().toLowerCase()===operatorCode)&&(!status||program.status===status)&&(!type||program.travelTypes.includes(type));
-    });
+    }).map((program,index)=>({program,index,date:nextDepartureDate(program)})).sort((a,b)=>{
+      if(!a.date&&!b.date)return a.index-b.index;
+      if(!a.date)return 1;
+      if(!b.date)return -1;
+      const order=a.date.localeCompare(b.date);
+      return(order*(state.departureSort==='asc'?1:-1))||a.index-b.index;
+    }).map(item=>item.program);
+    const sortHeader=$('#departureSortHeader');
+    const sortButton=$('#sortDepartureButton');
+    sortHeader.setAttribute('aria-sort',state.departureSort==='asc'?'ascending':'descending');
+    sortButton.innerHTML=`Próxima salida <span aria-hidden="true">${state.departureSort==='asc'?'↑':'↓'}</span>`;
+    sortButton.setAttribute('aria-label',`Ordenar por próxima salida, ${state.departureSort==='asc'?'ascendente':'descendente'}`);
     $('#totalCount').textContent=state.programs.length;
     $('#publishedCount').textContent=state.programs.filter(item=>item.status==='published').length;
     $('#draftCount').textContent=state.programs.filter(item=>item.status==='draft').length;
@@ -37,7 +49,7 @@
     $('#emptyState').hidden=filtered.length>0;
     $('#programTableWrap').hidden=filtered.length===0;
     $('#programTableBody').innerHTML=filtered.map(program=>{
-      const next=(program.departures||[]).map(item=>item.date).filter(Boolean).sort()[0];
+      const next=nextDepartureDate(program);
       const availability=dateMode.normalizeMode(program.dateMode)===dateMode.DATE_RANGE?dateMode.rangeLabel(program.rangeStartDate,program.rangeEndDate):(next?new Date(`${next}T12:00:00`).toLocaleDateString('es-AR'):'A solicitud');
       return`<tr><td><strong>${escapeHtml(program.title)}</strong><small>${escapeHtml(program.operatorCode||'Sin código')} · ${escapeHtml(program.region||'Sin región')}</small></td><td>${escapeHtml((program.travelTypes||[]).map(typeLabel).join(', ')||'Sin asignar')}</td><td>${escapeHtml(availability||'Rango incompleto')}</td><td>${escapeHtml(priceLabel(program))}</td><td><span class="status-pill ${escapeHtml(program.status)}">${escapeHtml(statusLabel(program.status))}</span></td><td><div class="table-actions"><button class="icon-button" data-action="edit" data-id="${program.id}" aria-label="Editar">✎</button><button class="icon-button" data-action="duplicate" data-id="${program.id}" aria-label="Duplicar">⧉</button><button class="icon-button remove-row" data-action="delete" data-id="${program.id}" aria-label="Eliminar">×</button></div></td></tr>`;
     }).join('');
@@ -108,6 +120,7 @@
   $('#imageFile').addEventListener('change',event=>{const file=event.target.files[0];if(!file)return;updateImagePreview(URL.createObjectURL(file))});
   $$('.nav-button').forEach(button=>button.addEventListener('click',()=>button.dataset.view==='editor'?openNew():switchView(button.dataset.view)));
   ['programSearch','operatorCodeFilter','statusFilter','typeFilter'].forEach(id=>$(`#${id}`).addEventListener('input',renderPrograms));
+  $('#sortDepartureButton').addEventListener('click',()=>{state.departureSort=state.departureSort==='asc'?'desc':'asc';renderPrograms()});
   document.addEventListener('click',event=>{
     const action=event.target.closest('[data-action]');if(action?.dataset.action==='new')openNew();
     const remove=event.target.closest('.remove-row');if(remove&&!remove.dataset.action){remove.closest('.repeat-card').remove();renumberDays()}
