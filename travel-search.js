@@ -70,6 +70,7 @@
 
   const catalog = [];
   const catalogById = new Map();
+  let dialogReturnFocus = null;
 
   function normalize(value) {
     return String(value || '')
@@ -233,29 +234,31 @@
         if (!title) return;
         const info = card.querySelector('.package-info') || card;
         const tag = card.querySelector('.package-tag');
-        const price = card.querySelector('.package-price');
-        const img = card.querySelector('img');
+        const prices = [...card.querySelectorAll('.package-price')].map(item => item.textContent.replace(/\s+/g, ' ').trim()).filter(Boolean);
+        const img = card.querySelector('.package-image img, img');
         const explicitTypes = (card.dataset.travelTypes || section.dataset.travelTypes || '').split(',').map(type => type.trim()).filter(Boolean);
         const id = `static:${sectionKey}:${index}`;
         card.dataset.tripId = id;
-        addRecord({
+        const record = {
           id,
           name: title.textContent.trim(),
           source: `static ${sectionKey}`,
           searchText: `${info.textContent} ${section.textContent}`,
           departureText: `${tag ? tag.textContent : ''} ${info.textContent}`,
-          priceText: price ? price.textContent : '',
+          priceText: prices.join(' · '),
           image: img ? img.src : '',
           types: explicitTypes.length ? explicitTypes : undefined,
           duration: extractDuration(info.textContent),
           open: function () {
+            if (showHistoricalProgram(record, card, section)) return;
             showSection(sectionKey);
             window.setTimeout(() => {
               const target = document.querySelector(`[data-trip-id="${id}"]`);
               if (target && section.querySelectorAll('.package-card').length > 1) target.scrollIntoView({behavior:'smooth',block:'center'});
             }, 120);
           }
-        });
+        };
+        addRecord(record);
       });
     });
   }
@@ -285,12 +288,12 @@
     Object.entries(object).forEach(([key, trip]) => {
       const name = trip.name || key;
       const route = trip.route || trip.itinerary || [];
-      const routeText = route.map(item => Array.isArray(item) ? item.join(' ') : item).join(' ');
-      const includes = (trip.includes || []).join(' ');
+      const routeText = route.map(item => Array.isArray(item) ? item.join(' ') : typeof item === 'object' ? [item.title, item.description, item.text].filter(Boolean).join(' ') : item).join(' ');
+      const includes = Array.isArray(trip.includes) ? trip.includes.join(' ') : trip.includes || '';
       const departures = trip.departures || trip.departure || '';
       const prices = Array.isArray(trip.prices) ? trip.prices.join(' ') : (trip.price || '');
       const text = [name, trip.subtitle, trip.cities, trip.duration, departures, prices, includes, routeText].filter(Boolean).join(' ');
-      addRecord({
+      const record = {
         id: `${source}:${key}`,
         name,
         source,
@@ -301,8 +304,9 @@
         types: options && options.types
           ? [...new Set([...options.types, ...inferTypes(text, source)])]
           : inferTypes(text, source),
-        open: function () { openFn(key); }
-      });
+        open: function () { showObjectProgram(record, trip, source, key, openFn); }
+      };
+      addRecord(record);
     });
   }
 
@@ -348,49 +352,386 @@
     return [...types];
   }
 
-  function showPublicProgram(program) {
+  function detailEmpty(message) {
+    return `<div class="detail-empty"><i class="far fa-folder-open" aria-hidden="true"></i><p>${escapeHtml(message)}</p></div>`;
+  }
+
+  function detailTypeLabel(types) {
+    const labels = {'personalizado':'A medida','lujo':'Lujo','low-cost':'Low cost','sin-aereo':'Circuito sin aéreo','con-aereo':'Con aéreo','grupal':'Salida grupal','luna-de-miel':'Luna de miel','programa':'Programa'};
+    return (types || []).map(type => labels[type] || type).join(' · ');
+  }
+
+  function detailValues(value) {
+    if (Array.isArray(value)) return value.filter(item => item != null && String(item) !== '').map(item => String(item));
+    if (value == null || String(value) === '') return [];
+    return [String(value)];
+  }
+
+  function detailText(value) {
+    return escapeHtml(value).replace(/\r\n?|\n/g, '<br>');
+  }
+
+  function detailMoney(value, currency) {
+    const amount = Number(value);
+    return Number.isFinite(amount)
+      ? `${currency || 'USD'} ${new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(amount)}`
+      : String(value == null ? '' : value);
+  }
+
+  function ensureProgramDialog() {
     let dialog = document.getElementById('publicProgramDialog');
     if (!dialog) {
       dialog = document.createElement('dialog');
       dialog.id = 'publicProgramDialog';
-      dialog.className = 'program-dialog';
       dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+      dialog.addEventListener('close', () => {
+        const target = dialogReturnFocus;
+        dialogReturnFocus = null;
+        if (target && target.isConnected && typeof target.focus === 'function') target.focus({preventScroll:true});
+      });
       document.body.appendChild(dialog);
     }
-    const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
-    const rangeAvailability = isRangeProgram(program) ? publicAvailability(program) : '';
-    const itinerary = [...(program.itinerary_days || [])].sort((a,b) => a.position - b.position);
-    const includes = program.includes || [];
-    const title = escapeHtml(program.title);
-    const whatsappText = encodeURIComponent(`Hola, quiero consultar por el programa ${program.title}.`);
-    dialog.innerHTML = `<article class="program-detail">
-      <button class="program-dialog-close" type="button" aria-label="Cerrar">×</button>
-      ${program.image_path ? `<img class="program-detail-image" src="${escapeHtml(program.image_path)}" alt="${title}">` : ''}
-      <div class="program-detail-content">
-        <div class="premium-eyebrow">${program.operator_code ? `Código ${escapeHtml(program.operator_code)}` : 'Programa de viaje'}</div>
-        <h2>${title}</h2>
-        ${program.summary ? `<p class="program-detail-summary">${escapeHtml(program.summary)}</p>` : ''}
-        <div class="program-detail-facts">
-          ${program.duration ? `<span><i class="far fa-clock"></i>${escapeHtml(program.duration)}</span>` : ''}
-          ${program.region ? `<span><i class="fas fa-map-marker-alt"></i>${escapeHtml(program.region)}</span>` : ''}
-          <strong>${escapeHtml(publicPrice(program) || 'Precio a consultar')}</strong>
-        </div>
-        ${rangeAvailability ? `<section class="program-range"><h3>Período de viaje</h3><div class="program-departures"><span>${escapeHtml(rangeAvailability)}</span></div><p>${escapeHtml(dateMode.RANGE_NOTICE)}</p></section>` : departures.length ? `<section><h3>Fechas de salida</h3><div class="program-departures">${departures.map(item => `<span>${escapeHtml(publicDate(item.departure_date))}${item.price != null ? ` · ${escapeHtml(program.currency || 'USD')} ${escapeHtml(new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(Number(item.price)))}` : ''}</span>`).join('')}</div></section>` : ''}
-        ${includes.length ? `<section><h3>Incluye</h3><ul class="program-includes">${includes.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
-        ${itinerary.length ? `<section><h3>Itinerario</h3><div class="program-itinerary">${itinerary.map(day => `<article><div class="program-day-label">Día ${day.position}</div><div><h4>${escapeHtml(day.title || `Día ${day.position}`)}</h4>${day.meals ? `<small>${escapeHtml(day.meals)}</small>` : ''}<p>${escapeHtml(day.description).replace(/\n/g,'<br>')}</p></div></article>`).join('')}</div></section>` : ''}
-        ${program.notes ? `<section class="program-notes"><h3>Notas</h3><p>${escapeHtml(program.notes).replace(/\n/g,'<br>')}</p></section>` : ''}
-        <div class="program-detail-actions"><a class="premium-button" href="https://wa.me/5491134821978?text=${whatsappText}" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Consultar por WhatsApp</a><a class="premium-button secondary" href="mailto:javier@tresortravel.com.ar?subject=${encodeURIComponent(`Consulta: ${program.title}`)}"><i class="far fa-envelope"></i> Consultar por email</a></div>
+    dialog.className = 'program-dialog program-dialog-v2';
+    dialog.setAttribute('aria-labelledby', 'detailProgramTitle');
+    return dialog;
+  }
+
+  function renderProgramDetail(detail) {
+    const dialog = ensureProgramDialog();
+    const title = escapeHtml(detail.title || 'Programa de viaje');
+    const images = [...new Set((detail.images || []).filter(Boolean).map(image => String(image)))];
+    const departures = detail.departures || [];
+    const selectableIndexes = departures.map((item,index) => item.selectable ? index : -1).filter(index => index >= 0);
+    const selectedIndex = detail.selectedDepartureIndex != null
+      ? detail.selectedDepartureIndex
+      : selectableIndexes.length === 1 ? selectableIndexes[0] : -1;
+    const selectedDepartureItem = selectedIndex >= 0 ? departures[selectedIndex] : null;
+    const selectedDeparture = selectedDepartureItem ? selectedDepartureItem.label : '';
+    const selectedPrice = selectedDepartureItem && selectedDepartureItem.price ? selectedDepartureItem.price : '';
+    const displayedPriceLabel = selectedPrice ? 'Precio de la salida' : (detail.priceLabel || 'Precio');
+    const displayedPriceValue = selectedPrice || detail.priceValue || 'A consultar';
+    const whatsappMessage = 'Hola, quiero consultar por el programa ' + (detail.title || '') + (selectedDeparture ? ', salida ' + selectedDeparture : '') + '.';
+    const whatsappUrl = 'https://wa.me/5491134821978?text=' + encodeURIComponent(whatsappMessage);
+    const imageHtml = images.length ? `<div class="detail-gallery">
+      <img class="detail-main-image" data-detail-main-image src="${escapeHtml(images[0])}" alt="${title}">
+      ${images.length > 1 ? `<div class="detail-thumbnails" aria-label="Galería de fotografías">${images.map((image,index) => `<button type="button" class="detail-thumbnail${index === 0 ? ' active' : ''}" data-detail-image-index="${index}" aria-label="Ver fotografía ${index + 1}" aria-pressed="${index === 0 ? 'true' : 'false'}"><img src="${escapeHtml(image)}" alt=""></button>`).join('')}</div>` : ''}
+    </div>` : detailEmpty('Este programa no tiene fotografías disponibles.');
+    const itineraryHtml = detail.itinerary && detail.itinerary.length ? `<div class="detail-timeline">${detail.itinerary.map((day,index) => `<article class="detail-day">
+      <div class="detail-day-marker" aria-hidden="true">${escapeHtml(day.day || String(index + 1))}</div>
+      <div><h4>${escapeHtml(day.title || 'Día ' + (index + 1))}</h4>${day.date ? `<small>${escapeHtml(day.date)}</small>` : ''}${day.description ? `<p>${detailText(day.description)}</p>` : ''}${day.notes ? `<p class="detail-day-notes">${detailText(day.notes)}</p>` : ''}</div>
+    </article>`).join('')}</div>` : detailEmpty('El itinerario todavía no fue informado para este programa.');
+    const included = detail.included || [];
+    const excluded = detail.excluded || [];
+    const extraDetails = detail.additionalDetails || [];
+    const includedHtml = included.length ? `<ul class="detail-service-list included">${included.map(item => `<li><i class="fas fa-check" aria-hidden="true"></i><span>${detailText(item)}</span></li>`).join('')}</ul>` : detailEmpty('No hay servicios incluidos informados.');
+    const excludedHtml = excluded.length ? `<ul class="detail-service-list excluded">${excluded.map(item => `<li><i class="fas fa-times" aria-hidden="true"></i><span>${detailText(item)}</span></li>`).join('')}</ul>` : detailEmpty('No hay servicios no incluidos informados.');
+    const extraHtml = extraDetails.length ? `<div class="detail-additional-info"><h4>Otros datos del paquete</h4><ul>${extraDetails.map(item => `<li>${detailText(item)}</li>`).join('')}</ul></div>` : '';
+    const priceOptions = detail.priceOptions || [];
+    const priceOptionsHtml = priceOptions.length ? `<section class="detail-price-options"><h4>Otras tarifas informadas</h4><ul>${priceOptions.map(item => `<li>${detailText(item)}</li>`).join('')}</ul></section>` : '';
+    let datesHtml = '';
+    if (detail.rangeText) {
+      datesHtml = `<div class="detail-range"><strong>${detailText(detail.rangeText)}</strong>${detail.rangeNotice ? `<p>${detailText(detail.rangeNotice)}</p>` : ''}</div>`;
+    } else if (departures.length) {
+      datesHtml = `<div class="detail-departures">${departures.map((item,index) => {
+        const label = item.label || 'Fecha no informada';
+        const price = item.price ? `<strong>${detailText(item.price)}</strong>` : '';
+        if (item.selectable) return `<button type="button" class="detail-departure${index === selectedIndex ? ' active' : ''}" data-departure-index="${index}" aria-pressed="${index === selectedIndex ? 'true' : 'false'}"><i class="far fa-calendar-alt" aria-hidden="true"></i><span>${detailText(label)}</span>${price}</button>`;
+        return `<div class="detail-departure detail-departure-static"><i class="far fa-calendar-alt" aria-hidden="true"></i><span>${detailText(label)}</span>${price}</div>`;
+      }).join('')}</div>`;
+    } else if (detail.availabilityText) {
+      datesHtml = `<div class="detail-availability"><i class="far fa-calendar-alt" aria-hidden="true"></i><span>${detailText(detail.availabilityText)}</span></div>`;
+    } else {
+      datesHtml = detailEmpty('No hay fechas de salida informadas.');
+    }
+    datesHtml += priceOptionsHtml;
+    const conditionsHtml = detail.conditions && detail.conditions.length ? `<div class="detail-conditions">${detail.conditions.map(item => `<p>${detailText(item)}</p>`).join('')}</div>` : detailEmpty('No hay condiciones adicionales informadas.');
+    const facts = [
+      detail.region ? `<span><i class="fas fa-map-marker-alt" aria-hidden="true"></i><strong>${escapeHtml(detail.region)}</strong></span>` : '',
+      detail.destination ? `<span><i class="fas fa-location-dot" aria-hidden="true"></i><strong>${escapeHtml(detail.destination)}</strong></span>` : '',
+      detail.departureText ? `<span><i class="far fa-calendar-alt" aria-hidden="true"></i><strong>${detailText(detail.departureText)}</strong></span>` : '',
+      detail.duration ? `<span><i class="fas fa-bed" aria-hidden="true"></i><strong>${escapeHtml(detail.duration)}</strong></span>` : ''
+    ].filter(Boolean).join('');
+    const codeHtml = detail.operatorCode != null && String(detail.operatorCode).trim() !== ''
+      ? `<span class="detail-code">Código ${escapeHtml(detail.operatorCode)}</span>` : '';
+    const typeHtml = detail.type ? `<span class="detail-type">${escapeHtml(detail.type)}</span>` : '';
+    const summaryHtml = detail.summary ? `<p class="detail-summary-copy">${detailText(detail.summary)}</p>` : '';
+    const priceHtml = `<div class="detail-price"><small data-detail-price-label>${escapeHtml(displayedPriceLabel)}</small><strong data-detail-price-value>${detailText(displayedPriceValue)}</strong>${detail.priceBasis ? `<span>${escapeHtml(detail.priceBasis)}</span>` : ''}</div>`;
+    const emailUrl = 'mailto:javier@tresortravel.com.ar?subject=' + encodeURIComponent('Consulta: ' + (detail.title || ''));
+    dialog.innerHTML = `<article class="detail-v2">
+      <button class="program-dialog-close" type="button" aria-label="Cerrar ficha">×</button>
+      <div class="detail-top">
+        ${imageHtml}
+        <aside class="detail-summary">
+          <div class="detail-breadcrumb">Inicio <i class="fas fa-chevron-right" aria-hidden="true"></i> ${escapeHtml(detail.region || 'Viajes')}</div>
+          ${typeHtml}${codeHtml}
+          <h2 id="detailProgramTitle">${title}</h2>
+          ${summaryHtml}
+          ${facts ? `<div class="detail-facts">${facts}</div>` : ''}
+          ${priceHtml}
+          <a class="detail-whatsapp" data-detail-whatsapp href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i><span><strong>Consultá por WhatsApp</strong><small>Quiero más información</small></span></a>
+          <a class="detail-email" href="${emailUrl}"><i class="far fa-envelope" aria-hidden="true"></i> Consultar por email</a>
+        </aside>
+      </div>
+      <div class="detail-tabs" role="tablist" aria-label="Información del programa">
+        <button type="button" class="active" id="detailTabItinerary" role="tab" aria-selected="true" aria-controls="detailPanelItinerary" tabindex="0" data-detail-tab="itinerary"><i class="far fa-calendar-alt" aria-hidden="true"></i>Itinerario</button>
+        <button type="button" id="detailTabServices" role="tab" aria-selected="false" aria-controls="detailPanelServices" tabindex="-1" data-detail-tab="services"><i class="fas fa-shield-alt" aria-hidden="true"></i>Servicios</button>
+        <button type="button" id="detailTabDates" role="tab" aria-selected="false" aria-controls="detailPanelDates" tabindex="-1" data-detail-tab="dates"><i class="far fa-calendar-check" aria-hidden="true"></i>Fechas y precios</button>
+        <button type="button" id="detailTabConditions" role="tab" aria-selected="false" aria-controls="detailPanelConditions" tabindex="-1" data-detail-tab="conditions"><i class="fas fa-info-circle" aria-hidden="true"></i>Condiciones</button>
+      </div>
+      <div class="detail-panels">
+        <section class="detail-panel active" id="detailPanelItinerary" role="tabpanel" aria-labelledby="detailTabItinerary" tabindex="0" data-detail-panel="itinerary"><h3>Itinerario completo</h3>${itineraryHtml}</section>
+        <section class="detail-panel" id="detailPanelServices" role="tabpanel" aria-labelledby="detailTabServices" tabindex="0" data-detail-panel="services" hidden><div class="detail-services-grid"><div><h3>Servicios incluidos</h3>${includedHtml}${extraHtml}</div><div><h3>Servicios no incluidos</h3>${excludedHtml}</div></div></section>
+        <section class="detail-panel" id="detailPanelDates" role="tabpanel" aria-labelledby="detailTabDates" tabindex="0" data-detail-panel="dates"><h3>Fechas y precios</h3>${datesHtml}</section>
+        <section class="detail-panel" id="detailPanelConditions" role="tabpanel" aria-labelledby="detailTabConditions" tabindex="0" data-detail-panel="conditions" hidden><h3>Condiciones</h3>${conditionsHtml}</section>
       </div>
     </article>`;
     dialog.querySelector('.program-dialog-close').addEventListener('click', () => dialog.close());
+    const tabs = [...dialog.querySelectorAll('[data-detail-tab]')];
+    const panels = [...dialog.querySelectorAll('[data-detail-panel]')];
+    function activateTab(button, moveFocus) {
+      tabs.forEach(tab => {
+        const active = tab === button;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        tab.setAttribute('tabindex', active ? '0' : '-1');
+      });
+      panels.forEach(panel => {
+        const active = panel.dataset.detailPanel === button.dataset.detailTab;
+        panel.classList.toggle('active', active);
+        panel.hidden = !active;
+      });
+      if (moveFocus) button.focus();
+      dialog.scrollTop = 0;
+    }
+    tabs.forEach((button,index) => {
+      button.addEventListener('click', () => activateTab(button, false));
+      button.addEventListener('keydown', event => {
+        let next = index;
+        if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+        else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = tabs.length - 1;
+        else return;
+        event.preventDefault();
+        activateTab(tabs[next], true);
+      });
+    });
+    dialog.querySelectorAll('[data-detail-image-index]').forEach(button => button.addEventListener('click', () => {
+      const index = Number(button.dataset.detailImageIndex);
+      const image = images[index];
+      const main = dialog.querySelector('[data-detail-main-image]');
+      if (main && image) main.src = image;
+      dialog.querySelectorAll('[data-detail-image-index]').forEach(item => {
+        const active = item === button;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    }));
+    dialog.querySelectorAll('[data-departure-index]').forEach(button => button.addEventListener('click', () => {
+      const item = departures[Number(button.dataset.departureIndex)];
+      if (!item || !item.selectable) return;
+      dialog.querySelectorAll('[data-departure-index]').forEach(candidate => {
+        const active = candidate === button;
+        candidate.classList.toggle('active', active);
+        candidate.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      const message = 'Hola, quiero consultar por el programa ' + (detail.title || '') + ', salida ' + item.label + '.';
+      const link = dialog.querySelector('[data-detail-whatsapp]');
+      if (link) link.href = 'https://wa.me/5491134821978?text=' + encodeURIComponent(message);
+      const priceLabel = dialog.querySelector('[data-detail-price-label]');
+      const priceValue = dialog.querySelector('[data-detail-price-value]');
+      if (priceLabel && priceValue) {
+        priceLabel.textContent = item.price ? 'Precio de la salida' : (detail.priceLabel || 'Precio');
+        priceValue.textContent = item.price || detail.priceValue || 'A consultar';
+      }
+    }));
+    if (!dialogReturnFocus || !dialogReturnFocus.isConnected) dialogReturnFocus = document.activeElement;
     dialog.showModal();
   }
 
+  function readHeadingItems(container, pattern) {
+    const headings = [...container.querySelectorAll('h2,h3,h4')].filter(heading => pattern.test(normalize(heading.textContent)));
+    return headings.flatMap(heading => [...(heading.parentElement?.querySelectorAll('li') || [])].map(item => item.textContent.replace(/\s+/g,' ').trim()).filter(Boolean));
+  }
+
+  function showHistoricalProgram(record, card, section) {
+    if (section.querySelectorAll('.package-card').length !== 1) return false;
+    const detailItems = [...card.querySelectorAll('.package-details li')].map(item => item.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);
+    const tagText = card.querySelector('.package-tag')?.textContent.replace(/\s+/g,' ').trim() || '';
+    const dateDetails = [...card.querySelectorAll('.package-details li')].filter(item => {
+      const text = item.textContent.replace(/\s+/g,' ').trim();
+      return item.querySelector('.fa-calendar-alt,.fa-calendar,.fa-calendar-check') || /^(salida|fecha|vigencia|inicio|salidas)\b/i.test(text);
+    }).map(item => item.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);
+    const availabilityText = [tagText, ...dateDetails].filter((value,index,array) => value && array.indexOf(value) === index && (/salida|fecha|vigencia|inicio|semanal|solicitud/i.test(value) || hasConcreteDepartureDate(value))).join(' · ');
+    const tagIsDate = tagText && hasConcreteDepartureDate(tagText);
+    const explicitCodeNode = card.querySelector('[data-operator-code],.operator-code');
+    const titleCodeMatch = record.name.match(/\bC[oó]digo\s+([A-Za-z0-9][A-Za-z0-9._/-]*)/i);
+    const explicitCode = card.dataset.operatorCode || explicitCodeNode?.getAttribute('data-operator-code') || explicitCodeNode?.textContent || titleCodeMatch?.[1] || '';
+    const detailTitle = titleCodeMatch
+      ? record.name.replace(/\s*(?:[·—–-]\s*)?C[oó]digo\s+[A-Za-z0-9][A-Za-z0-9._/-]*\s*$/i,'').trim()
+      : record.name;
+    const priceOptions = [...card.querySelectorAll('.package-price')].map(item => item.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);
+    const itineraryNodes = [...section.querySelectorAll('strong')].filter(item => {
+      const text = item.textContent.replace(/\s+/g,' ').trim();
+      return /^(?:d[ií]as?\s+\d+\b|\d{1,2}\s+(?:ene(?:ro)?|feb(?:rero)?|mar(?:zo)?|abr(?:il)?|may(?:o)?|jun(?:io)?|jul(?:io)?|ago(?:sto)?|sep(?:tiembre)?|oct(?:ubre)?|nov(?:iembre)?|dic(?:iembre)?)\b)/i.test(text);
+    });
+    const itinerary = itineraryNodes.map((node,index) => {
+      const sourceTitle = node.textContent.replace(/\s+/g,' ').trim();
+      const numbered = sourceTitle.match(/^D[ií]as?\s+(\d+)\s*[-–—:]\s*(.*)$/i);
+      const dated = sourceTitle.match(/^(\d{1,2}\s+(?:ene(?:ro)?|feb(?:rero)?|mar(?:zo)?|abr(?:il)?|may(?:o)?|jun(?:io)?|jul(?:io)?|ago(?:sto)?|sep(?:tiembre)?|oct(?:ubre)?|nov(?:iembre)?|dic(?:iembre)?)\s*:\s*)(.*)$/i);
+      const block = node.parentElement || node;
+      const paragraphs = [...block.querySelectorAll('p')].map(item => item.textContent.trim()).filter(Boolean);
+      return {
+        day: numbered ? numbered[1] : String(index + 1),
+        title: numbered ? (numbered[2] || sourceTitle) : dated ? (dated[1] + dated[2]).trim() : sourceTitle,
+        description: paragraphs.join('\n\n')
+      };
+    });
+    const allImages = [...card.querySelectorAll('.package-image img')].map(image => image.currentSrc || image.src).filter(Boolean);
+    const explicitIncluded = readHeadingItems(section, /^(incluye|servicios incluidos|el programa incluye)$/);
+    const excluded = readHeadingItems(section, /(no incluye|servicios no incluidos|no incluido)/);
+    const conditions = readHeadingItems(section, /(condiciones|notas importantes|importante)/);
+    const summary = section.querySelector('.dest-hero p')?.textContent.trim() || '';
+    const priceSource = priceOptions[0] || record.priceText || '';
+    const priceLabel = /^desde\b/i.test(priceSource) ? 'Desde' : 'Tarifa informada';
+    const priceValue = priceSource.replace(/^desde\s*/i,'');
+    const detailsWithoutHeading = explicitIncluded.length ? [] : detailItems;
+    renderProgramDetail({
+      title:detailTitle || record.name,
+      operatorCode:explicitCode,
+      region:record.region || '',
+      destination:'',
+      type:!tagIsDate ? tagText : detailTypeLabel(record.types),
+      summary,
+      images:allImages,
+      departureText:availabilityText,
+      availabilityText:availabilityText && !dateDetails.length ? availabilityText : '',
+      departures:dateDetails.map(label => ({label,price:'',selectable:false})),
+      duration:record.duration || '',
+      priceLabel,
+      priceValue:priceValue || 'A consultar',
+      priceBasis:'',
+      priceOptions:priceOptions.slice(1),
+      itinerary,
+      included:explicitIncluded,
+      excluded,
+      additionalDetails:detailsWithoutHeading,
+      conditions
+    });
+    return true;
+  }
+
+  function showObjectProgram(record, trip, source, key, fallbackOpen) {
+    const rawRoute = trip.route || trip.itinerary || [];
+    const rawDepartures = trip.departures || trip.departure || '';
+    const rawPrices = Array.isArray(trip.prices) ? trip.prices : trip.price != null ? [trip.price] : [];
+    const explicitImages = [trip.image_path,trip.image].filter(Boolean);
+    [trip.images,trip.gallery,trip.image_urls].forEach(group => {
+      if (Array.isArray(group)) group.forEach(item => explicitImages.push(typeof item === 'string' ? item : item?.url || item?.path || item?.image_path || ''));
+    });
+    const images = [...new Set(explicitImages.filter(Boolean))];
+    const includes = detailValues(trip.includes);
+    const excluded = detailValues(trip.excludes || trip.notIncluded || trip.not_included);
+    const hasSourceDetail = Boolean((Array.isArray(rawRoute) && rawRoute.length) || rawDepartures || rawPrices.length || images.length || includes.length || excluded.length || trip.subtitle || trip.cities || trip.duration || trip.notes || trip.conditions);
+    if (!hasSourceDetail) {
+      if (typeof fallbackOpen === 'function') fallbackOpen(key);
+      return;
+    }
+    const route = Array.isArray(rawRoute) ? rawRoute : [];
+    const itinerary = route.map((item,index) => {
+      if (typeof item === 'string') return {day:String(index + 1),title:'Día ' + (index + 1),description:item};
+      if (Array.isArray(item)) return {day:String(index + 1),title:String(item[0] || 'Día ' + (index + 1)),description:item.slice(1).map(String).join(' ')};
+      return {day:String(item.day || item.position || index + 1),title:item.title || item.name || 'Día ' + (index + 1),description:item.description || item.text || '',date:item.date || '',notes:item.notes || item.meals || ''};
+    });
+    const rawDepartureList = Array.isArray(rawDepartures) ? rawDepartures : rawDepartures ? [rawDepartures] : [];
+    const departures = rawDepartureList.filter(item => typeof item === 'object' && item !== null).map(item => {
+      const rawDate = item.departure_date || item.date || item.label || '';
+      const label = item.departure_date ? publicDate(item.departure_date) : String(rawDate);
+      const price = item.price != null && item.price !== '' ? (typeof item.price === 'number' ? detailMoney(item.price,trip.currency || 'USD') : String(item.price)) : '';
+      return {label,price,selectable:Boolean(rawDate && hasConcreteDepartureDate(String(rawDate)))};
+    });
+    const textDepartures = rawDepartureList.filter(item => typeof item !== 'object' || item === null).map(item => String(item));
+    const availabilityText = textDepartures.join(' · ') || (trip.departureType === 'weekly' ? 'Salidas semanales' : trip.departureType === 'on-request' ? 'A solicitud' : '');
+    const namedCodeMatch = String(trip.name || record.name).match(/\bC[oó]digo\s+([A-Za-z0-9][A-Za-z0-9._/-]*)/i);
+    const operatorCode = trip.operator_code || trip.operatorCode || trip.code || (source === 'loaded' && typeof tourCodeByKey !== 'undefined' ? tourCodeByKey[key] || '' : '') || namedCodeMatch?.[1] || '';
+    const detailTitle = namedCodeMatch
+      ? String(trip.name || record.name).replace(/\s*(?:[·—–-]\s*)?C[oó]digo\s+[A-Za-z0-9][A-Za-z0-9._/-]*\s*$/i,'').trim()
+      : record.name;
+    const firstPrice = rawPrices.length ? rawPrices[0] : '';
+    const priceValue = firstPrice == null || firstPrice === '' ? 'A consultar' : String(firstPrice);
+    const priceOptions = rawPrices.slice(1).map(value => String(value));
+    const cityText = Array.isArray(trip.cities) ? trip.cities.join(', ') : trip.cities || '';
+    renderProgramDetail({
+      title:detailTitle || record.name,
+      operatorCode,
+      region:record.region || '',
+      destination:cityText,
+      type:detailTypeLabel(record.types),
+      summary:trip.subtitle || cityText,
+      images,
+      departureText:availabilityText || (departures.length === 1 ? departures[0].label : departures.length > 1 ? departures.length + ' fechas de salida' : ''),
+      availabilityText,
+      departures,
+      duration:trip.duration || record.duration || '',
+      priceLabel:/^desde\b/i.test(priceValue) ? 'Desde' : 'Tarifa informada',
+      priceValue,
+      priceBasis:trip.price_basis || '',
+      priceOptions,
+      itinerary,
+      included,
+      excluded,
+      additionalDetails:detailValues(trip.additionalDetails || trip.details),
+      conditions:detailValues(trip.conditions || trip.notes || trip.notice)
+    });
+  }
+
+  function showPublicProgram(program) {
+    const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
+    const rangeMode = isRangeProgram(program);
+    const rangeText = rangeMode ? dateMode.rangeLabel(program.travel_start_date,program.travel_end_date) : '';
+    const currency = program.currency || 'USD';
+    const basePriceAvailable = program.price != null && program.price_prefix !== 'consult';
+    const priceBasis = {double:'por persona en doble',single:'por persona en single',package:'por paquete'}[program.price_basis] || '';
+    const destinations = Array.isArray(program.destinations) ? program.destinations.join(', ') : String(program.destinations || '');
+    const countries = Array.isArray(program.countries) ? program.countries.join(', ') : String(program.countries || '');
+    const departureRows = rangeMode ? [] : departures.map(item => ({
+      label:item.departure_date ? publicDate(item.departure_date) : '',
+      price:item.price != null ? detailMoney(item.price,currency) : '',
+      selectable:Boolean(item.departure_date)
+    }));
+    const weeklyOrRequest = program.departure_type === 'weekly' ? 'Salidas semanales' : program.departure_type === 'on-request' ? 'A solicitud' : '';
+    const departureSummary = rangeText || (departures.length === 1 ? publicDate(departures[0].departure_date) : departures.length > 1 ? departures.length + ' fechas de salida' : weeklyOrRequest);
+    const itinerary = [...(program.itinerary_days || [])].sort((a,b) => Number(a.position || 0) - Number(b.position || 0)).map(day => ({
+      day:String(day.position || ''),title:day.title || '',description:day.description || '',notes:day.meals || ''
+    }));
+    renderProgramDetail({
+      title:program.title,
+      operatorCode:program.operator_code,
+      region:program.region || '',
+      destination:destinations || countries,
+      type:detailTypeLabel(publicTypes(program)),
+      summary:program.summary || '',
+      images:program.image_path ? [program.image_path] : [],
+      departureText:departureSummary,
+      availabilityText:rangeMode ? '' : departures.length ? '' : weeklyOrRequest,
+      rangeText,
+      rangeNotice:rangeMode ? dateMode.RANGE_NOTICE : '',
+      departures:departureRows,
+      duration:program.duration || '',
+      priceLabel:program.price_prefix === 'from' ? 'Desde' : 'Precio',
+      priceValue:basePriceAvailable ? detailMoney(program.price,currency) : 'A consultar',
+      priceBasis,
+      itinerary,
+      included:detailValues(program.includes),
+      excluded:[],
+      additionalDetails:[],
+      conditions:detailValues(program.notes)
+    });
+  }
+
   function collectPublicPrograms(programs) {
-    const existingNames = new Set(catalog.map(item => normalize(item.name)));
     (programs || []).forEach(program => {
-      const isCrownProgram = normalize(program.operator_code) === 'crown';
-      if (!program.title || (!isCrownProgram && existingNames.has(normalize(program.title)))) return;
+      if (!program.title) return;
       const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
       const departureText = publicAvailability(program);
       const itineraryText = (program.itinerary_days || []).map(day => `${day.title || ''} ${day.description || ''}`).join(' ');
@@ -412,7 +753,6 @@
         featured:Boolean(program.featured),
         open:function () { showPublicProgram(program); }
       });
-      existingNames.add(normalize(program.title));
     });
     window.travelCatalog = catalog;
   }
@@ -568,25 +908,28 @@
     if (grid) grid.innerHTML = '';
   }
 
-  function openTrip(id) {
+  function openTrip(id, invoker) {
     const record = catalogById.get(id);
-    if (record && typeof record.open === 'function') record.open();
+    if (record && typeof record.open === 'function') {
+      dialogReturnFocus = invoker || document.activeElement;
+      record.open();
+    }
   }
 
   function diverseFeatured() {
     const wanted = ['Punta Cana Verano 2027','Conociendo Europa','Tesoros de Corea y Japón','Tailandia Clásica'];
-    const picks = catalog.filter(item => item.featured).slice(0,4);
+    const picks = catalog.filter(item => item.featured).slice(0,3);
     wanted.forEach(name => {
       const found = catalog.find(item => normalize(item.name) === normalize(name));
       if (found && !picks.includes(found)) picks.push(found);
     });
     const regions = ['Caribe','Europa','Asia y Exóticos','África'];
     regions.forEach(region => {
-      if (picks.length >= 4) return;
+      if (picks.length >= 3) return;
       const found = catalog.find(item => item.region === region && item.image && !picks.includes(item));
       if (found) picks.push(found);
     });
-    return picks.slice(0,4);
+    return picks.slice(0,3);
   }
 
   function renderFeatured() {
@@ -623,7 +966,7 @@
     if (form) form.addEventListener('submit', runSearch);
     document.addEventListener('click', event => {
       const opener = event.target.closest('[data-open-trip]');
-      if (opener) openTrip(opener.dataset.openTrip);
+      if (opener) openTrip(opener.dataset.openTrip, opener);
       const query = event.target.closest('[data-search-query]');
       if (query) {
         showSection('home');

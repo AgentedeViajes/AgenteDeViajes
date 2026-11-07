@@ -173,7 +173,7 @@
       footer { padding: 40px 20px 20px; }
     }
   </style>
-  <link rel="stylesheet" href="premium-home.css?v=20261017c">
+  <link rel="stylesheet" href="premium-home.css?v=20261107a">
 </head>
 <body>
 
@@ -188,7 +188,7 @@
       <li class="nav-item">
         <span class="nav-link-btn" onclick="toggleDropdown(event, this)">Destinos <i class="fas fa-chevron-down"></i></span>
         <ul class="dropdown">
-          <li><a onclick="goHomeTo('destinations-home')"><span class="dest-icon">🌍</span> Explorar por región</a></li>
+          <li><a onclick="goHomeTo('travel-search')"><span class="dest-icon">🌍</span> Buscar por destino</a></li>
           <li><a data-search-query="Europa"><span class="dest-icon">🇪🇺</span> Europa</a></li>
           <li><a data-search-query="Caribe"><span class="dest-icon">🏝️</span> Caribe</a></li>
           <li><a data-search-query="Brasil"><span class="dest-icon">🇧🇷</span> Brasil</a></li>
@@ -207,9 +207,9 @@
           <li><a data-search-type="low-cost"><span class="dest-icon">🏷️</span> Low cost</a></li>
         </ul>
       </li>
-      <li class="nav-item"><a onclick="goHomeTo('upcoming-home')">Próximas salidas</a></li>
+      <li class="nav-item"><a onclick="goHomeTo('travel-search')">Próximas salidas</a></li>
       <li class="nav-item"><a onclick="goHomeTo('custom-home')">Viajes a medida</a></li>
-      <li class="nav-item"><a onclick="goHomeTo('contact-home')">Contacto</a></li>
+      <li class="nav-item"><a onclick="goHomeTo('mainFooter')">Contacto</a></li>
       <li class="nav-item nav-tools">
         <button class="nav-search-button" onclick="goHomeTo('travel-search')" aria-label="Buscar viajes"><i class="fas fa-search"></i></button>
         <a class="nav-whatsapp" href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i><span>Consultanos</span></a>
@@ -430,8 +430,8 @@
       </div>
       <div class="premium-hero-content">
         <div class="premium-kicker">Viajá · explorá · viví</div>
-        <h1 id="homeHeroTitle">El mundo te espera.<em>Nosotros te llevamos.</em></h1>
-        <p class="premium-hero-copy">Descubrí experiencias inolvidables con el respaldo y la atención personalizada de tu agente de viajes.</p>
+        <h1 id="homeHeroTitle">Tu próximo viaje<br>está más cerca</h1>
+        <p class="premium-hero-copy">Circuitos, salidas grupales, playas,<br>exóticos y viajes a medida</p>
       </div>
       <div class="hero-carousel-dots" role="group" aria-label="Elegir fotografía del destino">
         <button class="hero-carousel-dot is-active" type="button" data-slide="0" aria-label="Mostrar Santorini, Grecia" aria-current="true"></button>
@@ -486,40 +486,29 @@
 
     <section class="travel-modes-section" aria-labelledby="travelModesTitle">
       <div class="premium-container">
-        <header class="premium-heading travel-modes-heading">
-          <div class="premium-eyebrow">Elegí tu próxima experiencia</div>
-          <h2 id="travelModesTitle">¿En qué modo querés viajar?</h2>
-        </header>
         <div class="travel-modes-grid">
           <article class="travel-mode-card mode-playa" data-search-mode="playa" tabindex="0" role="button" aria-label="Ver viajes Modo Playa">
-            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">🏖️</span><h3>Modo Playa</h3><p>Brasil, Caribe y playas paradisíacas.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true"><i class="fas fa-umbrella-beach"></i></span><h3>Modo<br>Playa</h3><p>Brasil, Caribe y playas paradisíacas.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
           </article>
           <article class="travel-mode-card mode-europa" data-search-query="Europa" tabindex="0" role="button" aria-label="Ver viajes Modo Europa">
-            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">🌍</span><h3>Modo Europa</h3><p>Circuitos, cultura y grandes ciudades.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true"><i class="fas fa-landmark"></i></span><h3>Modo<br>Europa</h3><p>Circuitos, cultura y grandes ciudades.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
           </article>
           <article class="travel-mode-card mode-grupales" data-search-type="grupal" tabindex="0" role="button" aria-label="Ver viajes Modo Grupales">
-            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">🧳</span><h3>Modo Grupales</h3><p>Compartí experiencias inolvidables.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true"><i class="fas fa-users"></i></span><h3>Modo<br>Grupales</h3><p>Compartí experiencias inolvidables.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
           </article>
           <article class="travel-mode-card mode-exoticos" data-search-query="Exóticos" tabindex="0" role="button" aria-label="Ver viajes Modo Exóticos">
-            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">🌏</span><h3>Modo Exóticos</h3><p>Descubrí destinos extraordinarios.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true"><i class="fas fa-torii-gate"></i></span><h3>Modo<br>Exótico</h3><p>Descubrí destinos extraordinarios.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
           </article>
           <article class="travel-mode-card mode-medida" data-search-type="personalizado" tabindex="0" role="button" aria-label="Ver viajes Modo a Medida">
-            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true">✨</span><h3>Modo a Medida</h3><p>Diseñamos el viaje que imaginás.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
+            <div class="travel-mode-content"><span class="travel-mode-icon" aria-hidden="true"><i class="fas fa-tags"></i></span><h3>Modo<br>a Medida</h3><p>Diseñamos el viaje que imaginás.</p><span class="travel-mode-action">Explorar <i class="fas fa-arrow-right"></i></span></div>
           </article>
         </div>
       </div>
     </section>
 
-    <div class="trust-strip" aria-label="Beneficios de la agencia">
-      <div class="trust-item"><i class="fas fa-paper-plane"></i><span>Asesoramiento<br>personalizado</span></div>
-      <div class="trust-item"><i class="fas fa-shield-alt"></i><span>Compra segura<br>y confiable</span></div>
-      <div class="trust-item"><i class="far fa-credit-card"></i><span>Las mejores opciones<br>y precios</span></div>
-      <div class="trust-item"><i class="fas fa-users"></i><span>Acompañamiento<br>en todo tu viaje</span></div>
-    </div>
-
     <section class="premium-section search-results-section soft" id="travelResults" aria-live="polite">
       <div class="premium-container">
-        <div class="section-topline"><div><div class="premium-eyebrow">Resultados de búsqueda</div><h2 style="font-family:'Playfair Display',serif;color:var(--premium-navy);font-size:2rem">Encontrá tu próximo viaje</h2></div><a class="view-all-link" onclick="showAllTrips()">Limpiar filtros <i class="fas fa-redo-alt"></i></a></div>
+        <div class="section-topline"><div><div class="premium-eyebrow">Resultados de búsqueda</div><h2>Encontrá tu próximo viaje</h2></div><a class="view-all-link" onclick="showAllTrips()">Limpiar filtros <i class="fas fa-redo-alt"></i></a></div>
         <p class="search-results-summary" id="travelResultsSummary"></p>
         <div class="trip-card-grid" id="travelResultsGrid"></div>
       </div>
@@ -553,12 +542,19 @@
 
     <section class="premium-section" id="featured-home">
       <div class="premium-container">
-        <div class="section-topline"><header class="premium-heading"><div class="premium-eyebrow">Selección especial</div><h2>Viajes recomendados</h2><p>Una selección de propuestas para inspirar tu próxima aventura.</p></header><a class="view-all-link" onclick="showAllTrips()">Ver todos los programas <i class="fas fa-arrow-right"></i></a></div>
+        <div class="section-topline"><header class="premium-heading"><div class="premium-eyebrow">Selección especial</div><h2>Salidas destacadas</h2></header><a class="view-all-link" onclick="showAllTrips()">Ver todos los viajes <i class="fas fa-arrow-right"></i></a></div>
         <div class="trip-card-grid" id="featuredTripsGrid"></div>
       </div>
     </section>
 
-    <section class="premium-section soft" id="upcoming-home">
+    <div class="trust-strip" aria-label="Beneficios de la agencia">
+      <div class="trust-item"><i class="fas fa-paper-plane"></i><span>Asesoramiento<br>personalizado</span></div>
+      <div class="trust-item"><i class="fas fa-shield-alt"></i><span>Operadores<br>confiables</span></div>
+      <div class="trust-item"><i class="far fa-credit-card"></i><span>Múltiples<br>formas de pago</span></div>
+      <div class="trust-item"><i class="fas fa-headset"></i><span>Acompañamiento<br>en todo el viaje</span></div>
+    </div>
+
+    <section class="premium-section soft" id="upcoming-home" hidden>
       <div class="premium-container">
         <div class="section-topline"><header class="premium-heading"><div class="premium-eyebrow">Planificá con tiempo</div><h2>Próximas salidas</h2><p>Programas con fechas informadas, ordenados para ayudarte a elegir.</p></header><a class="view-all-link" onclick="goHomeTo('travel-search')">Buscar por mes <i class="fas fa-calendar-alt"></i></a></div>
         <div class="departure-list" id="upcomingDepartures"></div>
@@ -567,19 +563,19 @@
 
     <section class="premium-section" id="custom-home">
       <div class="premium-container custom-trip-banner">
-        <div class="custom-trip-copy"><div class="premium-eyebrow">Tu viaje, a tu manera</div><h2>Europa a Medida</h2><p>Viajes personalizados que pueden adaptarse y modificarse según tus preferencias, con hotelería céntrica para recorrer cada destino por cuenta propia.</p><button class="premium-button" type="button" data-search-type="personalizado"><i class="far fa-compass"></i> Ver propuestas a medida</button></div>
+        <div class="custom-trip-copy"><h2>Viajes a tu medida</h2><p>Diseñamos tu viaje ideal, con la flexibilidad, experiencia y respaldo que necesitás.</p><button class="premium-button" type="button" data-search-type="personalizado">Quiero un viaje a medida <i class="fas fa-arrow-right"></i></button></div>
         <div class="custom-trip-image"><img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=900&q=85" alt="Viajes personalizados por Europa" loading="lazy"></div>
       </div>
     </section>
 
-    <section class="premium-section soft" id="hotel-search-home">
+    <section class="premium-section soft" id="hotel-search-home" hidden>
       <div class="premium-container hotel-home-card">
         <div><div class="premium-eyebrow" style="justify-content:flex-start"><span style="display:none"></span>Reservas independientes</div><h2>Encontrá tu hotel ideal</h2><p>Cotizá hoteles en cualquier destino del mundo desde nuestro buscador online.</p></div>
         <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" rel="noopener noreferrer" class="premium-button"><i class="fas fa-hotel"></i> Buscar hoteles</a>
       </div>
     </section>
 
-    <section class="contact-band" id="contact-home">
+    <section class="contact-band" id="contact-home" hidden>
       <h2>¿Listo para empezar a viajar?</h2><p>Contanos qué experiencia estás buscando y te ayudamos a encontrar la mejor opción.</p>
       <div class="contact-actions"><a class="premium-button" href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Consultar por WhatsApp</a><a class="premium-button secondary" href="mailto:javier@tresortravel.com.ar"><i class="far fa-envelope"></i> Enviar un email</a></div>
     </section>
