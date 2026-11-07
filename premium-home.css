@@ -81,7 +81,6 @@ body:has(.program-dialog[open]) { overflow: hidden; }
 #navbar .brand-logo-img { width:auto; height:66px; object-fit:contain; }
 #navbar .legacy-nav-links { display: none !important; }
 #navbar .hamburger { border:0; background:transparent; }
-#navbar .nav-toggle { position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; }
 
 #navbar .nav-item > a,
 #navbar .nav-item > span.nav-link-btn {
@@ -731,14 +730,21 @@ body:has(.program-dialog[open]) { overflow: hidden; }
   #navbar { height:66px; }
   #navbar .logo-text { font-size:1.15rem; }
   #navbar .brand-logo-img { height:58px; }
+  #navbar .hamburger { min-width:44px; min-height:44px; align-items:center; justify-content:center; }
   #navbar .hamburger span { background:var(--premium-navy); }
   #navbar .premium-nav-links { top:66px; background:#fff; box-shadow:0 16px 28px rgba(8,43,76,.16); pointer-events:none; }
-  #navbar:focus-within .premium-nav-links { transform:translateY(0); opacity:1; pointer-events:auto; }
-  #navbar .nav-toggle:checked ~ .premium-nav-links { transform:translateY(0); opacity:1; pointer-events:auto; }
+  #navbar.menu-open .premium-nav-links { transform:translateY(0); opacity:1; pointer-events:auto; }
+  #navbar .premium-nav-links .nav-item:not(.nav-tools) > a,
+  #navbar .premium-nav-links .nav-item > .nav-link-btn { color:var(--premium-navy) !important; }
+  #navbar .premium-nav-links .nav-item > a,
+  #navbar .premium-nav-links .nav-item > .nav-link-btn { min-height:44px; }
   #navbar .premium-nav-links .nav-item { width:100%; }
   #navbar .premium-nav-links .dropdown { background:#f7f9fb; }
   #navbar .premium-nav-links .dropdown li a { color:var(--premium-navy); }
+  #navbar .premium-nav-links .dropdown li a { min-height:44px; }
   #navbar .premium-nav-links .nav-tools { display:flex; align-items:center; gap:10px; padding:8px 12px; }
+  #navbar .premium-nav-links .nav-whatsapp { width:auto; flex:0 0 auto; }
+  #navbar .premium-nav-links .nav-whatsapp span { display:inline; }
   .premium-hero { margin-top:66px; min-height:580px; }
   .hero-slide { background-position:var(--hero-position-mobile,var(--hero-position,center)); }
   .premium-hero-content { padding-bottom:150px; }
