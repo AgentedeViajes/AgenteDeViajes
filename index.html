@@ -173,7 +173,7 @@
       footer { padding: 40px 20px 20px; }
     }
   </style>
-  <link rel="stylesheet" href="premium-home.css?v=20261107b">
+  <link rel="stylesheet" href="premium-home.css?v=20261107c">
 </head>
 <body>
 
@@ -182,12 +182,11 @@
     <a class="logo" onclick="showSection('home')" aria-label="Modo Rumbo - Ir al inicio">
       <img class="brand-logo-img" src="assets/logo-modo-rumbo-naranja.png" alt="Modo Rumbo - Viajes y Experiencias">
     </a>
-    <input class="nav-toggle" type="checkbox" id="navToggle" aria-label="Abrir menú">
     <ul class="nav-links premium-nav-links" id="navLinks">
       <li class="nav-item"><a onclick="goHomeAndReset()">Inicio</a></li>
       <li class="nav-item">
-        <span class="nav-link-btn" onclick="toggleDropdown(event, this)">Destinos <i class="fas fa-chevron-down"></i></span>
-        <ul class="dropdown">
+        <span class="nav-link-btn" role="button" tabindex="0" aria-expanded="false" aria-controls="mobileDestinationsMenu" onclick="toggleDropdown(event, this)">Destinos <i class="fas fa-chevron-down"></i></span>
+        <ul class="dropdown" id="mobileDestinationsMenu">
           <li><a onclick="goHomeTo('travel-search')"><span class="dest-icon">🌍</span> Buscar por destino</a></li>
           <li><a data-search-query="Europa"><span class="dest-icon">🇪🇺</span> Europa</a></li>
           <li><a data-search-query="Caribe"><span class="dest-icon">🏝️</span> Caribe</a></li>
@@ -198,8 +197,8 @@
         </ul>
       </li>
       <li class="nav-item">
-        <span class="nav-link-btn" onclick="toggleDropdown(event, this)">Experiencias <i class="fas fa-chevron-down"></i></span>
-        <ul class="dropdown">
+        <span class="nav-link-btn" role="button" tabindex="0" aria-expanded="false" aria-controls="mobileExperiencesMenu" onclick="toggleDropdown(event, this)">Experiencias <i class="fas fa-chevron-down"></i></span>
+        <ul class="dropdown" id="mobileExperiencesMenu">
           <li><a data-search-type="grupal"><span class="dest-icon">👥</span> Viajes grupales</a></li>
           <li><a data-search-type="personalizado"><span class="dest-icon">🧭</span> Viajes a medida</a></li>
           <li><a data-search-type="sin-aereo"><span class="dest-icon">🚌</span> Circuitos sin aéreo</a></li>
@@ -410,7 +409,7 @@
       </li>
 
     </ul>
-    <label class="hamburger" for="navToggle" aria-label="Abrir menú" aria-controls="navLinks"><span></span><span></span><span></span></label>
+    <button class="hamburger" id="navToggle" type="button" aria-label="Abrir menú" aria-controls="navLinks" aria-expanded="false"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
   </nav>
 
   <!-- ==================== HOME ==================== -->
@@ -2444,10 +2443,7 @@
       const section = document.getElementById('section-' + id);
       if (section) section.classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      document.getElementById('navLinks').classList.remove('active');
-      const navToggle = document.getElementById('navToggle');
-      if (navToggle) navToggle.checked = false;
-      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+      setMobileMenuOpen(false);
     }
 
     const loadedTours = {
@@ -3240,17 +3236,44 @@
       showSection('tour-low-cost');
     }
 
+    function setMobileMenuOpen(open) {
+      const navbar = document.getElementById('navbar');
+      const menuButton = document.getElementById('navToggle');
+      navbar.classList.toggle('menu-open', open);
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      if (!open) {
+        document.querySelectorAll('#navLinks .dropdown').forEach(dropdown => {
+          dropdown.classList.remove('show');
+          dropdown.previousElementSibling?.setAttribute('aria-expanded', 'false');
+        });
+      }
+    }
+
     function toggleMenu() {
-      document.getElementById('navLinks').classList.toggle('active');
+      setMobileMenuOpen(!document.getElementById('navbar').classList.contains('menu-open'));
     }
 
     function toggleDropdown(e, el) {
       e.preventDefault();
       e.stopPropagation();
       if (window.innerWidth <= 900) {
-        el.nextElementSibling.classList.toggle('show');
+        const isOpen = el.nextElementSibling.classList.toggle('show');
+        el.setAttribute('aria-expanded', String(isOpen));
       }
     }
+
+    document.getElementById('navToggle').addEventListener('click', toggleMenu);
+    document.getElementById('navLinks').addEventListener('click', event => {
+      if (event.target.closest('a')) setMobileMenuOpen(false);
+    });
+    document.getElementById('navLinks').addEventListener('keydown', event => {
+      const submenuButton = event.target.closest('.nav-link-btn[role="button"]');
+      if (submenuButton && (event.key === 'Enter' || event.key === ' ')) toggleDropdown(event, submenuButton);
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && document.getElementById('navbar').classList.contains('menu-open')) setMobileMenuOpen(false);
+    });
 
     window.addEventListener('scroll', () => {
       const nav = document.getElementById('navbar');
