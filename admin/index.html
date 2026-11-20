@@ -6,8 +6,8 @@
   <title>Administración | Modo Rumbo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=20261105b">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css?v=20261120a">
 </head>
 <body>
   <section class="auth-gate" id="authGate" hidden>
@@ -24,8 +24,11 @@
   </section>
   <aside class="sidebar">
     <div class="brand">
-      <img src="../Logo de Viajes Modo Rumbo.png" alt="Modo Rumbo">
-      <span>Panel de gestión</span>
+      <div class="brand-identity">
+        <svg class="brand-logo-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#ff6508"/><path d="M8 22.3 39.8 9.1c1.3-.5 2.4.7 1.7 1.9L25.9 40.2c-.7 1.2-2.4 1-2.7-.3l-3-11.3 12.4-11.3-16 8.7-8.5-1.5c-1.2-.2-1.4-1.7-.1-2.2Z" fill="#fff"/><path d="m20.2 28.6 6 4.8-3-5.6" fill="#d8e7f5"/></svg>
+        <span class="brand-logo-type"><span>Modo</span><span>Rumbo</span></span>
+      </div>
+      <span class="brand-caption">Panel de gestión</span>
     </div>
     <nav aria-label="Administración">
       <button class="nav-button active" type="button" data-view="programs">Programas</button>
@@ -87,7 +90,7 @@
             <label class="span-2">Nombre del programa *<input id="title" required placeholder="Ej. Japón al Completo"></label>
             <label>Código del operador<input id="operatorCode" placeholder="MIDAS, Julia, PI..."></label>
             <label>Estado<select id="status"><option value="draft">Borrador</option><option value="published">Publicado</option><option value="paused">Pausado</option></select></label>
-            <label>Región<select id="region"><option value="">Seleccionar</option><option>Europa</option><option>Caribe</option><option>Brasil</option><option>Estados Unidos</option><option>Asia</option><option>África</option><option>Islas del Índico</option><option>Medio Oriente</option><option>Oceanía</option></select></label>
+            <label>Región<select id="region"><option value="">Seleccionar</option><option>Europa</option><option>Caribe</option><option>Brasil</option><option>Estados Unidos</option><option>Asia</option><option>África</option><option>Islas del Índico</option><option>Medio Oriente</option><option>Oriente</option><option>Sudeste Asiático</option><option>Subcontinente Indio</option><option>Oceanía</option></select></label>
             <label>País o países<input id="countries" placeholder="Japón, Emiratos Árabes"></label>
             <label class="span-2">Ciudades o destinos<input id="destinations" placeholder="Tokyo, Kyoto, Osaka, Dubai"></label>
             <label>Duración<input id="duration" placeholder="15 días / 14 noches"></label>

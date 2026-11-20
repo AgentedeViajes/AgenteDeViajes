@@ -1,0 +1,173 @@
+/* Search bar visual overrides; loaded after the legacy presentation rules. */
+#section-home .travel-search {
+  display:grid!important;
+  grid-template-columns:minmax(0,1.78fr) minmax(0,1.02fr) minmax(0,1.12fr) minmax(178px,.82fr)!important;
+  align-items:center!important;
+  min-height:72px!important;
+  padding:7px 9px!important;
+  border-radius:999px!important;
+}
+#section-home .search-field {
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:24px minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  align-items:center!important;
+  min-width:0!important;
+  min-height:52px!important;
+  padding:0 12px!important;
+  border-right:1px solid #dce3ed!important;
+  border-bottom:0!important;
+}
+#section-home .search-field:first-child {
+  grid-template-columns:24px max-content minmax(0,1fr)!important;
+  gap:0 6px!important;
+  padding-left:12px!important;
+}
+#section-home .compact-select-field { grid-template-columns:24px minmax(0,1fr) 16px!important; }
+#section-home .search-field label {
+  display:contents!important;
+  min-width:0!important;
+  margin:0!important;
+  color:#0b2554!important;
+  font:800 .78rem/1.1 Inter,sans-serif!important;
+  white-space:nowrap!important;
+}
+#section-home .search-field label > i:first-child {
+  grid-column:1!important;
+  grid-row:1!important;
+  justify-self:center!important;
+  margin:0!important;
+  color:#0b2554!important;
+  font-size:1.06rem!important;
+}
+#section-home .search-field label > span {
+  grid-column:2!important;
+  grid-row:1!important;
+  min-width:0!important;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#section-home .compact-select-field label > .select-chevron {
+  grid-column:3!important;
+  grid-row:1!important;
+  justify-self:end!important;
+  color:#68788e!important;
+  font-size:.72rem!important;
+}
+#section-home .compact-select-field select {
+  position:absolute!important;
+  z-index:2!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  padding:0!important;
+  opacity:0!important;
+  cursor:pointer!important;
+}
+/* Use one centered flex row for the visible controls and keep the full select hit area. */
+#section-home .compact-select-field {
+  display:flex!important;
+  align-items:center!important;
+  min-height:52px!important;
+}
+#section-home .compact-select-field > label {
+  display:flex!important;
+  flex:1 1 auto!important;
+  align-items:center!important;
+  align-self:stretch!important;
+  gap:0!important;
+  min-width:0!important;
+  margin:0!important;
+  cursor:pointer!important;
+}
+#section-home .compact-select-field > label > span {
+  flex:1 1 auto!important;
+}
+#section-home .compact-select-field > label > i:first-child {
+  flex:0 0 24px!important;
+  width:24px!important;
+  text-align:center!important;
+}
+#section-home .compact-select-field label > i:first-child,
+#section-home .compact-select-field label > span,
+#section-home .compact-select-field label > .select-chevron {
+  align-self:center!important;
+  margin-block:0!important;
+  line-height:1.1!important;
+}
+#section-home .compact-select-field label > .select-chevron {
+  margin-left:auto!important;
+  pointer-events:none!important;
+}
+#section-home .compact-select-field > select {
+  z-index:3!important;
+  pointer-events:auto!important;
+}
+#section-home .search-field:first-child input {
+  grid-column:3!important;
+  grid-row:1!important;
+  width:100%!important;
+  min-width:0!important;
+  height:38px!important;
+  padding:0 3px!important;
+  border:0!important;
+  background:transparent!important;
+  color:#253957!important;
+  font:400 .75rem Inter,sans-serif!important;
+}
+#section-home .search-field:first-child input::placeholder { color:#778399!important; opacity:1; }
+#section-home .search-field:nth-child(3) { border-right:1px solid #dce3ed!important; }
+#section-home .travel-search-submit {
+  grid-column:auto!important;
+  justify-self:stretch!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:54px!important;
+  margin:0!important;
+  padding:0 14px!important;
+  border-radius:999px!important;
+  color:#fff!important;
+  background:linear-gradient(135deg,#ff7a16,#ff6508)!important;
+  font:800 .92rem Inter,sans-serif!important;
+  box-shadow:0 7px 18px rgba(255,101,8,.27)!important;
+  white-space:nowrap!important;
+}
+@media (max-width:1100px) and (min-width:901px) {
+  #section-home .travel-search { grid-template-columns:minmax(0,1.72fr) minmax(0,.98fr) minmax(0,1.05fr) minmax(150px,.82fr)!important; }
+  #section-home .search-field { padding-inline:8px!important; }
+  #section-home .search-field:first-child { grid-template-columns:22px max-content minmax(0,1fr)!important; gap:0 4px!important; }
+  #section-home .search-field label { font-size:.69rem!important; }
+  #section-home .search-field:first-child input { font-size:.64rem!important; }
+  #section-home .travel-search-submit { padding-inline:9px!important; font-size:.8rem!important; }
+}
+@media (max-width:900px) {
+  #section-home .travel-search { grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important; min-height:0!important; padding:9px!important; border-radius:22px!important; }
+  #section-home .search-field { min-height:48px!important; padding-inline:6px!important; }
+  #section-home .search-field:first-child { grid-column:1/-1!important; grid-template-columns:24px max-content minmax(0,1fr)!important; gap:0 6px!important; padding-inline:10px!important; border-right:0!important; border-bottom:1px solid #dce3ed!important; }
+  #section-home .compact-select-field { grid-template-columns:20px minmax(0,1fr) 12px!important; }
+  #section-home .compact-select-field > label > i:first-child { flex-basis:20px!important; width:20px!important; }
+  #section-home .search-field label { font-size:.72rem!important; }
+  #section-home .search-field:first-child input { font-size:.7rem!important; }
+  #section-home .compact-select-field label > .select-chevron { font-size:.65rem!important; }
+  #section-home .search-field:nth-child(2) { border-right:1px solid #dce3ed!important; }
+  #section-home .search-field:nth-child(3) { border-right:0!important; }
+  #section-home .travel-search-submit { grid-column:1/-1!important; min-height:46px!important; margin-top:6px!important; }
+}
+@media (max-width:680px) {
+  #section-home .travel-search { grid-template-columns:minmax(0,1fr)!important; min-height:0!important; padding:9px!important; border-radius:22px!important; }
+  #section-home .search-field,#section-home .search-field:first-child {
+    grid-column:auto!important;
+    grid-template-columns:24px max-content minmax(0,1fr)!important;
+    min-height:50px!important;
+    padding:0 8px!important;
+    border-right:0!important;
+    border-bottom:1px solid #dce3ed!important;
+  }
+  #section-home .compact-select-field { grid-template-columns:24px minmax(0,1fr) 16px!important; }
+  #section-home .compact-select-field > label > i:first-child { flex-basis:24px!important; width:24px!important; }
+  #section-home .search-field label { font-size:.77rem!important; }
+  #section-home .search-field:first-child input { font-size:.71rem!important; }
+  #section-home .search-field:nth-child(3) { border-bottom:0!important; }
+  #section-home .travel-search-submit { grid-column:1!important; min-height:46px!important; margin-top:5px!important; }
+}

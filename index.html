@@ -173,44 +173,50 @@
       footer { padding: 40px 20px 20px; }
     }
   </style>
-  <link rel="stylesheet" href="premium-home.css?v=20261107c">
+  <link rel="stylesheet" href="premium-home.css?v=20261120c">
+  <link rel="stylesheet" href="search-final.css?v=20261120a">
 </head>
 <body>
 
   <!-- NAVBAR -->
   <nav id="navbar">
     <a class="logo" onclick="showSection('home')" aria-label="Modo Rumbo - Ir al inicio">
-      <img class="brand-logo-img" src="assets/logo-modo-rumbo-naranja.png" alt="Modo Rumbo - Viajes y Experiencias">
+      <svg class="brand-logo-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#ff6508"/><path d="M8 22.3 39.8 9.1c1.3-.5 2.4.7 1.7 1.9L25.9 40.2c-.7 1.2-2.4 1-2.7-.3l-3-11.3 12.4-11.3-16 8.7-8.5-1.5c-1.2-.2-1.4-1.7-.1-2.2Z" fill="#fff"/><path d="m20.2 28.6 6 4.8-3-5.6" fill="#d8e7f5"/></svg>
+      <span class="brand-logo-type"><span>Modo</span><span>Rumbo</span></span>
     </a>
     <ul class="nav-links premium-nav-links" id="navLinks">
       <li class="nav-item"><a onclick="goHomeAndReset()">Inicio</a></li>
-      <li class="nav-item">
+      <li class="nav-item has-dropdown">
         <span class="nav-link-btn" role="button" tabindex="0" aria-expanded="false" aria-controls="mobileDestinationsMenu" onclick="toggleDropdown(event, this)">Destinos <i class="fas fa-chevron-down"></i></span>
         <ul class="dropdown" id="mobileDestinationsMenu">
-          <li><a onclick="goHomeTo('travel-search')"><span class="dest-icon">🌍</span> Buscar por destino</a></li>
-          <li><a data-search-query="Europa"><span class="dest-icon">🇪🇺</span> Europa</a></li>
-          <li><a data-search-query="Caribe"><span class="dest-icon">🏝️</span> Caribe</a></li>
-          <li><a data-search-query="Brasil"><span class="dest-icon">🇧🇷</span> Brasil</a></li>
-          <li><a data-search-query="Estados Unidos"><span class="dest-icon">🇺🇸</span> EEUU</a></li>
-          <li><a data-search-query="Exóticos"><span class="dest-icon">🌏</span> Exóticos: Asia, África e Índico</a></li>
-          <li><a onclick="showAllTrips()"><span class="dest-icon">🧭</span> Todos los programas</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Europa"><span class="dest-icon"><i class="fas fa-landmark"></i></span> Europa</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Caribe"><span class="dest-icon"><i class="fas fa-umbrella-beach"></i></span> Caribe</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Brasil"><span class="dest-icon"><i class="fas fa-globe-americas"></i></span> Brasil</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Estados Unidos"><span class="dest-icon"><i class="fas fa-flag-usa"></i></span> EEUU</a></li>
+          <li><a role="button" tabindex="0" data-search-query="África"><span class="dest-icon"><i class="fas fa-tree"></i></span> África</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Islas del Índico"><span class="dest-icon"><i class="fas fa-water"></i></span> Islas del Índico</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Medio Oriente"><span class="dest-icon"><i class="fas fa-mosque"></i></span> Medio Oriente</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Oriente"><span class="dest-icon"><i class="fas fa-torii-gate"></i></span> Oriente</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Subcontinente Indio"><span class="dest-icon"><i class="fas fa-mountain"></i></span> Subcontinente Indio</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Sudeste Asiático"><span class="dest-icon"><i class="fas fa-compass"></i></span> Sudeste Asiático</a></li>
+          <li><a role="button" tabindex="0" data-search-query="Oceanía"><span class="dest-icon"><i class="fas fa-water"></i></span> Oceanía</a></li>
         </ul>
       </li>
-      <li class="nav-item">
+      <li class="nav-item has-dropdown">
         <span class="nav-link-btn" role="button" tabindex="0" aria-expanded="false" aria-controls="mobileExperiencesMenu" onclick="toggleDropdown(event, this)">Experiencias <i class="fas fa-chevron-down"></i></span>
         <ul class="dropdown" id="mobileExperiencesMenu">
-          <li><a data-search-type="grupal"><span class="dest-icon">👥</span> Viajes grupales</a></li>
-          <li><a data-search-type="personalizado"><span class="dest-icon">🧭</span> Viajes a medida</a></li>
-          <li><a data-search-type="sin-aereo"><span class="dest-icon">🚌</span> Circuitos sin aéreo</a></li>
-          <li><a data-search-type="lujo"><span class="dest-icon">💎</span> Viajes de lujo</a></li>
-          <li><a data-search-type="low-cost"><span class="dest-icon">🏷️</span> Low cost</a></li>
+          <li><a role="button" tabindex="0" data-search-experience="grupal"><span class="dest-icon"><i class="fas fa-users"></i></span><span>Viajes grupales<small>Salidas acompañadas con fechas fijas y grupo formado.</small></span></a></li>
+          <li><a role="button" tabindex="0" data-search-experience="personalizado"><span class="dest-icon"><i class="fas fa-route"></i></span><span>Viajes a medida<small>Itinerarios personalizados a tu ritmo y presupuesto.</small></span></a></li>
+          <li><a role="button" tabindex="0" data-search-experience="sin-aereo"><span class="dest-icon"><i class="fas fa-bus"></i></span><span>Circuitos sin aéreo<small>Recorridos terrestres con hoteles, traslados y guías.</small></span></a></li>
+          <li><a role="button" tabindex="0" data-search-experience="lujo"><span class="dest-icon"><i class="fas fa-gem"></i></span><span>Viajes de lujo<small>Hotelería 5 estrellas y experiencias exclusivas.</small></span></a></li>
+          <li><a role="button" tabindex="0" data-search-experience="low-cost"><span class="dest-icon"><i class="fas fa-tag"></i></span><span>Low cost<small>Circuitos europeos optimizados al mejor precio.</small></span></a></li>
         </ul>
       </li>
-      <li class="nav-item"><a onclick="goHomeTo('travel-search')">Próximas salidas</a></li>
+      <li class="nav-item"><a role="button" tabindex="0" data-upcoming-departures onclick="showUpcomingDepartures()">Próximas salidas</a></li>
       <li class="nav-item"><a onclick="goHomeTo('custom-home')">Viajes a medida</a></li>
       <li class="nav-item"><a onclick="goHomeTo('mainFooter')">Contacto</a></li>
       <li class="nav-item nav-tools">
-        <button class="nav-search-button" onclick="goHomeTo('travel-search')" aria-label="Buscar viajes"><i class="fas fa-search"></i></button>
+        <button class="nav-search-button" type="button" aria-label="Buscar viajes" aria-expanded="false" aria-controls="navSearchPanel"><i class="fas fa-search"></i></button>
         <a class="nav-whatsapp" href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i><span>Consultanos</span></a>
       </li>
     </ul>
@@ -253,12 +259,9 @@
           <li class="dropdown-header month-header">Febrero 2027</li>
           <li class="dropdown-header month-header">Marzo 2027</li>
           <li class="dropdown-header month-header">Abril 2027</li>
-          <li><a onclick="showSection('europa-promo')"><span class="dest-icon">🏷️</span> Europa en Promo · 19 abr</a></li>
           <li class="dropdown-header month-header">Mayo 2027</li>
-          <li><a onclick="showSection('europa-promo')"><span class="dest-icon">🏷️</span> Europa en Promo · 24 may</a></li>
           <li class="dropdown-header month-header">Junio 2027</li>
           <li class="dropdown-header month-header">Salidas regulares</li>
-          <li><a onclick="showSection('europa-conociendo')"><span class="dest-icon">🏛️</span> Conociendo Europa · semanal</a></li>
           <li><a onclick="showSection('europa-turquia-griegas')"><span class="dest-icon">🇹🇷</span> Turquía con Islas Griegas · semanal</a></li>
           <li><a onclick="showSection('europa-todo-turquia')"><span class="dest-icon">🇹🇷</span> Todo Turquía · salidas diarias</a></li>
         </ul>
@@ -409,8 +412,13 @@
       </li>
 
     </ul>
-    <button class="hamburger" id="navToggle" type="button" aria-label="Abrir menú" aria-controls="navLinks" aria-expanded="false"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
+    <button class="hamburger" id="navToggle" type="button" aria-label="Abrir menú" aria-controls="navLinks" aria-expanded="false" aria-haspopup="true"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
   </nav>
+  <form class="nav-search-panel" id="navSearchPanel" role="search" hidden>
+    <label class="sr-only" for="navSearchInput">Buscar programas</label>
+    <i class="fas fa-search" aria-hidden="true"></i><input id="navSearchInput" type="search" placeholder="Buscar un destino o programa" autocomplete="off">
+    <button type="submit">Buscar</button><button class="nav-search-close" type="button" aria-label="Cerrar búsqueda">×</button>
+  </form>
 
   <!-- ==================== HOME ==================== -->
   <div class="page-section active" id="section-home">
@@ -449,37 +457,29 @@
     <div class="travel-search-wrap" id="travel-search">
       <form class="travel-search" id="travelSearchForm" role="search">
         <div class="search-field">
-          <label for="travelDestination"><i class="fas fa-map-marker-alt"></i> ¿A dónde querés viajar?</label>
+          <label for="travelDestination"><i class="fas fa-search"></i> ¿A dónde querés ir?</label>
           <input id="travelDestination" type="search" autocomplete="off" placeholder="Destino, país, ciudad o región">
         </div>
-        <div class="search-field">
-          <label for="travelMonth"><i class="far fa-calendar-alt"></i> ¿Cuándo?</label>
+        <div class="search-field compact-select-field" data-placeholder="¿Cuándo viajás?">
+          <label for="travelMonth"><i class="far fa-calendar-alt"></i><span data-select-value>¿Cuándo viajás?</span><i class="fas fa-chevron-down select-chevron" aria-hidden="true"></i></label>
           <select id="travelMonth">
-            <option value="">Cualquier fecha</option>
+            <option value="" aria-label="Cualquier fecha"></option>
             <option value="enero">Enero</option><option value="febrero">Febrero</option><option value="marzo">Marzo</option>
             <option value="abril">Abril</option><option value="mayo">Mayo</option><option value="junio">Junio</option>
             <option value="julio">Julio</option><option value="agosto">Agosto</option><option value="septiembre">Septiembre</option>
             <option value="octubre">Octubre</option><option value="noviembre">Noviembre</option><option value="diciembre">Diciembre</option>
           </select>
         </div>
-        <div class="search-field">
-          <label for="travelType"><i class="fas fa-suitcase"></i> Tipo de viaje</label>
+        <div class="search-field compact-select-field" data-placeholder="Estilo de viaje">
+          <label for="travelType"><i class="fas fa-suitcase"></i><span data-select-value>Estilo de viaje</span><i class="fas fa-chevron-down select-chevron" aria-hidden="true"></i></label>
           <select id="travelType">
-            <option value="">Todos los tipos</option>
+            <option value="" aria-label="Todos los tipos"></option>
             <option value="con-aereo">Con aéreo</option><option value="sin-aereo">Sin aéreo</option>
             <option value="grupal">Grupal</option><option value="personalizado">Personalizado</option>
             <option value="luna-de-miel">Luna de miel</option><option value="lujo">Lujo</option><option value="low-cost">Low cost</option>
           </select>
         </div>
-        <div class="search-field">
-          <label for="travelBudget"><i class="fas fa-wallet"></i> Presupuesto</label>
-          <select id="travelBudget">
-            <option value="">Cualquier presupuesto</option>
-            <option value="hasta-2000">Hasta USD 2.000</option><option value="2000-3500">USD 2.001 a 3.500</option>
-            <option value="3500-5000">USD 3.501 a 5.000</option><option value="mas-5000">Más de USD 5.000</option>
-          </select>
-        </div>
-        <button class="travel-search-submit" type="submit"><i class="fas fa-search"></i> Buscar viajes</button>
+        <button class="travel-search-submit" type="submit"><i class="fas fa-search"></i> Buscar</button>
       </form>
     </div>
 
@@ -597,120 +597,6 @@
       <a href="https://tresorb2c.app.pricenavigator.net/v3/home/hotels" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:18px 40px;font-size:1rem;">
         <i class="fas fa-search-location"></i> Buscador Online de Hoteles
       </a>
-    </section>
-  </div>
-
-  <!-- ==================== EUROPA: CONOCIENDO EUROPA ==================== -->
-  <div class="page-section" id="section-europa-conociendo">
-    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1920&q=80') center/cover;">
-      <div class="dest-hero-content">
-        <h1>Conociendo <span>Europa</span></h1>
-        <p>Madrid, Burdeos, París, Frankfurt, Zúrich, Venecia, Florencia, Roma, Niza y Barcelona - 17 noches</p>
-        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-      </div>
-    </section>
-    <section class="packages">
-      <div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
-
-      <div class="package-card">
-        <div class="package-info">
-          <span class="package-tag">Salidas semanales todo 2027</span>
-          <h3>Conociendo Europa</h3>
-          <ul class="package-details">
-            <li><i class="fas fa-calendar-alt"></i> Salidas semanales todo 2027</li>
-            <li><i class="fas fa-moon"></i> 17 Noches</li>
-            <li><i class="fas fa-plane"></i> Ticket aéreo Buenos Aires/Madrid/Buenos Aires</li>
-            <li><i class="fas fa-hotel"></i> 17 noches de alojamiento según itinerario</li>
-            <li><i class="fas fa-user-tie"></i> Guía durante todo el recorrido</li>
-          </ul>
-          <div class="package-price">USD 3.600 <span>por persona en doble</span></div>
-        </div>
-        <div class="package-image"><img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=760&q=80" alt="Conociendo Europa"></div>
-      </div>
-
-      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px;">
-        <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px;">Itinerario</h2>
-        <p style="color:var(--text-light);font-size:0.9rem;margin-bottom:24px;">Madrid (3 noches), Burdeos (1 noche), París (3 noches), Frankfurt (1 noche), Zúrich (1 noche), Venecia (1 noche), Florencia (1 noche), Roma (3 noches), Niza (1 noche) y Barcelona (2 noches)</p>
-
-        <div style="display:grid;gap:16px;">
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 1 - Buenos Aires - Madrid</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Vuelo con destino a la ciudad de Madrid. Noche a bordo.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 2 - Madrid</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Llegada al aeropuerto de Madrid-Barajas. Traslado al hotel. Día libre para actividades personales. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 3 - Madrid</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica de la ciudad con guía local: Plaza de España, Fuente de Cibeles, Plaza de Oriente, Puerta de Alcalá, Ciudad Universitaria. Tarde libre.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 4 - Madrid - San Sebastián - Burdeos</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Viaje hacia el norte de España, pasando por Castilla León y País Vasco. San Sebastián: tiempo para pasear por su casco antiguo. Continuación a Burdeos. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 5 - Burdeos - Blois - París</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Viaje hacia el Valle del Loira. Parada en Blois y su Castillo. Continuación a París. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 6 - París</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Campos Elíseos, Arco del Triunfo, Ópera, Torre Eiffel, Barrio Latino, Jardines de Luxemburgo, Los Inválidos. Breve tiempo para visitar la Medalla Milagrosa. Tarde libre. Opcional: espectáculo del Lido.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 7 - París</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre para pasear o subir a la Torre Eiffel. Opcional: visita al Palacio de Versalles y sus jardines.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 8 - París - Luxemburgo - Valle del Rhin - Frankfurt</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida por la región de Champagne hasta Luxemburgo. Continuación por el Valle del Rhin, castillos germanos y Roca de Loreley. Llegada a Frankfurt. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 9 - Frankfurt - Heidelberg - Selva Negra - Zúrich</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Heidelberg: ciudad universitaria a orillas del Río Neckar. Friburgo: capital de la Selva Negra. Continuación a Zúrich. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 10 - Zúrich - Lucerna - Venecia</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Lucerna: lago de los Cuatro Cantones, encanto medieval. Opcional: excursión al monte Titlis. Viaje hacia Venecia. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 11 - Venecia - Padova - Florencia</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita de Venecia: vaporetto a Plaza de San Marcos, Palacio Ducal, Puente de los Suspiros. Opcional: paseo en góndola. Continuación a Padova y Florencia. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 12 - Florencia - Asís - Roma</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Catedral, Baptisterio, Puente Vecchio, Plaza de la Señoría, Santa Croce. Asís: Basílicas con la tumba de San Francisco. Llegada a Roma. Opcional: Roma Barroca.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 13 - Roma</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Opcional: excursión de día completo a Capri y Nápoles-Pompeya.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 14 - Roma (Audiencia Papal)</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida a la Ciudad del Vaticano para la audiencia del Santo Padre (si el Papa está en Roma). Visita panorámica: Foros Romanos, Coliseo, Arco de Constantino, Plaza de Venecia, Plaza de San Pedro. Opcional: Museos Vaticanos y Capilla Sixtina.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 15 - Roma - Pisa - Niza</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Pisa: Plaza de los Milagros, Catedral, Baptisterio, Torre Inclinada. Niza, capital de la Costa Azul. Opcional: excursión a Mónaco, Montecarlo y su casino.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 16 - Niza - Nimes - Barcelona</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Breve recorrido panorámico de Niza. Nimes: tiempo libre. Continuación por Provenza hasta Barcelona. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 17 - Barcelona</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica de la ciudad con guía local. Tarde libre.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 18 - Barcelona - Zaragoza - Madrid</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Mañana libre en el barrio Gótico. Salida hacia Zaragoza: Basílica del Pilar, Casco Antiguo. Continuación a Madrid. Alojamiento.</p>
-          </div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);">
-            <strong style="color:var(--primary);">Día 19 - Madrid - Buenos Aires</strong>
-            <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Traslado al aeropuerto. Vuelo de regreso a Buenos Aires.</p>
-          </div>
-        </div>
-      </div>
     </section>
   </div>
 
@@ -1031,64 +917,6 @@
             <strong style="color:var(--primary);">Día 11 - Estambul / Aeropuerto</strong>
             <p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Traslado al aeropuerto (4 horas antes del vuelo internacional). Fin de servicios.</p>
           </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ==================== EUROPA: EUROPA EN PROMO ==================== -->
-  <div class="page-section" id="section-europa-promo">
-    <section class="dest-hero" style="background: linear-gradient(135deg, rgba(26,54,93,0.9), rgba(44,82,130,0.85)), url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&q=80') center/cover;">
-      <div class="dest-hero-content">
-        <h1>Europa en <span>Promo</span></h1>
-        <p>Madrid, Burdeos, Valle del Loira, París, Lucerna, Zúrich, Venecia, Florencia y Roma - 16 días</p>
-        <a class="back-btn" onclick="showSection('home')"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-      </div>
-    </section>
-    <section class="packages">
-      <div class="section-header"><h2>Paquete Disponible</h2><div class="section-divider"></div></div>
-      <div class="package-card">
-        <div class="package-info">
-          <span class="package-tag">19 Abril / 24 Mayo 2027</span>
-          <h3>Europa en Promo - Código BTW</h3>
-          <ul class="package-details">
-            <li><i class="fas fa-plane"></i> Air Europa EZE/Madrid//Roma/EZE (ida directa, vuelta conexión Madrid)</li>
-            <li><i class="fas fa-moon"></i> 15 Noches de alojamiento</li>
-            <li><i class="fas fa-coffee"></i> Desayuno buffet diario</li>
-            <li><i class="fas fa-shuttle-van"></i> Traslados de llegada y salida</li>
-            <li><i class="fas fa-bus"></i> Autocar de lujo durante todo el recorrido</li>
-            <li><i class="fas fa-user-tie"></i> Guía profesional de habla hispana</li>
-            <li><i class="fas fa-map-marked-alt"></i> Visita con guía local en Madrid, París, Venecia, Florencia y Roma</li>
-            <li><i class="fas fa-shield-alt"></i> Asistencia Coris Global Plus (cancelación multicausa USD 2.000)</li>
-            <li><i class="fas fa-hotel"></i> Tasas hoteleras incluidas</li>
-          </ul>
-          <div class="package-price">USD 4.390 <span>por persona en doble</span></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding:12px;background:var(--light);border-radius:8px;">
-            <div><strong style="color:var(--primary);">Salidas</strong><br><span style="font-size:0.85rem;color:var(--text);">19 Abril y 24 Mayo 2027</span></div>
-            <div><strong style="color:var(--primary);">Duración</strong><br><span style="font-size:0.85rem;color:var(--text);">16 Días / 15 Noches</span></div>
-          </div>
-        </div>
-        <div class="package-image"><img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=760&q=80" alt="Europa en Promo"></div>
-      </div>
-      <div style="background:var(--white);border-radius:14px;box-shadow:var(--shadow);padding:36px;margin-top:30px;">
-        <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--primary);margin-bottom:6px;">Itinerario</h2>
-        <div style="display:grid;gap:16px;">
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 1 - 19 Abr: Ezeiza</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Embarque en el Aeropuerto Internacional de Ezeiza para tomar vuelo con destino Madrid. Noche a bordo.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 2 - 20 Abr: Madrid</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Llegada a la capital de España. Asistencia en el aeropuerto y traslado al hotel. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 3 - 21 Abr: Madrid</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Plaza de España, Gran Vía, Fuente de la Cibeles, Puerta de Alcalá, Estadio Santiago Bernabéu, Plaza de las Ventas, Puerta del Sol. Opcional: excursión a Toledo. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 4 - 22 Abr: Madrid → Burdeos</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia el norte de España, entrando en Francia. Región de las Landas. Llegada a Burdeos, capital mundial del vino. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 5 - 23 Abr: Burdeos → Valle del Loira → París</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Atravesando Poitiers y Tours, llegada al Valle del Loira. Tiempo libre para visitar el Castillo de Chambord. Continuación a París. Opcional: París Iluminado. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 6 - 24 Abr: París</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Campos Elíseos, Arco del Triunfo, Ópera, Torre Eiffel, Barrio Latino, Jardines de Luxemburgo, Los Inválidos. Opcional: Palacio de Versalles. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 7 - 25 Abr: París</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Opcionales: Torre Eiffel, barrio de Montmartre, crucero por el río Sena. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 8 - 26 Abr: París → Lucerna → Zúrich</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida hacia Suiza. Lucerna: ciudad medieval, puente de madera. Tiempo libre. Continuación a Zúrich. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 9 - 27 Abr: Zúrich → Venecia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Salida temprano. Opcional: excursión al Monte Titlis (teleférico, 3.200 mts). Continuación a Venecia. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 10 - 28 Abr: Venecia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Embarque en barco a Plaza de San Marcos. Visita a pie: Basílica de San Marcos, Campanile, Torre del Reloj, Palacio Ducal, Puente de los Suspiros. Tarde libre. Opcional: góndola o crucero por la Laguna. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 11 - 29 Abr: Venecia → Padua → Florencia</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Pádua: Basílica de San Antonio. Continuación a Florencia. Visita panorámica: Catedral, Baptisterio, Puente Vecchio, Plaza de la Señoría. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 12 - 30 Abr: Florencia → Asís → Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Asís: ciudad amurallada, Basílicas y tumba de San Francisco. Continuación a Roma. Opcional: Roma Barroca (Plaza Navona, Fontana de Trevi, Panteón). Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 13 - 01 May: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Visita panorámica: Plaza de Venecia, Coliseo, Foro Romano, Circo Máximo, Castillo de Santo Ángel, Vaticano. Opcional: Museos Vaticanos, Capilla Sixtina, Basílica de San Pedro. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 14 - 02 May: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Día libre. Opcional: excursión de día completo a Nápoles y la isla de Capri. Alojamiento.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 15 - 03 May: Roma</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Desayuno. Check out y salida hacia el aeropuerto de Roma. Vuelo de regreso. Conexión en Madrid. Noche a bordo.</p></div>
-          <div style="padding:14px 18px;background:var(--light);border-radius:10px;border-left:4px solid var(--accent);"><strong style="color:var(--primary);">Día 16 - 04 May: Ezeiza</strong><p style="font-size:0.85rem;color:var(--text);margin-top:4px;">Arribo al aeropuerto internacional. Fin de los servicios.</p></div>
         </div>
       </div>
     </section>
@@ -3239,40 +3067,99 @@
     function setMobileMenuOpen(open) {
       const navbar = document.getElementById('navbar');
       const menuButton = document.getElementById('navToggle');
-      navbar.classList.toggle('menu-open', open);
-      menuButton.setAttribute('aria-expanded', String(open));
-      menuButton.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
-      if (!open) {
-        document.querySelectorAll('#navLinks .dropdown').forEach(dropdown => {
-          dropdown.classList.remove('show');
-          dropdown.previousElementSibling?.setAttribute('aria-expanded', 'false');
-        });
-      }
+      const navLinks = document.getElementById('navLinks');
+      const responsiveMenu = window.matchMedia('(max-width: 1100px)').matches;
+      const isOpen = responsiveMenu && Boolean(open);
+      navbar.classList.toggle('menu-open', isOpen);
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+      menuButton.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+      navLinks.inert = responsiveMenu && !isOpen;
+      if (responsiveMenu) navLinks.setAttribute('aria-hidden', String(!isOpen));
+      else navLinks.removeAttribute('aria-hidden');
+      if (!isOpen) document.querySelectorAll('#navLinks .dropdown').forEach(dropdown => {
+        dropdown.classList.remove('show');
+        dropdown.previousElementSibling?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen && navLinks.contains(document.activeElement)) menuButton.focus();
     }
 
     function toggleMenu() {
       setMobileMenuOpen(!document.getElementById('navbar').classList.contains('menu-open'));
     }
 
+    let navDropdownCloseTimer = null;
+    function setOpenNavDropdown(target) {
+      window.clearTimeout(navDropdownCloseTimer);
+      document.querySelectorAll('#navLinks .has-dropdown > .nav-link-btn').forEach(button => {
+        const active = button === target;
+        button.nextElementSibling.classList.toggle('show',active);
+        button.setAttribute('aria-expanded',String(active));
+      });
+    }
+    function scheduleNavDropdownClose() {
+      window.clearTimeout(navDropdownCloseTimer);
+      navDropdownCloseTimer = window.setTimeout(() => setOpenNavDropdown(null),200);
+    }
     function toggleDropdown(e, el) {
       e.preventDefault();
       e.stopPropagation();
-      if (window.innerWidth <= 900) {
-        const isOpen = el.nextElementSibling.classList.toggle('show');
-        el.setAttribute('aria-expanded', String(isOpen));
-      }
+      setOpenNavDropdown(el.getAttribute('aria-expanded') === 'true' ? null : el);
     }
+
+    // Keep off-canvas links out of keyboard and assistive-technology navigation
+    // until the responsive menu is opened; desktop navigation remains exposed.
+    setMobileMenuOpen(false);
+    window.addEventListener('resize', () => setMobileMenuOpen(document.getElementById('navbar').classList.contains('menu-open')));
 
     document.getElementById('navToggle').addEventListener('click', toggleMenu);
     document.getElementById('navLinks').addEventListener('click', event => {
-      if (event.target.closest('a')) setMobileMenuOpen(false);
+      if (event.target.closest('a')) {
+        setMobileMenuOpen(false);
+        setOpenNavDropdown(null);
+      }
     });
     document.getElementById('navLinks').addEventListener('keydown', event => {
       const submenuButton = event.target.closest('.nav-link-btn[role="button"]');
       if (submenuButton && (event.key === 'Enter' || event.key === ' ')) toggleDropdown(event, submenuButton);
     });
+    const navSearchButton = document.querySelector('.nav-search-button');
+    const navSearchPanel = document.getElementById('navSearchPanel');
+    const navSearchInput = document.getElementById('navSearchInput');
+    document.querySelectorAll('#travelSearchForm .compact-select-field').forEach(field => {
+      const select = field.querySelector('select');
+      const valueLabel = field.querySelector('[data-select-value]');
+      select.addEventListener('change', () => {
+        valueLabel.textContent = select.value ? select.selectedOptions[0].text : field.dataset.placeholder;
+      });
+    });
+    function closeNavSearch({restoreFocus=true}={}) { navSearchPanel.hidden = true; navSearchButton.setAttribute('aria-expanded','false'); if (restoreFocus) navSearchButton.focus(); }
+    navSearchButton.addEventListener('click', () => {
+      const opening = navSearchPanel.hidden;
+      if (opening && window.innerWidth <= 1100) setMobileMenuOpen(false);
+      if (opening) setOpenNavDropdown(null);
+      navSearchPanel.hidden = !opening;
+      navSearchButton.setAttribute('aria-expanded',String(opening));
+      if (opening) navSearchInput.focus();
+    });
+    navSearchPanel.addEventListener('submit', event => {
+      event.preventDefault();
+      const query = navSearchInput.value.trim();
+      if (!query) { navSearchInput.focus(); return; }
+      document.getElementById('travelDestination').value = query;
+      if (typeof window.runModoRumboSearch === 'function') window.runModoRumboSearch();
+      else document.getElementById('travelSearchForm').requestSubmit();
+      navSearchPanel.hidden = true;
+      navSearchButton.setAttribute('aria-expanded','false');
+      goHomeTo('travel-search');
+    });
+    navSearchPanel.querySelector('.nav-search-close').addEventListener('click',() => closeNavSearch());
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && document.getElementById('navbar').classList.contains('menu-open')) setMobileMenuOpen(false);
+      if (event.key === 'Escape' && !navSearchPanel.hidden) closeNavSearch();
+      if (event.key === 'Escape' && document.querySelector('#navLinks .has-dropdown > .nav-link-btn[aria-expanded="true"]')) {
+        setOpenNavDropdown(null);
+        document.querySelector('#navLinks .has-dropdown > .nav-link-btn:focus')?.focus();
+      }
     });
 
     window.addEventListener('scroll', () => {
@@ -3282,15 +3169,37 @@
       scrollBtn.classList.toggle('visible', window.scrollY > 400);
     });
 
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.nav-item') && window.innerWidth > 900) {
-        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+    const primaryDropdownItems = document.querySelectorAll('#navLinks .has-dropdown');
+    primaryDropdownItems.forEach(item => {
+      const trigger = item.querySelector(':scope > .nav-link-btn');
+      const dropdown = item.querySelector(':scope > .dropdown');
+      item.addEventListener('mouseenter', () => {
+        if (window.innerWidth > 1100) setOpenNavDropdown(trigger);
+      });
+      item.addEventListener('mouseleave', () => {
+        if (window.innerWidth > 1100) scheduleNavDropdownClose();
+      });
+      dropdown.addEventListener('mouseenter', () => window.clearTimeout(navDropdownCloseTimer));
+      dropdown.addEventListener('mouseleave', () => {
+        if (window.innerWidth > 1100) scheduleNavDropdownClose();
+      });
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('#navLinks .has-dropdown') && !event.target.closest('.nav-search-panel') && !event.target.closest('.nav-search-button')) {
+        setOpenNavDropdown(null);
+        if (!navSearchPanel.hidden) closeNavSearch({restoreFocus:false});
       }
+      if (!event.target.closest('#navSearchPanel') && !event.target.closest('.nav-search-button') && !navSearchPanel.hidden) {
+        closeNavSearch({restoreFocus:false});
+      }
+      if (!event.target.closest('#navLinks') && !event.target.closest('#navToggle') && !event.target.closest('#navSearchPanel') && document.getElementById('navbar').classList.contains('menu-open')) setMobileMenuOpen(false);
     });
   </script>
   <script src="date-mode.js?v=20261025a"></script>
   <script src="public-programs.js?v=20261025a"></script>
-  <script src="travel-search.js?v=20261025a"></script>
+  <script src="program-search-filters.js?v=20261120h"></script>
+  <script src="program-sharing.js?v=20261120b"></script>
+  <script src="travel-search.js?v=20261120i"></script>
   <script src="hero-carousel.js?v=20261017a"></script>
 </body>
 </html>

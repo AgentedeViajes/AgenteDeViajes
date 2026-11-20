@@ -2,6 +2,8 @@
   'use strict';
 
   const dateMode = window.ModoRumboDateMode;
+  const programFilters = window.ModoRumboProgramFilters;
+  const programSharing = window.ModoRumboProgramSharing;
 
   const MONTHS = [
     ['enero','Enero'],['febrero','Febrero'],['marzo','Marzo'],['abril','Abril'],
@@ -71,6 +73,7 @@
   const catalog = [];
   const catalogById = new Map();
   let dialogReturnFocus = null;
+  let activeNavigationFilter = null;
 
   function normalize(value) {
     return String(value || '')
@@ -226,6 +229,7 @@
   }
 
   function collectStaticPrograms() {
+    const identifiersByBase = new Map();
     document.querySelectorAll('.page-section[id^="section-"]').forEach(section => {
       const sectionKey = section.id.replace('section-', '');
       if (['home','hotel-search','tour-sin-aereos','europa-medida','tour-low-cost'].includes(sectionKey)) return;
@@ -237,7 +241,11 @@
         const prices = [...card.querySelectorAll('.package-price')].map(item => item.textContent.replace(/\s+/g, ' ').trim()).filter(Boolean);
         const img = card.querySelector('.package-image img, img');
         const explicitTypes = (card.dataset.travelTypes || section.dataset.travelTypes || '').split(',').map(type => type.trim()).filter(Boolean);
-        const id = `static:${sectionKey}:${index}`;
+        const programName = title.textContent.trim();
+        const baseId = programSharing.createLegacyIdentifier(sectionKey, programName);
+        const occurrence = (identifiersByBase.get(baseId) || 0) + 1;
+        identifiersByBase.set(baseId, occurrence);
+        const id = programSharing.createLegacyIdentifier(sectionKey, programName, occurrence);
         card.dataset.tripId = id;
         const record = {
           id,
@@ -245,9 +253,16 @@
           source: `static ${sectionKey}`,
           searchText: `${info.textContent} ${section.textContent}`,
           departureText: `${tag ? tag.textContent : ''} ${info.textContent}`,
+          departureDates: programFilters.extractConcreteDates(tag ? tag.textContent : ''),
           priceText: prices.join(' · '),
           image: img ? img.src : '',
+          geographyRegion: section.dataset.region || '',
+          countries: card.dataset.countries || section.dataset.countries || [],
+          destinations: card.dataset.destinations || section.dataset.destinations || [],
+          published: true,
           types: explicitTypes.length ? explicitTypes : undefined,
+          experienceTypes:explicitTypes,
+          authoritativeTypes: explicitTypes.length > 0,
           duration: extractDuration(info.textContent),
           open: function () {
             if (showHistoricalProgram(record, card, section)) return;
@@ -277,7 +292,11 @@
         priceText: '',
         image: section.dataset.customImage || imageFor(region),
         region,
+        geographyRegion:section.dataset.customRegion || '',
+        countries:section.dataset.countries || [],
+        destinations:section.dataset.destinations || [name],
         types: ['personalizado'],
+        experienceTypes:[],
         open: function () { showSection(sectionKey); }
       });
     });
@@ -291,7 +310,14 @@
       const routeText = route.map(item => Array.isArray(item) ? item.join(' ') : typeof item === 'object' ? [item.title, item.description, item.text].filter(Boolean).join(' ') : item).join(' ');
       const includes = Array.isArray(trip.includes) ? trip.includes.join(' ') : trip.includes || '';
       const departures = trip.departures || trip.departure || '';
+      const departureList = Array.isArray(trip.departures) ? trip.departures : [];
+      const departureDates = [
+        ...departureList.map(item => typeof item === 'string' ? item : item && (item.departure_date || item.date)),
+        ...programFilters.extractConcreteDates(departures)
+      ];
       const prices = Array.isArray(trip.prices) ? trip.prices.join(' ') : (trip.price || '');
+      const rawTaggedTypes = trip.travel_types || trip.travelTypes || [];
+      const taggedTypes = Array.isArray(rawTaggedTypes) ? rawTaggedTypes : String(rawTaggedTypes).split(/[,;|]+/).map(type => type.trim()).filter(Boolean);
       const text = [name, trip.subtitle, trip.cities, trip.duration, departures, prices, includes, routeText].filter(Boolean).join(' ');
       const record = {
         id: `${source}:${key}`,
@@ -299,11 +325,19 @@
         source,
         searchText: text,
         departureText: departures,
+        departureDates,
+        date_mode:trip.date_mode || trip.dateMode || '',
+        geographyRegion:trip.region || '',
+        countries:trip.countries || [],
+        destinations:trip.destinations || trip.cities || [],
         priceText: prices,
         duration: trip.duration || extractDuration(text),
         types: options && options.types
-          ? [...new Set([...options.types, ...inferTypes(text, source)])]
+          ? [...new Set([...options.types, ...(taggedTypes.length ? taggedTypes : inferTypes(text, source))])]
           : inferTypes(text, source),
+        authoritativeTypes:taggedTypes.length > 0,
+        experienceTypes:taggedTypes,
+        published: true,
         open: function () { showObjectProgram(record, trip, source, key, openFn); }
       };
       addRecord(record);
@@ -468,7 +502,11 @@
           ${summaryHtml}
           ${facts ? `<div class="detail-facts">${facts}</div>` : ''}
           ${priceHtml}
-          <a class="detail-whatsapp" data-detail-whatsapp href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i><span><strong>Consultá por WhatsApp</strong><small>Quiero más información</small></span></a>
+          <div class="detail-actions">
+            <a class="detail-whatsapp" data-detail-whatsapp href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i><span><strong>Consultá por WhatsApp</strong><small>Quiero más información</small></span></a>
+            <button class="detail-share" type="button" data-share-program="${escapeHtml(detail.programId || '')}" aria-label="Compartir ${title}"><i class="fas fa-share-alt" aria-hidden="true"></i><span>Compartir</span></button>
+          </div>
+          <span class="detail-share-status" role="status" aria-live="polite"></span>
           <a class="detail-email" href="${emailUrl}"><i class="far fa-envelope" aria-hidden="true"></i> Consultar por email</a>
         </aside>
       </div>
@@ -486,6 +524,43 @@
       </div>
     </article>`;
     dialog.querySelector('.program-dialog-close').addEventListener('click', () => dialog.close());
+    const shareButton = dialog.querySelector('[data-share-program]');
+    shareButton.addEventListener('click', async () => {
+      const programId = shareButton.dataset.shareProgram;
+      const shareUrl = programSharing.buildProgramUrl(programId, window.location.href);
+      const status = dialog.querySelector('.detail-share-status');
+      shareButton.disabled = true;
+      try {
+        const result = await programSharing.shareOrCopy({
+          url:shareUrl,
+          title:detail.title || 'Modo Rumbo',
+          text:`Mirá este programa de Modo Rumbo: ${detail.title || 'viaje'}`,
+          onStatus:shareResult => {
+            if (shareResult === 'shared') status.textContent = 'Programa compartido.';
+            else if (shareResult === 'copied') status.textContent = 'Enlace copiado.';
+            else if (shareResult === 'cancelled') status.textContent = 'Compartir cancelado.';
+            else if (shareResult === 'manual') {
+              status.textContent = 'No se pudo copiar automáticamente. Copiá el enlace manualmente.';
+              window.prompt('Copiá el enlace para compartir este programa:', shareUrl);
+            }
+          }
+        });
+        if (result === 'manual') {
+          window.prompt('Copiá el enlace para compartir este programa:', shareUrl);
+          status.textContent = 'Podés copiar el enlace desde el cuadro que se abrió.';
+        } else if (result === 'copied') {
+          status.textContent = 'Enlace copiado.';
+        } else if (result === 'share-open') {
+          status.textContent = 'Se abrió el menú para compartir.';
+        } else if (result === 'cancelled') {
+          status.textContent = 'Compartir cancelado.';
+        }
+      } catch (_) {
+        status.textContent = 'No se pudo preparar el enlace para compartir.';
+      } finally {
+        shareButton.disabled = false;
+      }
+    });
     const tabs = [...dialog.querySelectorAll('[data-detail-tab]')];
     const panels = [...dialog.querySelectorAll('[data-detail-panel]')];
     function activateTab(button, moveFocus) {
@@ -598,6 +673,7 @@
     const detailsWithoutHeading = explicitIncluded.length ? [] : detailItems;
     renderProgramDetail({
       title:detailTitle || record.name,
+      programId:record.id,
       operatorCode:explicitCode,
       region:record.region || '',
       destination:'',
@@ -663,6 +739,7 @@
     const cityText = Array.isArray(trip.cities) ? trip.cities.join(', ') : trip.cities || '';
     renderProgramDetail({
       title:detailTitle || record.name,
+      programId:record.id,
       operatorCode,
       region:record.region || '',
       destination:cityText,
@@ -706,6 +783,7 @@
     }));
     renderProgramDetail({
       title:program.title,
+      programId:`supabase:${program.id}`,
       operatorCode:program.operator_code,
       region:program.region || '',
       destination:destinations || countries,
@@ -731,7 +809,7 @@
 
   function collectPublicPrograms(programs) {
     (programs || []).forEach(program => {
-      if (!program.title) return;
+      if (!program.title || (program.status && program.status !== 'published')) return;
       const departures = [...(program.departures || [])].sort((a,b) => String(a.departure_date || '').localeCompare(String(b.departure_date || '')));
       const departureText = publicAvailability(program);
       const itineraryText = (program.itinerary_days || []).map(day => `${day.title || ''} ${day.description || ''}`).join(' ');
@@ -740,8 +818,15 @@
         id:`supabase:${program.id}`,
         name:program.title,
         source:'supabase',
+        operator_code:program.operator_code || '',
+        status:program.status || 'published',
         searchText,
         departureText,
+        departureDates:isRangeProgram(program) ? [] : departures.map(item => item.departure_date).filter(Boolean),
+        geographyRegion:program.region || '',
+        countries:program.countries || [],
+        destinations:program.destinations || [],
+        experienceTypes:Array.isArray(program.travel_types) ? program.travel_types : [],
         priceText:publicPrice(program),
         priceFrom:program.price == null ? null : Number(program.price),
         duration:program.duration || '',
@@ -757,16 +842,6 @@
     window.travelCatalog = catalog;
   }
 
-  function budgetMatches(record, value) {
-    if (!value) return true;
-    if (record.priceFrom == null) return false;
-    if (value === 'hasta-2000') return record.priceFrom <= 2000;
-    if (value === '2000-3500') return record.priceFrom > 2000 && record.priceFrom <= 3500;
-    if (value === '3500-5000') return record.priceFrom > 3500 && record.priceFrom <= 5000;
-    if (value === 'mas-5000') return record.priceFrom > 5000;
-    return true;
-  }
-
   function isExoticQuery(query) {
     return /^exoticos?$/.test(query);
   }
@@ -775,19 +850,6 @@
     return record.region === 'África'
       || record.region === 'Asia y Exóticos'
       || /\b(?:islas? del indico|oceano indico|maldivas|mauritius|mauricio|seychelles|zanzibar|madagascar|isla reunion|reunion island)\b/.test(record.normalized);
-  }
-
-  function exactRegionForQuery(query) {
-    const regions = {
-      europa: 'Europa',
-      caribe: 'Caribe',
-      brasil: 'Brasil',
-      'estados unidos': 'Estados Unidos',
-      eeuu: 'Estados Unidos',
-      usa: 'Estados Unidos',
-      oceania: 'Oceanía'
-    };
-    return regions[query] || '';
   }
 
   function score(record, query) {
@@ -811,22 +873,24 @@
       query: normalize(document.getElementById('travelDestination').value),
       month: document.getElementById('travelMonth').value,
       type: document.getElementById('travelType').value,
-      budget: document.getElementById('travelBudget').value
+      navigation:activeNavigationFilter
     };
   }
 
   function filterCatalog(filters) {
-    const exactRegion = exactRegionForQuery(filters.query);
-    return catalog
+    const exactDestination = filters.query && programFilters.destinationKey(filters.query);
+    const source = programFilters.filterByNavigation(catalog,filters.navigation,{days:60});
+    const matched = source
       .map(record => ({record, score:score(record, filters.query)}))
       .filter(item => !filters.query || (isExoticQuery(filters.query)
         ? isExoticRecord(item.record)
-        : exactRegion ? item.record.region === exactRegion : item.score > 0))
+        : exactDestination ? programFilters.matchesDestination(item.record, exactDestination) : item.score > 0))
       .filter(item => !filters.month || item.record.months.includes(filters.month))
       .filter(item => !filters.type || item.record.types.includes(filters.type))
-      .filter(item => budgetMatches(item.record, filters.budget))
+      .filter(item => !filters.experience || programFilters.matchesExperience(item.record,filters.experience))
       .sort((a,b) => b.score - a.score || (a.record.priceFrom || Infinity) - (b.record.priceFrom || Infinity))
       .map(item => item.record);
+    return programFilters.dedupePrograms(matched);
   }
 
   function readableType(record) {
@@ -843,11 +907,12 @@
   }
 
   function cardHtml(record) {
+    const departure = record.nextDepartureDate ? displayUpcomingDate(record.nextDepartureDate) : compactDeparture(record.departureText);
     return `<article class="trip-card" data-open-trip="${escapeHtml(record.id)}" tabindex="0" role="button" aria-label="Ver ${escapeHtml(record.name)}">
       <div class="trip-card-media"><img src="${escapeHtml(record.image)}" alt="${escapeHtml(record.name)}" loading="lazy"><span class="trip-chip">${escapeHtml(readableType(record))}</span></div>
       <div class="trip-card-body">
         <h3>${escapeHtml(record.name)}</h3>
-        <div class="trip-meta"><span><i class="far fa-calendar-alt"></i>${escapeHtml(compactDeparture(record.departureText))}</span>${record.duration ? `<span><i class="far fa-clock"></i>${escapeHtml(record.duration)}</span>` : ''}</div>
+        <div class="trip-meta"><span><i class="far fa-calendar-alt"></i>${escapeHtml(departure)}</span>${record.duration ? `<span><i class="far fa-clock"></i>${escapeHtml(record.duration)}</span>` : ''}</div>
         <div class="trip-price">${record.priceText ? escapeHtml(compactPrice(record.priceText)) : 'Precio a consultar'}</div>
       </div>
     </article>`;
@@ -860,43 +925,51 @@
     return clean.length > 38 ? `${clean.slice(0,35)}…` : clean;
   }
 
-  function renderResults(records, filters) {
+  function renderResults(records, filters, emptyMessage) {
     const section = document.getElementById('travelResults');
     const summary = document.getElementById('travelResultsSummary');
     const grid = document.getElementById('travelResultsGrid');
     section.classList.add('visible');
-    const detail = [filters.query && `“${document.getElementById('travelDestination').value.trim()}”`, filters.month && MONTHS.find(m => m[0] === filters.month)?.[1], filters.type && document.getElementById('travelType').selectedOptions[0].text].filter(Boolean).join(' · ');
+    const experienceLabels = {grupal:'Viajes grupales',personalizado:'Viajes a medida','sin-aereo':'Circuitos sin aéreo',lujo:'Viajes de lujo','low-cost':'Low cost'};
+    const navigationLabel = filters.navigation && filters.navigation.kind === 'destination' ? filters.navigation.value
+      : filters.navigation && filters.navigation.kind === 'experience' ? experienceLabels[filters.navigation.value]
+      : filters.navigation && filters.navigation.kind === 'upcoming' ? 'Próximas salidas · próximos 60 días'
+      : filters.navigation && filters.navigation.kind === 'mode' ? ({playa:'Modo Playa'}[filters.navigation.value] || 'este modo') : '';
+    const detail = [navigationLabel, filters.query && `“${document.getElementById('travelDestination').value.trim()}”`, filters.month && MONTHS.find(m => m[0] === filters.month)?.[1], filters.type && document.getElementById('travelType').selectedOptions[0].text].filter(Boolean).join(' · ');
     summary.textContent = `${records.length} ${records.length === 1 ? 'viaje encontrado' : 'viajes encontrados'}${detail ? ` para ${detail}` : ''}`;
     grid.innerHTML = records.length
       ? records.map(cardHtml).join('')
-      : '<div class="search-results-empty" style="grid-column:1/-1"><i class="fas fa-compass"></i><strong>No encontramos programas con esos filtros.</strong><p>Probá con otro destino, mes o rango de presupuesto.</p></div>';
+      : `<div class="search-results-empty" style="grid-column:1/-1"><i class="fas fa-compass"></i><strong>${escapeHtml(emptyMessage || 'No encontramos programas con esos filtros.')}</strong><p>${emptyMessage ? 'Volvé a consultar más adelante o probá con otro destino.' : 'Probá con otro destino, mes o tipo de viaje.'}</p></div>`;
     section.scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  function runSearch(event) {
+  function runSearch(event, emptyMessage) {
     if (event) event.preventDefault();
     const filters = currentFilters();
-    renderResults(filterCatalog(filters), filters);
+    renderResults(filterCatalog(filters), filters, emptyMessage);
   }
 
+  window.runModoRumboSearch = function () {
+    activeNavigationFilter = null;
+    runSearch();
+  };
+
   function runTravelMode(mode) {
-    const modeLabels = {playa:'Modo Playa'};
-    let records = catalog;
-    if (mode === 'playa') {
-      records = catalog.filter(record => record.region === 'Caribe'
-        || record.region === 'Brasil');
-    }
+    activeNavigationFilter = {kind:'mode',value:mode};
     clearTravelFilters();
-    renderResults(records, {query:'',month:'',type:'',budget:''});
-    const summary = document.getElementById('travelResultsSummary');
-    if (summary) summary.textContent = `${records.length} ${records.length === 1 ? 'viaje encontrado' : 'viajes encontrados'} para ${modeLabels[mode] || 'este modo'}`;
+    runSearch();
   }
 
   function clearTravelFilters() {
     document.getElementById('travelDestination').value = '';
-    document.getElementById('travelMonth').value = '';
-    document.getElementById('travelType').value = '';
-    document.getElementById('travelBudget').value = '';
+    ['travelMonth','travelType'].forEach(id => {
+      const select = document.getElementById(id);
+      if (!select) return;
+      select.value = '';
+      const field = select.closest('.compact-select-field');
+      const valueLabel = field && field.querySelector('[data-select-value]');
+      if (valueLabel && field.dataset.placeholder) valueLabel.textContent = field.dataset.placeholder;
+    });
   }
 
   function hideTravelResults() {
@@ -937,29 +1010,31 @@
     if (target) target.innerHTML = diverseFeatured().map(cardHtml).join('');
   }
 
-  function monthDistance(month) {
-    const now = new Date();
-    const current = now.getMonth();
-    const index = MONTHS.findIndex(item => item[0] === month);
-    return index < 0 ? 99 : (index - current + 12) % 12;
-  }
-
   function renderDepartures() {
     const target = document.getElementById('upcomingDepartures');
     if (!target) return;
-    const records = catalog
-      .filter(item => item.months.length && item.departureText && !/todos los dias|todo el ano/i.test(normalize(item.departureText)))
-      .sort((a,b) => monthDistance(a.months[0]) - monthDistance(b.months[0]))
-      .slice(0,6);
-    target.innerHTML = records.map(record => {
-      const month = MONTHS.find(item => item[0] === record.months[0]);
-      return `<article class="departure-item" data-open-trip="${escapeHtml(record.id)}" tabindex="0" role="button">
-        <div class="departure-date">${escapeHtml(month ? month[1] : 'Salida')}</div>
-        <div class="departure-info"><h3>${escapeHtml(record.name)}</h3><p>${escapeHtml(compactDeparture(record.departureText))}${record.duration ? ` · ${escapeHtml(record.duration)}` : ''}</p></div>
+    const records = programFilters.upcomingDepartures(catalog,{days:60}).slice(0,6);
+    target.innerHTML = records.map(({program,departureDate}) => {
+      return `<article class="departure-item" data-open-trip="${escapeHtml(program.id)}" tabindex="0" role="button">
+        <div class="departure-date">${escapeHtml(displayUpcomingDate(departureDate))}</div>
+        <div class="departure-info"><h3>${escapeHtml(program.name)}</h3><p>${escapeHtml(program.duration || '')}</p></div>
         <i class="fas fa-arrow-right"></i>
       </article>`;
     }).join('');
   }
+
+  function displayUpcomingDate(value) {
+    if (!programFilters.validIsoDate(value)) return '';
+    return new Intl.DateTimeFormat('es-AR',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'})
+      .format(new Date(`${value}T12:00:00Z`));
+  }
+
+  window.showUpcomingDepartures = function () {
+    showSection('home');
+    activeNavigationFilter = {kind:'upcoming'};
+    clearTravelFilters();
+    runSearch(null,'No hay salidas confirmadas dentro de los próximos 60 días.');
+  };
 
   function bindEvents() {
     const form = document.getElementById('travelSearchForm');
@@ -971,14 +1046,27 @@
       if (query) {
         showSection('home');
         clearTravelFilters();
-        document.getElementById('travelDestination').value = query.dataset.searchQuery;
+        if (query.closest('#mobileDestinationsMenu')) {
+          activeNavigationFilter = {kind:'destination',value:query.dataset.searchQuery};
+        } else {
+          activeNavigationFilter = null;
+          document.getElementById('travelDestination').value = query.dataset.searchQuery;
+        }
         runSearch();
       }
       const type = event.target.closest('[data-search-type]');
       if (type) {
         showSection('home');
+        activeNavigationFilter = null;
         clearTravelFilters();
         document.getElementById('travelType').value = type.dataset.searchType;
+        runSearch();
+      }
+      const experience = event.target.closest('[data-search-experience]');
+      if (experience) {
+        showSection('home');
+        activeNavigationFilter = {kind:'experience',value:experience.dataset.searchExperience};
+        clearTravelFilters();
         runSearch();
       }
       const mode = event.target.closest('[data-search-mode]');
@@ -988,7 +1076,7 @@
       }
     });
     document.addEventListener('keydown', event => {
-      const action = event.target.closest && event.target.closest('[data-open-trip],[data-search-query],[data-search-type],[data-search-mode]');
+      const action = event.target.closest && event.target.closest('[data-open-trip],[data-search-query],[data-search-type],[data-search-experience],[data-search-mode],[data-upcoming-departures]');
       if (action && (event.key === 'Enter' || event.key === ' ')) {
         event.preventDefault();
         action.click();
@@ -1006,12 +1094,14 @@
 
   window.showAllTrips = function () {
     showSection('home');
+    activeNavigationFilter = null;
     clearTravelFilters();
     runSearch();
   };
 
   window.goHomeAndReset = function () {
     showSection('home');
+    activeNavigationFilter = null;
     clearTravelFilters();
     hideTravelResults();
   };
@@ -1023,6 +1113,7 @@
     renderDepartures();
     const count = document.getElementById('catalogCount');
     if (count) count.textContent = catalog.length;
+    let publicCatalogLoadFailed = false;
     if (typeof window.loadModoRumboPrograms === 'function') {
       try {
         collectPublicPrograms(await window.loadModoRumboPrograms());
@@ -1031,7 +1122,24 @@
         if (count) count.textContent = catalog.length;
         if (document.getElementById('travelResults')?.classList.contains('visible')) runSearch();
       } catch (error) {
+        publicCatalogLoadFailed = true;
         console.warn('Los programas del panel no pudieron cargarse; se conserva el catálogo local.', error);
+      }
+    }
+    const requestedProgramId = new URLSearchParams(window.location.search).get('programa');
+    if (requestedProgramId) {
+      const resolution = await programSharing.openProgramLink(
+        requestedProgramId,
+        async () => catalog,
+        program => openTrip(program.id)
+      );
+      if (resolution.opened) {
+        return;
+      } else {
+        const message = publicCatalogLoadFailed
+          ? 'No pudimos cargar el catálogo para abrir este programa. Revisá tu conexión e intentá nuevamente.'
+          : 'Este programa ya no está disponible o no se encuentra publicado.';
+        renderResults([], {query:'',month:'',type:'',navigation:null}, message);
       }
     }
   }
