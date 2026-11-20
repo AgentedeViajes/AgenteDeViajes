@@ -7,12 +7,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=20261120a">
+  <link rel="stylesheet" href="admin.css?v=20261120b">
 </head>
 <body>
+  <svg class="brand-logo-defs" aria-hidden="true" focusable="false">
+    <symbol id="modoRumboLogoMark" viewBox="0 0 48 48">
+      <rect width="48" height="48" rx="11" fill="#ff6508"/>
+      <path d="M8 22.3 39.8 9.1c1.3-.5 2.4.7 1.7 1.9L25.9 40.2c-.7 1.2-2.4 1-2.7-.3l-3-11.3 12.4-11.3-16 8.7-8.5-1.5c-1.2-.2-1.4-1.7-.1-2.2Z" fill="#fff"/>
+      <path d="m20.2 28.6 6 4.8-3-5.6" fill="#d8e7f5"/>
+    </symbol>
+  </svg>
   <section class="auth-gate" id="authGate" hidden>
     <form class="auth-card" id="loginForm">
-      <img src="../Logo de Viajes Modo Rumbo.png" alt="Modo Rumbo">
+      <div class="brand-identity auth-brand-identity" role="img" aria-label="Modo Rumbo">
+        <svg class="brand-logo-mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#modoRumboLogoMark"/></svg>
+        <span class="brand-logo-type" aria-hidden="true"><span>Modo</span><span>Rumbo</span></span>
+      </div>
       <p class="eyebrow">Administración privada</p>
       <h1>Ingresar al panel</h1>
       <p>Utilizá el usuario administrador habilitado en Modo Rumbo.</p>
@@ -25,7 +35,7 @@
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-identity">
-        <svg class="brand-logo-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#ff6508"/><path d="M8 22.3 39.8 9.1c1.3-.5 2.4.7 1.7 1.9L25.9 40.2c-.7 1.2-2.4 1-2.7-.3l-3-11.3 12.4-11.3-16 8.7-8.5-1.5c-1.2-.2-1.4-1.7-.1-2.2Z" fill="#fff"/><path d="m20.2 28.6 6 4.8-3-5.6" fill="#d8e7f5"/></svg>
+        <svg class="brand-logo-mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#modoRumboLogoMark"/></svg>
         <span class="brand-logo-type"><span>Modo</span><span>Rumbo</span></span>
       </div>
       <span class="brand-caption">Panel de gestión</span>
