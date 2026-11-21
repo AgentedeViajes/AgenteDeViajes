@@ -175,6 +175,7 @@
   </style>
   <link rel="stylesheet" href="premium-home.css?v=20261120c">
   <link rel="stylesheet" href="search-final.css?v=20261120a">
+  <link rel="stylesheet" href="home-videos.css?v=20261121d">
 </head>
 <body>
 
@@ -503,6 +504,57 @@
           </article>
         </div>
       </div>
+    </section>
+
+    <section class="home-video-section" id="home-explainer-videos" aria-labelledby="homeVideoTitle">
+      <div class="premium-container">
+        <div class="home-video-panel">
+          <div class="home-video-intro">
+            <h2 id="homeVideoTitle">¿Cuál es tu modo de viajar?</h2>
+            <p>Descubrí las distintas formas de viajar con Modo Rumbo. Te lo contamos en 15 segundos.</p>
+            <button class="home-video-chooser-trigger" type="button" data-open-video-chooser><i class="fas fa-play" aria-hidden="true"></i> ¿Qué tipo de viaje elegir?</button>
+          </div>
+          <div class="home-video-carousel" aria-label="Videos explicativos">
+            <div class="home-video-carousel-header">
+              <span class="home-video-carousel-label">Conocé las modalidades</span>
+              <div class="home-video-arrows">
+                <button type="button" data-video-previous aria-label="Videos anteriores" aria-controls="homeVideoTrack"><i class="fas fa-arrow-left" aria-hidden="true"></i></button>
+                <button type="button" data-video-next aria-label="Videos siguientes" aria-controls="homeVideoTrack"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+              </div>
+            </div>
+            <div class="home-video-track" id="homeVideoTrack" tabindex="0" aria-label="Carrusel de seis videos"></div>
+            <div class="home-video-pagination" id="homeVideoPagination" aria-label="Página del carrusel"></div>
+          </div>
+        </div>
+      </div>
+
+      <dialog class="home-video-dialog home-video-chooser" id="homeVideoChooser" aria-labelledby="homeVideoChooserTitle">
+        <button class="home-video-dialog-close" type="button" data-close-video-dialog aria-label="Cerrar">&times;</button>
+        <span class="home-video-eyebrow">Encontrá tu forma de viajar</span>
+        <h2 id="homeVideoChooserTitle">¿Qué tipo de viaje elegir?</h2>
+        <p class="home-video-dialog-copy">Elegí una modalidad para ver las propuestas disponibles.</p>
+        <div class="home-video-chooser-list" id="homeVideoChooserList"></div>
+      </dialog>
+
+      <dialog class="home-video-dialog home-video-player-dialog" id="homeVideoPlayerDialog" aria-labelledby="homeVideoPlayerTitle">
+        <button class="home-video-dialog-close" type="button" data-close-video-dialog aria-label="Cerrar video">&times;</button>
+        <div class="home-video-player-content">
+          <div class="home-video-player-stage">
+            <img id="homeVideoPlayerPoster" alt="" hidden>
+            <video id="homeVideoPlayer" controls playsinline preload="none" hidden></video>
+            <button class="home-video-start" type="button" data-start-video><i class="fas fa-play" aria-hidden="true"></i> Reproducir video</button>
+            <p class="home-video-player-status" id="homeVideoPlayerStatus" aria-live="polite"></p>
+          </div>
+          <div class="home-video-player-side">
+            <div class="home-video-player-copy">
+              <span class="home-video-eyebrow">Modo Rumbo · video breve</span>
+              <h2 id="homeVideoPlayerTitle"></h2>
+            </div>
+            <p class="home-video-player-description" id="homeVideoPlayerDescription"></p>
+            <button class="home-video-route home-video-player-route" type="button" data-player-route></button>
+          </div>
+        </div>
+      </dialog>
     </section>
 
     <section class="premium-section search-results-section soft" id="travelResults" aria-live="polite">
@@ -3200,6 +3252,7 @@
   <script src="program-search-filters.js?v=20261120h"></script>
   <script src="program-sharing.js?v=20261120b"></script>
   <script src="travel-search.js?v=20261120i"></script>
+  <script src="home-explainer-videos.js?v=20261121c"></script>
   <script src="hero-carousel.js?v=20261017a"></script>
 </body>
 </html>
