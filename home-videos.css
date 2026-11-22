@@ -1,5 +1,6 @@
 /* Sección nueva de videos breves, aislada del resto de la portada. */
 .home-video-section *, .home-video-dialog * { box-sizing: border-box; }
+.home-video-section[hidden] { display: none !important; }
 .home-video-section { padding: 10px 0 16px; }
 .home-video-panel {
   display: grid;

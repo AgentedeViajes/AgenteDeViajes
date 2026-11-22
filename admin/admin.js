@@ -10,6 +10,7 @@
   function uid(){return crypto.randomUUID?crypto.randomUUID():`program-${Date.now()}-${Math.random().toString(16).slice(2)}`}
   function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]))}
   function showToast(message){const toast=$('#toast');toast.textContent=message;toast.classList.add('visible');window.setTimeout(()=>toast.classList.remove('visible'),2600)}
+  function updateBackendIndicator(mode,user){const label=$('#backendMode');const description=$('#backendDescription');if(mode==='supabase'){label.textContent=user?'Supabase conectado':'Supabase configurado';description.textContent=user?`Sesión: ${user.email}`:'Los datos se consultan en Supabase. Iniciá sesión con una cuenta administradora para gestionarlos.'}else{label.textContent='Modo local';description.textContent='Sin conexión a Supabase, los cambios de programas se guardan únicamente en este navegador.'}}
   function typeLabel(type){return({grupal:'Viaje grupal',personalizado:'Viaje a medida','sin-aereo':'Circuito sin aéreo',lujo:'Viaje de lujo','luna-de-miel':'Luna de miel','low-cost':'Low Cost'})[type]||type}
   function statusLabel(status){return({published:'Publicado',draft:'Borrador',paused:'Pausado'})[status]||status}
   function priceLabel(program){if(program.pricePrefix==='consult'||!program.price)return'Consultar';return`${program.pricePrefix==='from'?'Desde ':''}${program.currency} ${Number(program.price).toLocaleString('es-AR')}`}
@@ -131,11 +132,11 @@
     if(action?.dataset.action==='delete'){const program=state.programs.find(item=>item.id===action.dataset.id);if(program&&window.confirm(`¿Eliminar “${program.title}”?`)){dataService.deleteProgram(program.id,state.programs).then(programs=>{state.programs=programs;renderPrograms();showToast('Programa eliminado.')}).catch(error=>showToast(`No se pudo eliminar: ${error.message}`))}}
   });
 
-  $('#loginForm').addEventListener('submit',async event=>{event.preventDefault();$('#loginError').textContent='';try{state.user=await dataService.signIn($('#loginEmail').value.trim(),$('#loginPassword').value);state.programs=await dataService.listPrograms();$('#authGate').hidden=true;$('#signOutButton').hidden=false;renderPrograms()}catch(error){$('#loginError').textContent=error.message}});
+  $('#loginForm').addEventListener('submit',async event=>{event.preventDefault();$('#loginError').textContent='';try{state.user=await dataService.signIn($('#loginEmail').value.trim(),$('#loginPassword').value);state.programs=await dataService.listPrograms();$('#authGate').hidden=true;$('#signOutButton').hidden=false;updateBackendIndicator(state.mode,state.user);renderPrograms()}catch(error){$('#loginError').textContent=error.message}});
   $('#signOutButton').addEventListener('click',async()=>{await dataService.signOut();window.location.reload()});
 
   async function boot(){
-    try{const result=await dataService.initialize();state.mode=result.mode;state.user=result.user;state.programs=result.programs;if(result.requiresAuth){$('#authGate').hidden=false}else if(result.mode==='supabase'){$('#signOutButton').hidden=false;$('#backendMode').textContent='Base de datos conectada';$('#backendDescription').textContent=`Sesión: ${result.user.email}`;}resetForm();renderPrograms()}catch(error){showToast(`Error de inicio: ${error.message}`)}
+    try{const result=await dataService.initialize();state.mode=result.mode;state.user=result.user;state.programs=result.programs;updateBackendIndicator(result.mode,result.user);if(result.requiresAuth){$('#authGate').hidden=false}else if(result.mode==='supabase'){$('#signOutButton').hidden=false}resetForm();renderPrograms()}catch(error){showToast(`Error de inicio: ${error.message}`)}
   }
   boot();
 })();

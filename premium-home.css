@@ -1564,6 +1564,76 @@ body:has(.program-dialog[open]) { overflow: hidden; }
   background:var(--premium-orange);
 }
 
+/* Carrusel responsive de programas destacados; conserva las tarjetas existentes. */
+#featured-home[hidden] { display:none !important; }
+#featured-home .featured-carousel-track {
+  display:flex !important;
+  align-items:stretch;
+  gap:16px;
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  touch-action:pan-x pan-y;
+}
+#featured-home .featured-carousel-track::-webkit-scrollbar { display:none; }
+#featured-home .featured-carousel-track .trip-card {
+  display:flex;
+  flex:0 0 calc((100% - 48px)/4);
+  flex-direction:column;
+  min-width:0;
+  scroll-snap-align:start;
+}
+#featured-home .featured-carousel-track .trip-card-body { flex:1; }
+.featured-carousel-controls {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:34px;
+  margin-top:12px;
+}
+.featured-carousel-controls[hidden] { display:none !important; }
+.featured-carousel-controls > button {
+  display:grid;
+  width:32px;
+  height:32px;
+  flex:0 0 32px;
+  place-items:center;
+  border:1px solid #d7e0ea;
+  border-radius:50%;
+  background:#fff;
+  color:var(--premium-navy);
+  cursor:pointer;
+  transition:background .18s ease,border-color .18s ease,color .18s ease;
+}
+.featured-carousel-controls > button:hover:not(:disabled) { border-color:var(--premium-orange); background:var(--premium-orange); color:#fff; }
+.featured-carousel-controls > button:disabled { opacity:.42; cursor:default; }
+.featured-carousel-pagination { display:flex; align-items:center; justify-content:center; gap:7px; }
+.featured-carousel-pagination button {
+  width:9px;
+  height:9px;
+  padding:0;
+  border:0;
+  border-radius:999px;
+  background:#a4adbb;
+  cursor:pointer;
+  transition:width .18s ease,background .18s ease;
+}
+.featured-carousel-pagination button[aria-current="true"] { width:20px; background:var(--premium-orange); }
+@media (min-width:681px) and (max-width:1024px) {
+  #featured-home .featured-carousel-track .trip-card { flex-basis:calc((100% - 16px)/2); }
+}
+@media (max-width:680px) {
+  #featured-home .featured-carousel-track .trip-card { flex-basis:100%; }
+  .featured-carousel-controls { margin-top:10px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  #featured-home .featured-carousel-track { scroll-behavior:auto; }
+  .featured-carousel-controls > button,.featured-carousel-pagination button { transition:none; }
+}
+
 #section-home .trust-strip {
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));

@@ -173,9 +173,9 @@
       footer { padding: 40px 20px 20px; }
     }
   </style>
-  <link rel="stylesheet" href="premium-home.css?v=20261120c">
+  <link rel="stylesheet" href="premium-home.css?v=20261121f">
   <link rel="stylesheet" href="search-final.css?v=20261120a">
-  <link rel="stylesheet" href="home-videos.css?v=20261121d">
+  <link rel="stylesheet" href="home-videos.css?v=20261121e">
 </head>
 <body>
 
@@ -506,7 +506,7 @@
       </div>
     </section>
 
-    <section class="home-video-section" id="home-explainer-videos" aria-labelledby="homeVideoTitle">
+    <section class="home-video-section" id="home-explainer-videos" aria-labelledby="homeVideoTitle" hidden>
       <div class="premium-container">
         <div class="home-video-panel">
           <div class="home-video-intro">
@@ -522,7 +522,7 @@
                 <button type="button" data-video-next aria-label="Videos siguientes" aria-controls="homeVideoTrack"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
               </div>
             </div>
-            <div class="home-video-track" id="homeVideoTrack" tabindex="0" aria-label="Carrusel de seis videos"></div>
+            <div class="home-video-track" id="homeVideoTrack" tabindex="0" aria-label="Carrusel de videos explicativos"></div>
             <div class="home-video-pagination" id="homeVideoPagination" aria-label="Página del carrusel"></div>
           </div>
         </div>
@@ -591,10 +591,15 @@
       </div>
     </section>
 
-    <section class="premium-section" id="featured-home">
+    <section class="premium-section" id="featured-home" hidden>
       <div class="premium-container">
         <div class="section-topline"><header class="premium-heading"><div class="premium-eyebrow">Selección especial</div><h2>Salidas destacadas</h2></header><a class="view-all-link" onclick="showAllTrips()">Ver todos los viajes <i class="fas fa-arrow-right"></i></a></div>
-        <div class="trip-card-grid" id="featuredTripsGrid"></div>
+        <div class="trip-card-grid featured-carousel-track" id="featuredTripsGrid" tabindex="0" aria-label="Programas destacados"></div>
+        <div class="featured-carousel-controls" id="featuredCarouselControls" hidden>
+          <button type="button" id="featuredPrevious" aria-label="Programas destacados anteriores" aria-controls="featuredTripsGrid"><i class="fas fa-arrow-left" aria-hidden="true"></i></button>
+          <div class="featured-carousel-pagination" id="featuredPagination" aria-label="Páginas de programas destacados"></div>
+          <button type="button" id="featuredNext" aria-label="Programas destacados siguientes" aria-controls="featuredTripsGrid"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
       </div>
     </section>
 
@@ -3251,8 +3256,11 @@
   <script src="public-programs.js?v=20261025a"></script>
   <script src="program-search-filters.js?v=20261120h"></script>
   <script src="program-sharing.js?v=20261120b"></script>
-  <script src="travel-search.js?v=20261120i"></script>
-  <script src="home-explainer-videos.js?v=20261121c"></script>
+  <script src="featured-carousel.js?v=20261121f"></script>
+  <script src="travel-search.js?v=20261121f"></script>
+  <script src="admin/config.js?v=20261121e"></script>
+  <script src="home-video-public-data.js?v=20261121e"></script>
+  <script src="home-explainer-videos.js?v=20261121e"></script>
   <script src="hero-carousel.js?v=20261017a"></script>
 </body>
 </html>

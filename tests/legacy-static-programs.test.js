@@ -15,9 +15,10 @@ test('retira del HTML activo las fichas estáticas antiguas y sus accesos direct
   assert.doesNotMatch(html, /showSection\('europa-conociendo'\)|showSection\('europa-promo'\)/);
 });
 
-test('conserva la búsqueda por catálogo dinámico para un homónimo publicado', () => {
-  assert.match(search, /'Conociendo Europa'/);
+test('conserva la carga del catálogo dinámico sin nombres destacados codificados', () => {
+  assert.doesNotMatch(search, /Conociendo Europa/);
   assert.match(search, /collectPublicPrograms\(await window\.loadModoRumboPrograms\(\)\)/);
+  assert.match(search, /name:program\.title/);
 });
 
 test('mantiene fichas vecinas de Europa y programas independientes con el mismo precio', () => {

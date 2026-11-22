@@ -4,6 +4,7 @@
   const dateMode = window.ModoRumboDateMode;
   const programFilters = window.ModoRumboProgramFilters;
   const programSharing = window.ModoRumboProgramSharing;
+  const featuredCarousel = window.ModoRumboFeaturedCarousel;
 
   const MONTHS = [
     ['enero','Enero'],['febrero','Febrero'],['marzo','Marzo'],['abril','Abril'],
@@ -989,25 +990,57 @@
     }
   }
 
-  function diverseFeatured() {
-    const wanted = ['Punta Cana Verano 2027','Conociendo Europa','Tesoros de Corea y Japón','Tailandia Clásica'];
-    const picks = catalog.filter(item => item.featured).slice(0,3);
-    wanted.forEach(name => {
-      const found = catalog.find(item => normalize(item.name) === normalize(name));
-      if (found && !picks.includes(found)) picks.push(found);
-    });
-    const regions = ['Caribe','Europa','Asia y Exóticos','África'];
-    regions.forEach(region => {
-      if (picks.length >= 3) return;
-      const found = catalog.find(item => item.region === region && item.image && !picks.includes(item));
-      if (found) picks.push(found);
-    });
-    return picks.slice(0,3);
-  }
-
   function renderFeatured() {
     const target = document.getElementById('featuredTripsGrid');
-    if (target) target.innerHTML = diverseFeatured().map(cardHtml).join('');
+    const section = document.getElementById('featured-home');
+    if (!target || !section || !featuredCarousel) return;
+    const picks = featuredCarousel.selectPublishedFeatured(catalog);
+    target.innerHTML = picks.map(cardHtml).join('');
+    section.hidden = picks.length === 0;
+    renderFeaturedCarouselControls();
+  }
+
+  function featuredTrack() { return document.getElementById('featuredTripsGrid'); }
+  function featuredCapacity() { return featuredCarousel.visibleCapacity(window.innerWidth); }
+  function featuredPageCount() {
+    return featuredCarousel.pageCount(featuredTrack()?.children.length || 0,featuredCapacity());
+  }
+  function featuredCurrentIndex() {
+    const track=featuredTrack(), first=track?.firstElementChild;
+    if(!track||!first)return 0;
+    const gap=parseFloat(getComputedStyle(track).columnGap)||0;
+    return Math.round(track.scrollLeft/(first.getBoundingClientRect().width+gap));
+  }
+  function updateFeaturedCarouselControls() {
+    const track=featuredTrack(), controls=document.getElementById('featuredCarouselControls');
+    const previous=document.getElementById('featuredPrevious'), next=document.getElementById('featuredNext');
+    const pagination=document.getElementById('featuredPagination');
+    if(!track||!controls||!previous||!next||!pagination)return;
+    const count=track.children.length,capacity=featuredCapacity(),pages=featuredCarousel.pageCount(count,capacity);
+    controls.hidden=count<=capacity;
+    const currentIndex=featuredCurrentIndex();
+    const activePage=featuredCarousel.activePage(currentIndex,count,capacity);
+    if(pagination.children.length!==pages){
+      pagination.innerHTML=Array.from({length:pages},(_,page)=>`<button type="button" data-featured-page="${page}" aria-label="Mostrar página ${page+1} de ${pages}" aria-controls="featuredTripsGrid" aria-current="${page===activePage?'true':'false'}"></button>`).join('');
+    }
+    pagination.querySelectorAll('[data-featured-page]').forEach(dot=>dot.setAttribute('aria-current',String(Number(dot.dataset.featuredPage)===activePage)));
+    previous.disabled=activePage<=0;
+    next.disabled=activePage>=pages-1;
+  }
+  function renderFeaturedCarouselControls() { updateFeaturedCarouselControls(); }
+  function scrollFeaturedToPage(page) {
+    const track=featuredTrack(),count=track?.children.length||0,capacity=featuredCapacity();
+    if(!track||!count)return;
+    const index=featuredCarousel.pageStart(page,count,capacity),card=track.children[index];
+    if(card){const left=track.scrollLeft+card.getBoundingClientRect().left-track.getBoundingClientRect().left;track.scrollTo({left,behavior:'smooth'});}
+  }
+  function bindFeaturedCarousel() {
+    const track=featuredTrack(),pagination=document.getElementById('featuredPagination');
+    document.getElementById('featuredPrevious')?.addEventListener('click',()=>scrollFeaturedToPage(featuredCarousel.activePage(featuredCurrentIndex(),track.children.length,featuredCapacity())-1));
+    document.getElementById('featuredNext')?.addEventListener('click',()=>scrollFeaturedToPage(featuredCarousel.activePage(featuredCurrentIndex(),track.children.length,featuredCapacity())+1));
+    pagination?.addEventListener('click',event=>{const dot=event.target.closest('[data-featured-page]');if(dot)scrollFeaturedToPage(Number(dot.dataset.featuredPage));});
+    track?.addEventListener('scroll',()=>window.requestAnimationFrame(updateFeaturedCarouselControls),{passive:true});
+    window.addEventListener('resize',updateFeaturedCarouselControls,{passive:true});
   }
 
   function renderDepartures() {
@@ -1037,6 +1070,7 @@
   };
 
   function bindEvents() {
+    bindFeaturedCarousel();
     const form = document.getElementById('travelSearchForm');
     if (form) form.addEventListener('submit', runSearch);
     document.addEventListener('click', event => {

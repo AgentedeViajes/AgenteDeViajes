@@ -61,5 +61,42 @@
     const{data}=client.storage.from('travel-programs').getPublicUrl(path);return data.publicUrl;
   }
 
-  window.ModoRumboData={configured,initialize,signIn,signOut,listPrograms,saveProgram,deleteProgram,uploadImage};
+  const HOME_VIDEO_FIELDS = new Set(['slug','title','description','video_url','thumbnail_path','player_poster_path','duration_seconds','navigation_type','navigation_value','button_label','sort_order','is_published']);
+  function requireSupabase(){if(!client)throw new Error('La gestión de videos requiere la conexión con Supabase.')}
+  async function listHomeVideos(){requireSupabase();const{data,error}=await client.from('home_videos').select('*').order('sort_order',{ascending:true}).order('created_at',{ascending:true});if(error)throw error;return data||[]}
+  async function createHomeVideo(video){requireSupabase();const payload=Object.fromEntries(Object.entries(video).filter(([key])=>HOME_VIDEO_FIELDS.has(key)));const{data,error}=await client.from('home_videos').insert(payload).select('*').single();if(error)throw error;return data}
+  async function updateHomeVideo(id,changes){requireSupabase();const payload=Object.fromEntries(Object.entries(changes).filter(([key])=>HOME_VIDEO_FIELDS.has(key)));const{data,error}=await client.from('home_videos').update(payload).eq('id',id).select('*').single();if(error)throw error;return data}
+  async function deleteHomeVideo(id){requireSupabase();const{data,error}=await client.from('home_videos').delete().eq('id',id).select('id').single();if(error)throw error;return data.id}
+  async function uploadHomeVideoImage(file,slug,kind){
+    requireSupabase();
+    const allowedTypes=new Set(['image/webp','image/jpeg','image/png']);
+    if(!file||!allowedTypes.has(file.type))throw new Error('Solo se permiten miniaturas WebP, JPEG o PNG.');
+    if(file.size>1024*1024)throw new Error('Cada miniatura debe pesar como máximo 1 MB.');
+    const safeSlug=String(slug||'video').toLowerCase().replace(/[^a-z0-9-]/g,'-');
+    const nonce=globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const extension=file.type==='image/jpeg'?'jpg':file.type==='image/png'?'png':'webp';
+    const path=`${safeSlug}/${Date.now()}-${nonce}-${kind}.${extension}`;
+    const{error}=await client.storage.from('home-video-images').upload(path,file,{cacheControl:'31536000',contentType:file.type,upsert:false});
+    if(error){if(error.message?.toLowerCase().includes('bucket'))throw new Error('Falta configurar el bucket home-video-images con el SQL de preparación.');throw error;}
+    const{data}=client.storage.from('home-video-images').getPublicUrl(path);
+    return{path,url:data.publicUrl};
+  }
+  function homeVideoImagePath(value){
+    try{const url=new URL(value);const base=new URL(config.supabaseUrl);if(url.origin!==base.origin)return null;const prefix='/storage/v1/object/public/home-video-images/';if(!url.pathname.startsWith(prefix))return null;const path=decodeURIComponent(url.pathname.slice(prefix.length));return path&&!path.split('/').includes('..')?path:null;}catch(_){return null}
+  }
+  async function deleteHomeVideoImage(value){
+    requireSupabase();const path=homeVideoImagePath(value);if(!path)return false;
+    const{error}=await client.storage.from('home-video-images').remove([path]);if(error)throw error;return true;
+  }
+
+  async function deleteHomeVideoImageIfUnreferenced(value){
+    requireSupabase();const path=homeVideoImagePath(value);if(!path)return{deleted:false,external:true};
+    const rows=await listHomeVideos();
+    const referenced=rows.some(row=>[row.thumbnail_path,row.player_poster_path].some(url=>homeVideoImagePath(url)===path));
+    if(referenced)return{deleted:false,referenced:true};
+    const{error}=await client.storage.from('home-video-images').remove([path]);if(error)throw error;
+    return{deleted:true,referenced:false};
+  }
+
+  window.ModoRumboData={configured,initialize,signIn,signOut,listPrograms,saveProgram,deleteProgram,uploadImage,listHomeVideos,createHomeVideo,updateHomeVideo,deleteHomeVideo,uploadHomeVideoImage,deleteHomeVideoImage,deleteHomeVideoImageIfUnreferenced};
 })();

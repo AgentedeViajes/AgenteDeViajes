@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css?v=20261120b">
+  <link rel="stylesheet" href="home-videos.css?v=20261121b">
 </head>
 <body>
   <svg class="brand-logo-defs" aria-hidden="true" focusable="false">
@@ -43,10 +44,11 @@
     <nav aria-label="Administración">
       <button class="nav-button active" type="button" data-view="programs">Programas</button>
       <button class="nav-button" type="button" data-view="editor">Nuevo programa</button>
+      <button class="nav-button" type="button" data-view="homeVideos">Videos de portada</button>
     </nav>
     <div class="prototype-note">
-      <strong id="backendMode">Etapa de prueba</strong>
-      <p id="backendDescription">Los cambios se guardan únicamente en este navegador. La web pública todavía no está conectada.</p>
+      <strong id="backendMode">Conectando con Supabase</strong>
+      <p id="backendDescription">Verificando la conexión y la sesión del administrador.</p>
     </div>
   </aside>
 
@@ -87,6 +89,26 @@
             <tbody id="programTableBody"></tbody>
           </table>
         </div>
+      </div>
+    </section>
+
+    <section class="view home-videos-view" id="homeVideosView" aria-labelledby="homeVideosHeading">
+      <div class="home-videos-toolbar">
+        <div>
+          <p id="homeVideosHeading">Administrá los videos y su orden. Los archivos permanecen en proveedores externos.</p>
+        </div>
+        <button class="primary-button" id="homeVideoAddButton" type="button">+ Agregar video</button>
+      </div>
+      <div class="home-videos-notice" id="homeVideosNotice" role="status" aria-live="polite" hidden></div>
+      <div class="home-videos-grid" id="homeVideosGrid"></div>
+      <div class="home-videos-empty" id="homeVideosEmpty" hidden>
+        <h3>No hay videos de portada</h3>
+        <p>Agregá el primero para comenzar a administrar la sección.</p>
+        <button class="primary-button" type="button" data-home-video-add>Agregar video</button>
+      </div>
+      <div class="home-videos-order-actions" id="homeVideosOrderActions" hidden>
+        <p>Podés cambiar los números de orden y guardar los cambios.</p>
+        <button class="secondary-button" id="homeVideosSaveOrder" type="button">Guardar orden</button>
       </div>
     </section>
 
@@ -193,6 +215,73 @@
     </section>
   </main>
 
+  <dialog class="home-video-form-dialog" id="homeVideoFormDialog" aria-labelledby="homeVideoFormTitle">
+    <form id="homeVideoForm" novalidate>
+      <header class="home-video-dialog-header">
+        <div><p class="eyebrow">Contenido de portada</p><h2 id="homeVideoFormTitle">Agregar video</h2></div>
+        <button class="icon-button" type="button" data-close-home-video-form aria-label="Cerrar formulario">×</button>
+      </header>
+      <div class="home-video-form-body">
+        <div class="home-video-dialog-notice" id="homeVideoFormNotice" role="status" aria-live="polite" hidden></div>
+        <input id="homeVideoId" type="hidden">
+        <div class="home-video-form-grid">
+          <label class="span-2">Título *<input id="homeVideoTitle" maxlength="120" required></label>
+          <label class="span-2">Descripción *<textarea id="homeVideoDescription" rows="3" maxlength="1200" required></textarea></label>
+          <label class="span-2">URL externa del video *<input id="homeVideoUrl" type="url" inputmode="url" placeholder="https://proveedor.com/video.mp4" required><small>Solo HTTPS de proveedores externos. El MP4 nunca se carga en Supabase.</small><button class="secondary-button home-video-generate-button" id="homeVideoGenerateThumbnails" type="button">Generar miniaturas del video</button></label>
+          <div class="home-video-frame-picker span-2" id="homeVideoFramePicker" hidden>
+            <div class="home-video-frame-player-wrap"><video id="homeVideoFramePlayer" controls playsinline preload="none" hidden></video></div>
+            <div class="home-video-frame-controls"><label for="homeVideoFramePosition">Fotograma seleccionado <output id="homeVideoFrameTime">0:00</output></label><input id="homeVideoFramePosition" type="range" min="0" max="0" step="0.1" value="0"><button class="primary-button" id="homeVideoCaptureFrame" type="button" disabled>Capturar fotograma</button></div>
+            <p class="home-video-frame-status" id="homeVideoFrameStatus" role="status" aria-live="polite" hidden></p>
+          </div>
+          <label>Miniatura horizontal 16:9 *<input id="homeVideoThumbnail" type="url" inputmode="url" placeholder="https://… o assets/videos/…"><input id="homeVideoThumbnailFile" type="file" accept="image/webp,image/jpeg,image/png"><small>URL externa, imagen manual o captura generada.</small></label>
+          <label>Portada vertical del reproductor *<input id="homeVideoPlayerPoster" type="url" inputmode="url" placeholder="https://… o assets/videos/…"><input id="homeVideoPlayerPosterFile" type="file" accept="image/webp,image/jpeg,image/png"><small>URL externa, imagen manual o captura generada.</small></label>
+          <div class="home-video-image-preview"><span>Miniatura horizontal</span><img id="homeVideoThumbnailPreview" alt="Vista previa de la miniatura horizontal" hidden></div>
+          <div class="home-video-image-preview vertical"><span>Portada vertical</span><img id="homeVideoPlayerPosterPreview" alt="Vista previa de la portada del reproductor" hidden></div>
+          <label>Duración en segundos *<input id="homeVideoDuration" type="number" min="1" max="86400" step="1" required></label>
+          <label>Orden de aparición *<input id="homeVideoOrder" type="number" min="0" step="1" required></label>
+          <label class="span-2">Acción al ir a programas *<select id="homeVideoNavigationType" required>
+            <option value="grupales">Viajes grupales acompañados</option>
+            <option value="sin-aereo">Tours grupales sin aéreo</option>
+            <option value="playa">Modo Playa</option>
+            <option value="europa">Modo Europa</option>
+            <option value="exotico">Modo Exótico</option>
+            <option value="a-medida">Modo A Medida</option>
+            <option value="custom-query">Búsqueda personalizada por destino o palabra</option>
+          </select></label>
+          <label class="span-2" id="homeVideoNavigationValueLabel" hidden>Destino o palabra de búsqueda<input id="homeVideoNavigationValue" maxlength="160" placeholder="Por ejemplo, Europa"></label>
+          <label class="span-2">Texto del botón *<input id="homeVideoButtonLabel" maxlength="100" required></label>
+          <label class="home-video-slug-field">Slug generado automáticamente<input id="homeVideoSlug" readonly aria-describedby="homeVideoSlugHelp"><small id="homeVideoSlugHelp">Se genera a partir del título y será único.</small></label>
+          <label class="home-video-publish-toggle"><input id="homeVideoPublished" type="checkbox"> Publicado en la portada</label>
+        </div>
+        <div class="home-video-form-actions">
+          <button class="text-button" type="button" data-close-home-video-form>Cancelar</button>
+          <button class="secondary-button" id="homeVideoFormPreview" type="button">Vista previa</button>
+          <button class="primary-button" id="homeVideoSaveButton" type="submit">Guardar video</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="home-video-preview-dialog" id="homeVideoPreviewDialog" aria-labelledby="homeVideoPreviewTitle">
+    <header class="home-video-preview-header">
+      <div><p class="eyebrow">Vista previa</p><h2 id="homeVideoPreviewTitle"></h2></div>
+      <button class="icon-button" type="button" data-close-home-video-preview aria-label="Cerrar vista previa">×</button>
+    </header>
+    <div class="home-video-preview-content">
+      <div class="home-video-dialog-notice" id="homeVideoPreviewStatus" role="status" aria-live="polite" hidden></div>
+      <div class="home-video-preview-media">
+        <img id="homeVideoPreviewPoster" alt="Portada vertical del video" hidden>
+        <video id="homeVideoPreviewPlayer" controls playsinline preload="none" hidden></video>
+        <button class="primary-button" id="homeVideoPreviewPlay" type="button">▶ Reproducir vista previa</button>
+      </div>
+      <div class="home-video-preview-copy">
+        <img id="homeVideoPreviewThumbnail" alt="Miniatura horizontal" hidden>
+        <p id="homeVideoPreviewDescription"></p>
+        <span id="homeVideoPreviewDuration"></span>
+      </div>
+    </div>
+  </dialog>
+
   <template id="departureTemplate">
     <div class="repeat-card departure-row">
       <label>Fecha<input type="date" data-field="date"></label>
@@ -289,7 +378,8 @@
   <script src="itinerary-parser.js"></script>
   <script src="document-reader.js"></script>
   <script src="itinerary-importer.js"></script>
-  <script src="data-service.js?v=20261025b"></script>
-  <script src="admin.js?v=20261105b"></script>
+  <script src="data-service.js?v=20261121b"></script>
+  <script src="admin.js?v=20261121b"></script>
+  <script src="home-videos-admin.js?v=20261121b"></script>
 </body>
 </html>
