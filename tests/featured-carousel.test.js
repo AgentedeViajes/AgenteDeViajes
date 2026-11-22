@@ -62,7 +62,7 @@ test('la portada oculta la sección vacía y mantiene título, enlace y franja d
   assert.match(html,/class="trust-strip"/);
   assert.match(travelSource,/section\.hidden = picks\.length === 0/);
   assert.match(html,/featured-carousel\.js\?v=/);
-  assert.match(html,/travel-search\.js\?v=20261121f/);
+  assert.match(html,/travel-search\.js\?v=20261122a/);
 });
 
 test('no usa selección por nombre, región ni tope fijo; las tarjetas mantienen su marcado existente',()=>{

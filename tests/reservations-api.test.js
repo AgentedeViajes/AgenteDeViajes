@@ -35,7 +35,10 @@ function makeRequest(overrides = {}) {
       ...(overrides.headers || {})
     },
     body: typeof overrides.body === 'string' ? overrides.body : {
-      passenger: { fullName: 'Ana Pérez', email: 'ana@example.test', phone: '+54 11 5555-1212' },
+      passenger: {
+        fullName: 'Ana Pérez', email: 'ana@example.test', phone: '+54 11 5555-1212',
+        locality: 'Buenos Aires', adults: 1, minors: 0, minorAges: [], comments: '', contactConsent: true
+      },
       program: {
         id: `supabase:${PROGRAM_UUID}`,
         departureDate: '2027-03-14',
@@ -88,8 +91,68 @@ test('envía una solicitud válida a Resend con destinatario y remitente fijados
   assert.match(message.text, /Código del operador: ABC-12/);
   assert.match(message.text, /14\/03\/2027/);
   assert.match(message.text, /USD 3\.500/);
-  assert.equal(message.subject, 'Solicitud de contratación: Japón y Tailandia');
+  assert.match(message.text, /Localidad: Buenos Aires/);
+  assert.match(message.text, /Adultos: 1/);
+  assert.match(message.text, /Acepta contacto: Sí/);
+  assert.equal(message.subject, 'Nueva solicitud de contratación - Japón y Tailandia');
+  assert.match(message.text, /Fecha de salida o período: 14\/03\/2027/);
+  assert.match(message.text, /Tarifa publicada y base tarifaria: USD 3\.500 por persona en doble/);
+  assert.doesNotMatch(message.text, /total a pagar|importe total/i);
+  assert.deepEqual(message.to, ['reservas@example.test']);
   assert.equal(res.payload.ok, true);
+});
+
+test('envía la segunda salida elegida con su tarifa canónica, sin calcular totales de pasajeros', async () => {
+  let call;
+  const multi = { ...CANONICAL_PROGRAM, departures: [
+    { departure_date: '2027-03-14', price: 3500 },
+    { departure_date: '2027-05-01', price: 3900 }
+  ] };
+  const handler = buildHandler({ loadProgram: async () => multi, fetchImpl: async (...args) => { call = args; return { ok: true }; } });
+  const res = await invoke(handler, makeRequest({ body: { program: {
+    id: `supabase:${PROGRAM_UUID}`, departureDate: '2027-05-01', fareAmount: 3900
+  }, passenger: { ...makeRequest().body.passenger, adults: 2, minors: 1, minorAges: [7] } } }));
+  const email = JSON.parse(call[1].body);
+  assert.equal(res.statusCode, 200);
+  assert.match(email.text, /Fecha de salida o período: 01\/05\/2027/);
+  assert.match(email.text, /Tarifa publicada y base tarifaria: USD 3\.900 por persona en doble/);
+  assert.match(email.text, /Adultos: 2/);
+  assert.match(email.text, /Menores: 1/);
+  assert.match(email.text, /Edades de menores: 7/);
+  assert.doesNotMatch(email.text, /Total de pasajeros|Total a pagar|Importe total/i);
+});
+
+test('no permite enviar varias salidas sin elegir una fecha', async () => {
+  let sends = 0;
+  const handler = buildHandler({
+    loadProgram: async () => ({ ...CANONICAL_PROGRAM, departures: [
+      { departure_date: '2027-03-14', price: 3500 }, { departure_date: '2027-05-01', price: 3900 }
+    ] }),
+    fetchImpl: async () => { sends += 1; return { ok: true }; }
+  });
+  const res = await invoke(handler, makeRequest({ body: { program: {
+    id: `supabase:${PROGRAM_UUID}`, departureDate: null, fareAmount: 3500
+  } } }));
+  assert.equal(res.statusCode, 409);
+  assert.equal(res.payload.error, 'departure_required');
+  assert.equal(sends, 0);
+});
+
+test('envía períodos publicados como rango sin inventar fecha de salida ni tarifa total', async () => {
+  let call;
+  const rangeProgram = {
+    ...CANONICAL_PROGRAM, date_mode: 'date_range', travel_start_date: '2027-04-01', travel_end_date: '2027-08-31',
+    departures: [], price: 3500, price_basis: 'double'
+  };
+  const handler = buildHandler({ loadProgram: async () => rangeProgram, fetchImpl: async (...args) => { call = args; return { ok: true }; } });
+  const res = await invoke(handler, makeRequest({ body: { program: {
+    id: `supabase:${PROGRAM_UUID}`, departureDate: null, fareAmount: 3500
+  } } }));
+  const email = JSON.parse(call[1].body);
+  assert.equal(res.statusCode, 200);
+  assert.match(email.text, /Fecha de salida o período: 01\/04\/2027 al 31\/08\/2027 \(período de viaje\)/);
+  assert.match(email.text, /Tarifa publicada y base tarifaria: USD 3\.500 por persona en doble/);
+  assert.doesNotMatch(email.text, /salida puntual|total a pagar/i);
 });
 
 test('ignora los datos del programa enviados por el navegador y arma el correo desde el catálogo publicado', async () => {
@@ -138,7 +201,7 @@ test('no permite que el cliente elija destinatario ni registra o devuelve datos 
     fetchImpl: async (...args) => { call = args; return { ok: true }; },
     log: (...args) => logged.push(args)
   });
-  const req = makeRequest({ body: { to: 'attacker@example.test', passenger: { fullName: 'Datos Privados', email: 'ana@example.test', phone: '+54 11 5555-1212' } } });
+  const req = makeRequest({ body: { to: 'attacker@example.test', passenger: { ...makeRequest().body.passenger, fullName: 'Datos Privados' } } });
   const res = await invoke(handler, req);
   const serialized = JSON.stringify({ response: res.payload, logs: logged });
   assert.deepEqual(JSON.parse(call[1].body).to, ['reservas@example.test']);
@@ -178,7 +241,11 @@ test('rechaza solicitudes inválidas, fechas imposibles y formularios enviados d
     { program: { ...makeRequest().body.program, departureDate: '2027-02-30' } },
     { program: { ...makeRequest().body.program, fareAmount: '3500' } },
     { formStartedAt: NOW - 500 },
-    { formStartedAt: 'not-a-timestamp' }
+    { formStartedAt: 'not-a-timestamp' },
+    { passenger: { ...makeRequest().body.passenger, contactConsent: false } },
+    { passenger: { ...makeRequest().body.passenger, adults: 20, minors: 1, minorAges: [8] } },
+    { passenger: { ...makeRequest().body.passenger, minors: 1, minorAges: [] } },
+    { passenger: { ...makeRequest().body.passenger, minors: 1, minorAges: [18] } }
   ];
   for (const body of invalidBodies) {
     await t.test(JSON.stringify(body).slice(0, 60), async () => {
@@ -202,6 +269,7 @@ test('honeypot devuelve aceptación silenciosa sin contactar a Resend', async ()
   const handler = buildHandler({ fetchImpl: async () => { calls += 1; return { ok: true }; } });
   const res = await invoke(handler, makeRequest({ body: { website: 'bot-filled-field' } }));
   assert.equal(res.statusCode, 202);
+  assert.deepEqual(res.payload, { ok: false, error: 'request_rejected' });
   assert.equal(calls, 0);
 });
 

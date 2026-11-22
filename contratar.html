@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b2346">
+  <meta name="description" content="Prepará tu solicitud de contratación con Modo Rumbo.">
+  <title>Solicitud de contratación | Modo Rumbo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="premium-home.css?v=20261122a">
+  <link rel="stylesheet" href="program-booking.css?v=20261122a">
+</head>
+<body class="booking-page">
+  <header class="booking-header">
+    <a class="booking-brand" href="index.html" aria-label="Modo Rumbo, volver a la portada">
+      <svg class="booking-brand-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#ff6508"/><path d="M8 22.3 39.8 9.1c1.3-.5 2.4.7 1.7 1.9L25.9 40.2c-.7 1.2-2.4 1-2.7-.3l-3-11.3 12.4-11.3-16 8.7-8.5-1.5c-1.2-.2-1.4-1.7-.1-2.2Z" fill="#fff"/><path d="m20.2 28.6 6 4.8-3-5.6" fill="#d8e7f5"/></svg>
+      <span class="booking-brand-type"><span>Modo</span><span>Rumbo</span></span>
+    </a>
+    <a class="booking-back" href="index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Volver a los programas</a>
+  </header>
+
+  <main class="booking-shell">
+    <div class="booking-eyebrow">MODO RUMBO · SOLICITUD DE CONTRATACIÓN</div>
+    <h1>Un viaje empieza con una consulta</h1>
+    <p class="booking-intro">Revisá los datos del programa y completá la información del pasajero para preparar tu solicitud.</p>
+    <div class="booking-status" data-booking-load-status role="status" aria-live="polite">Cargando los datos publicados del programa…</div>
+
+    <div class="booking-layout" data-booking-content hidden>
+      <section class="booking-program-card" aria-labelledby="booking-program-title">
+        <img class="booking-program-image" data-program-image alt="" hidden>
+        <div class="booking-program-copy">
+          <span class="booking-program-label">Tu viaje</span>
+          <h2 id="booking-program-title" data-program-title></h2>
+          <dl class="booking-program-facts">
+            <div><dt>Duración</dt><dd data-program-duration>—</dd></div>
+            <div data-operator-row hidden><dt>Código del operador</dt><dd data-program-code></dd></div>
+            <div class="booking-departure-row"><dt>Salida / período</dt><dd data-program-availability></dd></div>
+            <div><dt>Tarifa</dt><dd class="booking-fare" data-program-fare></dd></div>
+          </dl>
+          <label class="booking-date-field" data-date-select-row hidden for="booking-departure-select">
+            <span data-departure-label>Fecha de salida</span>
+            <select id="booking-departure-select" data-departure-select></select>
+          </label>
+        </div>
+      </section>
+
+      <form class="booking-form" data-booking-form novalidate>
+        <div class="booking-form-heading">
+          <span>DATOS DEL PASAJERO</span>
+          <h2>¿A quién contactamos?</h2>
+        </div>
+        <div class="booking-fields">
+          <label class="booking-field booking-field-wide">Nombre y apellido<input name="fullName" autocomplete="name" maxlength="120" required></label>
+          <label class="booking-field">Correo electrónico<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+          <label class="booking-field">Teléfono / WhatsApp<input name="phone" type="tel" autocomplete="tel" maxlength="40" required></label>
+          <label class="booking-field booking-field-wide">Localidad de residencia<input name="locality" autocomplete="address-level2" maxlength="120" required></label>
+          <label class="booking-field">Adultos<input name="adults" type="number" min="1" max="20" value="1" required></label>
+          <label class="booking-field">Menores<input name="minors" data-minors type="number" min="0" max="19" value="0" required></label>
+          <fieldset class="booking-field booking-field-wide booking-ages" data-minor-ages hidden><legend>Edad de cada menor</legend><div data-minor-age-inputs></div></fieldset>
+          <label class="booking-field booking-field-wide">Comentarios o solicitudes especiales <span>(opcional)</span><textarea name="comments" rows="3" maxlength="1000"></textarea></label>
+        </div>
+        <div class="booking-honeypot" aria-hidden="true"><label>Dejá este campo vacío<input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label class="booking-consent"><input name="contactConsent" type="checkbox" required><span>Acepto que Modo Rumbo se comunique conmigo para responder esta solicitud.</span></label>
+        <p class="booking-disclaimer"><i class="fas fa-info-circle" aria-hidden="true"></i> Esta solicitud queda sujeta a la confirmación de disponibilidad y tarifa. No implica un pago ni constituye una reserva confirmada.</p>
+        <button class="booking-submit" type="submit"><i class="fas fa-paper-plane" aria-hidden="true"></i> ENVIAR SOLICITUD DE CONTRATACIÓN</button>
+        <p class="booking-submit-status" data-submit-status role="status" aria-live="polite"></p>
+        <p class="booking-privacy">No solicitamos documentación personal ni datos bancarios.</p>
+      </form>
+    </div>
+    <section class="booking-confirmation" data-booking-confirmation role="status" aria-live="polite" tabindex="-1" hidden>
+      <span class="booking-confirmation-icon" aria-hidden="true"><i class="fas fa-check"></i></span>
+      <h2>¡Recibimos tu solicitud!</h2>
+      <p>Gracias por elegir Modo Rumbo. Un asesor de viajes se pondrá en contacto con vos a través del teléfono o WhatsApp que nos indicaste para confirmar la disponibilidad y continuar con la contratación de tu viaje.</p>
+      <a class="booking-submit" href="index.html"><i class="fas fa-home" aria-hidden="true"></i> Volver al inicio</a>
+    </section>
+  </main>
+
+  <script src="date-mode.js?v=20261025a"></script>
+  <script src="program-booking.js?v=20261122a"></script>
+  <script src="public-programs.js?v=20261025a"></script>
+  <script src="reservation-client.js?v=20261122a"></script>
+  <script src="program-booking-page.js?v=20261122b"></script>
+</body>
+</html>

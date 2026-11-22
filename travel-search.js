@@ -5,6 +5,7 @@
   const programFilters = window.ModoRumboProgramFilters;
   const programSharing = window.ModoRumboProgramSharing;
   const featuredCarousel = window.ModoRumboFeaturedCarousel;
+  const programBooking = window.ModoRumboProgramBooking;
 
   const MONTHS = [
     ['enero','Enero'],['febrero','Febrero'],['marzo','Marzo'],['abril','Abril'],
@@ -442,9 +443,10 @@
       : selectableIndexes.length === 1 ? selectableIndexes[0] : -1;
     const selectedDepartureItem = selectedIndex >= 0 ? departures[selectedIndex] : null;
     const selectedDeparture = selectedDepartureItem ? selectedDepartureItem.label : '';
+    const waitingForDeparture = selectableIndexes.length > 1 && selectedIndex < 0;
     const selectedPrice = selectedDepartureItem && selectedDepartureItem.price ? selectedDepartureItem.price : '';
-    const displayedPriceLabel = selectedPrice ? 'Precio de la salida' : (detail.priceLabel || 'Precio');
-    const displayedPriceValue = selectedPrice || detail.priceValue || 'A consultar';
+    const displayedPriceLabel = waitingForDeparture ? 'Tarifa' : selectedPrice ? 'Precio de la salida' : (detail.priceLabel || 'Precio');
+    const displayedPriceValue = waitingForDeparture ? 'Seleccioná una salida para ver la tarifa' : selectedPrice || detail.priceValue || 'A consultar';
     const whatsappMessage = 'Hola, quiero consultar por el programa ' + (detail.title || '') + (selectedDeparture ? ', salida ' + selectedDeparture : '') + '.';
     const whatsappUrl = 'https://wa.me/5491134821978?text=' + encodeURIComponent(whatsappMessage);
     const imageHtml = images.length ? `<div class="detail-gallery">
@@ -490,7 +492,7 @@
       ? `<span class="detail-code">Código ${escapeHtml(detail.operatorCode)}</span>` : '';
     const typeHtml = detail.type ? `<span class="detail-type">${escapeHtml(detail.type)}</span>` : '';
     const summaryHtml = detail.summary ? `<p class="detail-summary-copy">${detailText(detail.summary)}</p>` : '';
-    const priceHtml = `<div class="detail-price"><small data-detail-price-label>${escapeHtml(displayedPriceLabel)}</small><strong data-detail-price-value>${detailText(displayedPriceValue)}</strong>${detail.priceBasis ? `<span>${escapeHtml(detail.priceBasis)}</span>` : ''}</div>`;
+    const priceHtml = `<div class="detail-price"><small data-detail-price-label>${escapeHtml(displayedPriceLabel)}</small><strong data-detail-price-value>${detailText(displayedPriceValue)}</strong><span data-detail-price-basis${waitingForDeparture || !detail.priceBasis ? ' hidden' : ''}>${!waitingForDeparture ? escapeHtml(detail.priceBasis || '') : ''}</span></div>`;
     const emailUrl = 'mailto:javier@tresortravel.com.ar?subject=' + encodeURIComponent('Consulta: ' + (detail.title || ''));
     dialog.innerHTML = `<article class="detail-v2">
       <button class="program-dialog-close" type="button" aria-label="Cerrar ficha">×</button>
@@ -507,6 +509,7 @@
             <a class="detail-whatsapp" data-detail-whatsapp href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i><span><strong>Consultá por WhatsApp</strong><small>Quiero más información</small></span></a>
             <button class="detail-share" type="button" data-share-program="${escapeHtml(detail.programId || '')}" aria-label="Compartir ${title}"><i class="fas fa-share-alt" aria-hidden="true"></i><span>Compartir</span></button>
           </div>
+          ${detail.bookingProgramId ? `<a class="detail-booking" data-detail-booking href="${escapeHtml(programBooking.buildBookingUrl(detail.bookingProgramId, selectedDepartureItem?.date || null))}"><i class="fas fa-suitcase" aria-hidden="true"></i> RESERVAR</a>` : ''}
           <span class="detail-share-status" role="status" aria-live="polite"></span>
           <a class="detail-email" href="${emailUrl}"><i class="far fa-envelope" aria-hidden="true"></i> Consultar por email</a>
         </aside>
@@ -619,6 +622,15 @@
       if (priceLabel && priceValue) {
         priceLabel.textContent = item.price ? 'Precio de la salida' : (detail.priceLabel || 'Precio');
         priceValue.textContent = item.price || detail.priceValue || 'A consultar';
+      }
+      const priceBasis = dialog.querySelector('[data-detail-price-basis]');
+      if (priceBasis) {
+        priceBasis.textContent = item.price ? '' : (detail.priceBasis || '');
+        priceBasis.hidden = !priceBasis.textContent;
+      }
+      const bookingLink = dialog.querySelector('[data-detail-booking]');
+      if (bookingLink && item.date && detail.bookingProgramId) {
+        bookingLink.href = programBooking.buildBookingUrl(detail.bookingProgramId, item.date);
       }
     }));
     if (!dialogReturnFocus || !dialogReturnFocus.isConnected) dialogReturnFocus = document.activeElement;
@@ -774,6 +786,7 @@
     const countries = Array.isArray(program.countries) ? program.countries.join(', ') : String(program.countries || '');
     const departureRows = rangeMode ? [] : departures.map(item => ({
       label:item.departure_date ? publicDate(item.departure_date) : '',
+      date:item.departure_date || null,
       price:item.price != null ? detailMoney(item.price,currency) : '',
       selectable:Boolean(item.departure_date)
     }));
@@ -785,6 +798,7 @@
     renderProgramDetail({
       title:program.title,
       programId:`supabase:${program.id}`,
+      bookingProgramId:`supabase:${program.id}`,
       operatorCode:program.operator_code,
       region:program.region || '',
       destination:destinations || countries,

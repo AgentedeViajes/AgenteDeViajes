@@ -62,13 +62,25 @@ function validatePayload(body, now, environment = 'preview') {
   const fullName = cleanText(passenger.fullName, 120);
   const email = typeof passenger.email === 'string' ? passenger.email.trim() : '';
   const phone = cleanText(passenger.phone, 40);
+  const locality = cleanText(passenger.locality, 120);
+  const adults = passenger.adults;
+  const minors = passenger.minors;
+  const minorAges = passenger.minorAges;
+  const comments = passenger.comments === '' || passenger.comments === null || passenger.comments === undefined
+    ? '' : cleanText(passenger.comments, 1000);
+  const contactConsent = passenger.contactConsent === true;
   const programId = cleanText(program.id, 180);
   const departureDate = program.departureDate;
   const fareAmount = program.fareAmount;
   const formStartedAt = body.formStartedAt;
   const testMode = body.testMode === true;
 
-  if (!fullName || !isEmail(email) || !phone || !/^[+0-9().\- ]{7,40}$/.test(phone)) return null;
+  if (!fullName || !isEmail(email) || !phone || !/^[+0-9().\- ]{7,40}$/.test(phone) || !locality) return null;
+  if (!Number.isInteger(adults) || adults < 1 || !Number.isInteger(minors) || minors < 0
+      || adults + minors > 20 || !Array.isArray(minorAges) || minorAges.length !== minors
+      || minorAges.some(age => !Number.isInteger(age) || age < 0 || age > 17)
+      || (passenger.comments != null && passenger.comments !== '' && !comments)
+      || !contactConsent) return null;
   if (!programId || !programId.startsWith(PROGRAM_ID_PREFIX) || !/^[0-9a-f-]{36}$/i.test(programId.slice(PROGRAM_ID_PREFIX.length))) return null;
   if (departureDate !== null && departureDate !== undefined && !validCalendarDate(departureDate)) return null;
   if (fareAmount !== null && (typeof fareAmount !== 'number' || !Number.isFinite(fareAmount) || fareAmount < 0)) return null;
@@ -76,7 +88,7 @@ function validatePayload(body, now, environment = 'preview') {
   if (!Number.isSafeInteger(formStartedAt) || formStartedAt > now - MIN_FORM_AGE_MS) return null;
 
   return {
-    passenger: { fullName, email, phone },
+    passenger: { fullName, email, phone, locality, adults, minors, minorAges, comments, contactConsent },
     program: { id: programId.slice(PROGRAM_ID_PREFIX.length), departureDate: departureDate || null, fareAmount },
     testMode
   };
@@ -132,7 +144,7 @@ function formatPublishedFare(program, fare) {
   if (fare.price === null) return 'A consultar';
   const currency = cleanText(String(program.currency || 'USD'), 8) || 'USD';
   const amount = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(fare.price);
-  const basis = fare.isDeparturePrice ? '' : ({
+  const basis = ({
     double: ' por persona en doble',
     single: ' por persona en single',
     package: ' por paquete'
@@ -145,6 +157,16 @@ function formatDateForEmail(value) {
   if (!value) return 'A coordinar';
   const [year, month, day] = value.split('-');
   return `${day}/${month}/${year}`;
+}
+
+function formatAvailabilityForEmail(program, departureDate) {
+  if (departureDate) return formatDateForEmail(departureDate);
+  if (program.date_mode === 'date_range' && validCalendarDate(program.travel_start_date) && validCalendarDate(program.travel_end_date)) {
+    return `${formatDateForEmail(program.travel_start_date)} al ${formatDateForEmail(program.travel_end_date)} (período de viaje)`;
+  }
+  if (program.departure_type === 'weekly') return 'Salidas semanales';
+  if (program.departure_type === 'on-request') return 'A solicitud';
+  return 'A coordinar';
 }
 
 function allowedOrigin(origin, env) {
@@ -200,7 +222,7 @@ function createHandler(options = {}) {
     if (read.error === 'too_large') return respond(413, { ok: false, error: 'request_too_large' });
     if (read.error) return respond(400, { ok: false, error: 'invalid_request' });
     if (typeof read.body.website === 'string' && read.body.website.trim()) {
-      return respond(202, { ok: true });
+      return respond(202, { ok: false, error: 'request_rejected' });
     }
 
     const timestamp = now();
@@ -239,7 +261,7 @@ function createHandler(options = {}) {
       id: `supabase:${canonicalProgram.id}`,
       title: cleanText(canonicalProgram.title, 180),
       operatorCode,
-      departureDate: formatDateForEmail(payload.program.departureDate),
+      departureDate: formatAvailabilityForEmail(canonicalProgram, payload.program.departureDate),
       fare: formatPublishedFare(canonicalProgram, canonicalFare)
     };
     if (!program.title) return respond(409, { ok: false, error: 'program_not_published' });
@@ -253,13 +275,19 @@ function createHandler(options = {}) {
       `Nombre: ${passenger.fullName}`,
       `Email: ${passenger.email}`,
       `Teléfono: ${passenger.phone}`,
+      `Localidad: ${passenger.locality}`,
+      `Adultos: ${passenger.adults}`,
+      `Menores: ${passenger.minors}`,
+      ...(passenger.minorAges.length ? [`Edades de menores: ${passenger.minorAges.join(', ')}`] : []),
+      ...(passenger.comments ? [`Comentarios: ${passenger.comments}`] : []),
+      'Acepta contacto: Sí',
       '',
       'PROGRAMA',
       `Programa: ${program.title}`,
       `Identificador: ${program.id}`,
       ...(program.operatorCode ? [`Código del operador: ${program.operatorCode}`] : []),
-      `Fecha seleccionada: ${program.departureDate}`,
-      `Tarifa seleccionada: ${program.fare}`
+      `Fecha de salida o período: ${program.departureDate}`,
+      `Tarifa publicada y base tarifaria: ${program.fare}`
     ].join('\n');
 
     const controller = new AbortController();
@@ -275,7 +303,7 @@ function createHandler(options = {}) {
           from: sender,
           to: [recipient],
           reply_to: passenger.email,
-          subject: `${testPrefix}Solicitud de contratación: ${program.title}`,
+          subject: `${testPrefix}Nueva solicitud de contratación - ${program.title}`,
           text
         }),
         signal: controller.signal
