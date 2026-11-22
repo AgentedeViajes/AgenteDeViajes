@@ -15,6 +15,26 @@ function diagnostic(error, stage, category, httpStatus, missingEnvironmentVariab
   if (Array.isArray(missingEnvironmentVariables)) result.diagnostic.missingEnvironmentVariables = missingEnvironmentVariables;
   return result;
 }
+function normalizeSupabaseUrl(value) {
+  const raw = typeof value === 'string' && value.trim() ? value.trim() : SUPABASE_URL;
+  const parsed = new URL(raw);
+  if (parsed.protocol !== 'https:' || parsed.username || parsed.password || parsed.search || parsed.hash || parsed.pathname !== '/') throw new TypeError('invalid_supabase_url');
+  return parsed.origin;
+}
+function fetchFailureCategory(error) {
+  const codes = new Set();
+  let current = error;
+  for (let depth = 0; current && depth < 4; depth++, current = current.cause) {
+    if (typeof current.code === 'string') codes.add(current.code);
+    if (current.name === 'AbortError' || current.name === 'TimeoutError') return 'timeout_error';
+  }
+  if ([...codes].some(code => ['ENOTFOUND', 'EAI_AGAIN', 'ESERVFAIL'].includes(code))) return 'dns_error';
+  if ([...codes].some(code => ['CERT_HAS_EXPIRED', 'DEPTH_ZERO_SELF_SIGNED_CERT', 'ERR_TLS_CERT_ALTNAME_INVALID', 'UNABLE_TO_VERIFY_LEAF_SIGNATURE', 'ERR_SSL_WRONG_VERSION_NUMBER'].includes(code) || code.startsWith('ERR_TLS_'))) return 'tls_error';
+  if ([...codes].some(code => ['ETIMEDOUT', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT'].includes(code))) return 'timeout_error';
+  if ([...codes].some(code => ['ECONNREFUSED', 'ECONNRESET', 'EHOSTUNREACH', 'ENETUNREACH', 'EPIPE', 'UND_ERR_SOCKET'].includes(code))) return 'connection_error';
+  if (error && error.name === 'TypeError') return 'fetch_type_error';
+  return 'fetch_error';
+}
 function hashToken(token) { return crypto.createHash('sha256').update(token).digest(); }
 function dbBytea(hash) { return '\\x' + hash.toString('hex'); }
 function clean(value, max, min) {
@@ -72,7 +92,9 @@ async function processPhoto(input, sharpImpl) {
   } catch (err) { if (err instanceof ApiError) throw err; throw new ApiError('invalid_photo', 400); }
 }
 function createBackend(env, fetcher) {
-  const url = env.SUPABASE_URL || SUPABASE_URL;
+  let url = null;
+  let invalidUrl = false;
+  try { url = normalizeSupabaseUrl(env.SUPABASE_URL); } catch (_) { invalidUrl = true; }
   const pub = env.SUPABASE_PUBLISHABLE_KEY || PUBLIC_KEY;
   function serviceKey(){return env.SUPABASE_SECRET_KEY||env.SUPABASE_SERVICE_ROLE_KEY||''}
   function serviceHeaders(json=false, stage='supabase_request'){
@@ -85,8 +107,12 @@ function createBackend(env, fetcher) {
     return headers;
   }
   async function request(stage, requestUrl, init) {
-    try { return await fetcher(requestUrl, init); }
-    catch (_) { throw diagnostic(new ApiError('service_unavailable',503),stage,'network_error'); }
+    if (invalidUrl) throw diagnostic(new ApiError('service_unavailable',503),stage,'invalid_supabase_url');
+    let target;
+    try { target = new URL(requestUrl, url); if (target.origin !== url) throw new TypeError('invalid_supabase_url'); }
+    catch (_) { throw diagnostic(new ApiError('service_unavailable',503),stage,'invalid_supabase_url'); }
+    try { return await fetcher(target.toString(), init); }
+    catch (error) { throw diagnostic(new ApiError('service_unavailable',503),stage,fetchFailureCategory(error)); }
   }
   async function responseJson(response, stage) {
     try { return await response.json(); }
@@ -100,7 +126,7 @@ function createBackend(env, fetcher) {
   }
   async function rest(path,stage='supabase_postgrest_read') { const r=await request(stage,url+'/rest/v1/'+path,{headers:serviceHeaders(false,stage)});if(!r.ok)throw diagnostic(new ApiError('database_unavailable',r.status>=500?503:409),stage,'supabase_http_error',r.status);return responseJson(r,stage); }
   return {
-    async getUser(jwt) { const stage='supabase_auth_get_user';const r=await request(stage,url+'/auth/v1/user',{headers:{apikey:pub,Authorization:'Bearer '+jwt}}); if(!r.ok)return null; const u=await responseJson(r,stage); return u&&UUID_RE.test(u.id||'')?{id:u.id}:null; },
+    async getUser(jwt) { const stage='supabase_auth_get_user';const r=await request(stage,'/auth/v1/user',{headers:{apikey:pub,Authorization:'Bearer '+jwt}}); if(!r.ok)return null; const u=await responseJson(r,stage); return u&&UUID_RE.test(u.id||'')?{id:u.id}:null; },
     async isAdmin(id) { return (await rpc('is_modo_rumbo_admin',{check_user:id}))===true; },
     createInvite(data) { return rpc('create_traveler_experience_invite',data); },
     revokeInvite(data) { return rpc('revoke_traveler_experience_invite',data); },

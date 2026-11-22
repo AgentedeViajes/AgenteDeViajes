@@ -44,6 +44,48 @@ test('fallo HTTP de Supabase registra solo etapa, categoría y estado HTTP',asyn
   assert.equal(logs.join('').includes(sensitiveResponse),false);assert.equal(logs.join('').includes(session),false);assert.equal(logs.join('').includes('sb_secret_dummy_only_for_test'),false);
 });
 
+test('normaliza SUPABASE_URL con espacios y barra final antes de llamar Auth',async()=>{
+  let requested;
+  const db=api.createBackend({SUPABASE_URL:'  https://preview-project.supabase.co/  '},async url=>{requested=url;return new Response(JSON.stringify({id:'123e4567-e89b-42d3-a456-426614174001'}),{status:200,headers:{'content-type':'application/json'}});});
+  assert.deepEqual(await db.getUser('dummy-session-jwt'),{id:'123e4567-e89b-42d3-a456-426614174001'});
+  assert.equal(requested,'https://preview-project.supabase.co/auth/v1/user');
+});
+
+test('rechaza SUPABASE_URL inválida antes de fetch y registra solo la categoría segura',async()=>{
+  const logs=[],badUrl='not-a-real-supabase-url-secret';let fetchCalls=0;
+  const handler=api.createHandler({env:{SUPABASE_URL:badUrl},fetchImpl:async()=>{fetchCalls++;throw new Error('should not fetch');},log:entry=>logs.push(entry)});
+  const response=await call(handler,req('list-experiences'));
+  assert.equal(response.statusCode,503);assert.deepEqual(response.payload,{ok:false,error:'service_unavailable'});assert.equal(fetchCalls,0);
+  const record=JSON.parse(logs[0]);assert.equal(record.stage,'supabase_auth_get_user');assert.equal(record.category,'invalid_supabase_url');
+  assert.equal(logs.join('').includes(badUrl),false);assert.equal(logs.join('').includes('should not fetch'),false);
+});
+
+test('clasifica fallos DNS de fetch por código conocido sin filtrar excepción, URL ni sesión',async()=>{
+  const logs=[],session='fake-session-sensitive-token',privateUrl='https://private-preview-project.supabase.co';
+  const cause=Object.assign(new Error('DNS failed for '+privateUrl),{code:'ENOTFOUND'});
+  const failure=Object.assign(new TypeError('fetch failed '+session),{cause});
+  const handler=api.createHandler({env:{SUPABASE_URL:privateUrl},fetchImpl:async()=>{throw failure;},log:entry=>logs.push(entry)});
+  const response=await call(handler,req('list-experiences',{}, {authorization:'Bearer '+session}));
+  assert.equal(response.statusCode,503);assert.deepEqual(response.payload,{ok:false,error:'service_unavailable'});
+  const record=JSON.parse(logs[0]);assert.equal(record.stage,'supabase_auth_get_user');assert.equal(record.category,'dns_error');
+  assert.equal(logs.join('').includes('ENOTFOUND'),false);assert.equal(logs.join('').includes(privateUrl),false);assert.equal(logs.join('').includes(session),false);assert.equal(logs.join('').includes('DNS failed'),false);
+});
+
+test('distingue timeout y TLS mediante allowlist de códigos Node sin exponerlos',async()=>{
+  for(const [code,expected] of [['UND_ERR_CONNECT_TIMEOUT','timeout_error'],['ERR_TLS_CERT_ALTNAME_INVALID','tls_error']]){
+    const logs=[];const cause=Object.assign(new Error('private failure details'),{code});const failure=Object.assign(new TypeError('fetch failed'),{cause});
+    const handler=api.createHandler({env:{},fetchImpl:async()=>{throw failure;},log:entry=>logs.push(entry)});
+    const response=await call(handler,req('list-experiences'));
+    assert.equal(response.statusCode,503);const record=JSON.parse(logs[0]);assert.equal(record.stage,'supabase_auth_get_user');assert.equal(record.category,expected);assert.equal(logs.join('').includes(code),false);assert.equal(logs.join('').includes('private failure details'),false);
+  }
+});
+
+test('un HTTP 401 de Supabase Auth no se clasifica como fallo de red',async()=>{
+  const logs=[];const handler=api.createHandler({env:{},fetchImpl:async()=>new Response('unauthorized',{status:401}),log:entry=>logs.push(entry)});
+  const response=await call(handler,req('list-experiences'));
+  assert.equal(response.statusCode,401);assert.deepEqual(response.payload,{ok:false,error:'unauthorized'});assert.equal(logs.length,0);
+});
+
 test('crea invitación con el UUID de la sesión validada, no el enviado por navegador',async()=>{let saved,checked;const db=backend({async getUser(){return{id:'123e4567-e89b-42d3-a456-426614174001'};},async isAdmin(id){checked=id;return true;},async createInvite(p){saved=p;return[{invite_id:'123e4567-e89b-42d3-a456-426614174002',expires_at:'2026-12-22T00:00:00Z'}];}});const h=api.createHandler({env:{},backend:db,newToken:()=>TOKEN});const r=await call(h,req('create-invitation',{destination:'Kioto, Japón',adminUserId:'123e4567-e89b-42d3-a456-426614174099'}));assert.equal(r.statusCode,201);assert.equal(checked,'123e4567-e89b-42d3-a456-426614174001');assert.equal(saved.p_admin_user_id,checked);assert.equal(saved.p_valid_days,30);assert.match(saved.p_token_hash,/^\\x[0-9a-f]{64}$/);assert.equal(JSON.stringify(saved).includes(TOKEN),false);assert.match(r.payload.link,/#a{43}$/);assert.equal(r.headers['Cache-Control'],'no-store');});
 test('rechaza creación administrativa sin autorización',async()=>{const h=api.createHandler({env:{},backend:backend({async isAdmin(){return false;}})});const r=await call(h,req('create-invitation',{destination:'Kioto'}));assert.equal(r.statusCode,403);});
 test('valida invitación y responde solo con contexto necesario',async()=>{const h=api.createHandler({env:{},backend:backend()});const r=await call(h,req('validate-invitation',{token:TOKEN}));assert.equal(r.statusCode,200);assert.deepEqual(Object.keys(r.payload.invitation).sort(),['destination','expiresAt','passengerName','programTitle'].sort());});
