@@ -9,6 +9,41 @@ const submission={token:TOKEN,passengerName:'Pasajera de prueba',travelMonth:4,t
 
 test('exporta un manejador HTTP invocable por Vercel y conserva auxiliares de prueba',async()=>{assert.equal(typeof api,'function');assert.equal(typeof api.createHandler,'function');assert.equal(typeof api.createBackend,'function');const response=await call(api,{method:'GET',headers:{origin:'http://localhost:4175'}});assert.equal(response.statusCode,405);assert.equal(response.payload.error,'method_not_allowed');});
 
+test('diagnóstico de clave ausente informa solo nombres de variables y mantiene la respuesta pública',async()=>{
+  const logs=[],session='fake-user-session-token-sensitive';
+  const fetcher=async(url)=>new URL(url).pathname==='/auth/v1/user'?new Response(JSON.stringify({id:'123e4567-e89b-42d3-a456-426614174001'}),{status:200,headers:{'content-type':'application/json'}}):new Response('{}',{status:200,headers:{'content-type':'application/json'}});
+  const handler=api.createHandler({env:{VERCEL_ENV:'preview',VERCEL_URL:'preview.example.test'},fetchImpl:fetcher,log:entry=>logs.push(entry)});
+  const response=await call(handler,req('list-invitations',{}, {origin:'https://preview.example.test',authorization:'Bearer '+session}));
+  assert.equal(response.statusCode,503);assert.deepEqual(response.payload,{ok:false,error:'service_unavailable'});
+  const record=JSON.parse(logs[0]);assert.equal(record.stage,'supabase_rpc_is_modo_rumbo_admin');assert.equal(record.category,'missing_service_key');
+  assert.deepEqual(record.missing_environment_variables,['SUPABASE_SECRET_KEY','SUPABASE_SERVICE_ROLE_KEY']);
+  assert.equal(logs.join('').includes(session),false);assert.equal(logs.join('').includes('Bearer'),false);
+});
+
+test('fallos inesperados registran etapa y categoría sin mensaje, token ni datos personales',async()=>{
+  const logs=[],session='fake-user-token-never-log',privateText='pasajera@example.invalid private-diagnostic-secret';
+  const handler=api.createHandler({env:{},backend:backend({async getUser(){throw new Error(privateText);}}),log:entry=>logs.push(entry)});
+  const response=await call(handler,req('list-experiences',{}, {authorization:'Bearer '+session}));
+  assert.equal(response.statusCode,503);assert.deepEqual(response.payload,{ok:false,error:'service_unavailable'});
+  const record=JSON.parse(logs[0]);assert.equal(record.stage,'request_list-experiences');assert.equal(record.category,'unexpected_error');
+  assert.equal(logs.join('').includes(privateText),false);assert.equal(logs.join('').includes(session),false);
+});
+
+test('fallo HTTP de Supabase registra solo etapa, categoría y estado HTTP',async()=>{
+  const logs=[],session='fake-session-token-long-enough-for-validation',sensitiveResponse='user@example.invalid sb_secret_not-real';
+  const fetcher=async(url)=>{
+    const pathname=new URL(url).pathname;
+    if(pathname==='/auth/v1/user')return new Response(JSON.stringify({id:'123e4567-e89b-42d3-a456-426614174001'}),{status:200,headers:{'content-type':'application/json'}});
+    if(pathname.endsWith('/rpc/is_modo_rumbo_admin'))return new Response(JSON.stringify({code:'XX000',message:sensitiveResponse}),{status:503,headers:{'content-type':'application/json'}});
+    return new Response('{}',{status:200,headers:{'content-type':'application/json'}});
+  };
+  const handler=api.createHandler({env:{SUPABASE_SECRET_KEY:'sb_secret_dummy_only_for_test',VERCEL_ENV:'preview',VERCEL_URL:'preview.example.test'},fetchImpl:fetcher,log:entry=>logs.push(entry)});
+  const response=await call(handler,req('list-invitations',{}, {origin:'https://preview.example.test',authorization:'Bearer '+session}));
+  assert.equal(response.statusCode,503);assert.deepEqual(response.payload,{ok:false,error:'database_unavailable'});
+  const record=JSON.parse(logs[0]);assert.equal(record.stage,'supabase_rpc_is_modo_rumbo_admin');assert.equal(record.category,'supabase_http_error');assert.equal(record.http_status,503);
+  assert.equal(logs.join('').includes(sensitiveResponse),false);assert.equal(logs.join('').includes(session),false);assert.equal(logs.join('').includes('sb_secret_dummy_only_for_test'),false);
+});
+
 test('crea invitación con el UUID de la sesión validada, no el enviado por navegador',async()=>{let saved,checked;const db=backend({async getUser(){return{id:'123e4567-e89b-42d3-a456-426614174001'};},async isAdmin(id){checked=id;return true;},async createInvite(p){saved=p;return[{invite_id:'123e4567-e89b-42d3-a456-426614174002',expires_at:'2026-12-22T00:00:00Z'}];}});const h=api.createHandler({env:{},backend:db,newToken:()=>TOKEN});const r=await call(h,req('create-invitation',{destination:'Kioto, Japón',adminUserId:'123e4567-e89b-42d3-a456-426614174099'}));assert.equal(r.statusCode,201);assert.equal(checked,'123e4567-e89b-42d3-a456-426614174001');assert.equal(saved.p_admin_user_id,checked);assert.equal(saved.p_valid_days,30);assert.match(saved.p_token_hash,/^\\x[0-9a-f]{64}$/);assert.equal(JSON.stringify(saved).includes(TOKEN),false);assert.match(r.payload.link,/#a{43}$/);assert.equal(r.headers['Cache-Control'],'no-store');});
 test('rechaza creación administrativa sin autorización',async()=>{const h=api.createHandler({env:{},backend:backend({async isAdmin(){return false;}})});const r=await call(h,req('create-invitation',{destination:'Kioto'}));assert.equal(r.statusCode,403);});
 test('valida invitación y responde solo con contexto necesario',async()=>{const h=api.createHandler({env:{},backend:backend()});const r=await call(h,req('validate-invitation',{token:TOKEN}));assert.equal(r.statusCode,200);assert.deepEqual(Object.keys(r.payload.invitation).sort(),['destination','expiresAt','passengerName','programTitle'].sort());});

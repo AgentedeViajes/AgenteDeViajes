@@ -8,6 +8,13 @@ const MAX_PHOTO = 500 * 1024;
 const TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 class ApiError extends Error { constructor(code, status) { super(code); this.code = code; this.status = status || 503; } }
+function diagnostic(error, stage, category, httpStatus, missingEnvironmentVariables) {
+  const result = error instanceof Error ? error : new ApiError('service_unavailable', 503);
+  result.diagnostic = { stage, category };
+  if (Number.isInteger(httpStatus)) result.diagnostic.httpStatus = httpStatus;
+  if (Array.isArray(missingEnvironmentVariables)) result.diagnostic.missingEnvironmentVariables = missingEnvironmentVariables;
+  return result;
+}
 function hashToken(token) { return crypto.createHash('sha256').update(token).digest(); }
 function dbBytea(hash) { return '\\x' + hash.toString('hex'); }
 function clean(value, max, min) {
@@ -68,8 +75,8 @@ function createBackend(env, fetcher) {
   const url = env.SUPABASE_URL || SUPABASE_URL;
   const pub = env.SUPABASE_PUBLISHABLE_KEY || PUBLIC_KEY;
   function serviceKey(){return env.SUPABASE_SECRET_KEY||env.SUPABASE_SERVICE_ROLE_KEY||''}
-  function serviceHeaders(json=false){
-    const key=serviceKey();if(!key)throw new ApiError('service_unavailable',503);
+  function serviceHeaders(json=false, stage='supabase_request'){
+    const key=serviceKey();if(!key)throw diagnostic(new ApiError('service_unavailable',503),stage,'missing_service_key',undefined,['SUPABASE_SECRET_KEY','SUPABASE_SERVICE_ROLE_KEY']);
     const headers={apikey:key};
     // New opaque secret keys are not JWTs: send them only as `apikey`.
     // Legacy service_role JWTs keep the bearer header for compatibility.
@@ -77,34 +84,43 @@ function createBackend(env, fetcher) {
     if(json)headers['Content-Type']='application/json';
     return headers;
   }
-  async function rpc(name, data) {
-    const r = await fetcher(url + '/rest/v1/rpc/' + name, { method: 'POST', headers: serviceHeaders(true), body: JSON.stringify(data) });
-    if (!r.ok) { let j={}; try { j=await r.json(); } catch (_) {} const e=new ApiError('database_unavailable',r.status>=500?503:409); e.dbCode=j.code; throw e; }
-    return r.status===204 ? null : r.json();
+  async function request(stage, requestUrl, init) {
+    try { return await fetcher(requestUrl, init); }
+    catch (_) { throw diagnostic(new ApiError('service_unavailable',503),stage,'network_error'); }
   }
-  async function rest(path){const r=await fetcher(url+'/rest/v1/'+path,{headers:serviceHeaders()});if(!r.ok)throw new ApiError('database_unavailable',r.status>=500?503:409);return r.json()}
+  async function responseJson(response, stage) {
+    try { return await response.json(); }
+    catch (_) { throw diagnostic(new ApiError('service_unavailable',503),stage,'invalid_supabase_response',response.status); }
+  }
+  async function rpc(name, data) {
+    const stage='supabase_rpc_'+name;
+    const r = await request(stage,url + '/rest/v1/rpc/' + name, { method: 'POST', headers: serviceHeaders(true,stage), body: JSON.stringify(data) });
+    if (!r.ok) { let j={}; try { j=await r.json(); } catch (_) {} const e=new ApiError('database_unavailable',r.status>=500?503:409); e.dbCode=j.code; throw diagnostic(e,stage,'supabase_http_error',r.status); }
+    return r.status===204 ? null : responseJson(r,stage);
+  }
+  async function rest(path,stage='supabase_postgrest_read') { const r=await request(stage,url+'/rest/v1/'+path,{headers:serviceHeaders(false,stage)});if(!r.ok)throw diagnostic(new ApiError('database_unavailable',r.status>=500?503:409),stage,'supabase_http_error',r.status);return responseJson(r,stage); }
   return {
-    async getUser(jwt) { const r=await fetcher(url+'/auth/v1/user',{headers:{apikey:pub,Authorization:'Bearer '+jwt}}); if(!r.ok)return null; const u=await r.json(); return u&&UUID_RE.test(u.id||'')?{id:u.id}:null; },
+    async getUser(jwt) { const stage='supabase_auth_get_user';const r=await request(stage,url+'/auth/v1/user',{headers:{apikey:pub,Authorization:'Bearer '+jwt}}); if(!r.ok)return null; const u=await responseJson(r,stage); return u&&UUID_RE.test(u.id||'')?{id:u.id}:null; },
     async isAdmin(id) { return (await rpc('is_modo_rumbo_admin',{check_user:id}))===true; },
     createInvite(data) { return rpc('create_traveler_experience_invite',data); },
     revokeInvite(data) { return rpc('revoke_traveler_experience_invite',data); },
     moderateExperience(data) { return rpc('moderate_traveler_experience',data); },
-    async listInvitations(){return rest('traveler_experience_invites?select=id,destination,program_title_snapshot,passenger_name,status,created_at,expires_at,used_at,revoked_at&order=created_at.desc&limit=100')},
-    async listExperiences(){return rest('traveler_experiences?select=id,passenger_name,destination,travel_month,travel_year,rating,comment,photo_object_path,status,created_at,reviewed_at,published_at&order=created_at.desc&limit=100')},
-    async getPublishedProgram(id){const query=new URLSearchParams({select:'id,title',id:'eq.'+id,status:'eq.published',limit:'1'});const rows=await rest('programs?'+query.toString());return rows[0]||null},
+    async listInvitations(){return rest('traveler_experience_invites?select=id,destination,program_title_snapshot,passenger_name,status,created_at,expires_at,used_at,revoked_at&order=created_at.desc&limit=100','supabase_list_invitations')},
+    async listExperiences(){return rest('traveler_experiences?select=id,passenger_name,destination,travel_month,travel_year,rating,comment,photo_object_path,status,created_at,reviewed_at,published_at&order=created_at.desc&limit=100','supabase_list_experiences')},
+    async getPublishedProgram(id){const query=new URLSearchParams({select:'id,title',id:'eq.'+id,status:'eq.published',limit:'1'});const rows=await rest('programs?'+query.toString(),'supabase_get_published_program');return rows[0]||null},
     async getExperiencePhoto(id){
-      const query=new URLSearchParams({select:'photo_object_path',id:'eq.'+id,limit:'1'});const rows=await rest('traveler_experiences?'+query.toString());
+      const query=new URLSearchParams({select:'photo_object_path',id:'eq.'+id,limit:'1'});const rows=await rest('traveler_experiences?'+query.toString(),'supabase_get_experience_photo_record');
       const path=rows[0]?.photo_object_path;if(typeof path!=='string'||!/^traveler-experiences\/[0-9a-f-]{36}\.webp$/i.test(path))throw new ApiError('photo_unavailable',404);
-      const r=await fetcher(url+'/storage/v1/object/'+BUCKET+'/'+path,{headers:serviceHeaders()});if(r.status===404)throw new ApiError('photo_unavailable',404);if(!r.ok)throw new ApiError('storage_unavailable',503);
+      const stage='supabase_download_experience_photo';const r=await request(stage,url+'/storage/v1/object/'+BUCKET+'/'+path,{headers:serviceHeaders(false,stage)});if(r.status===404)throw new ApiError('photo_unavailable',404);if(!r.ok)throw diagnostic(new ApiError('storage_unavailable',503),stage,'supabase_http_error',r.status);
       const contentType=String(r.headers.get('content-type')||'').split(';')[0].toLowerCase();if(contentType!=='image/webp')throw new ApiError('photo_unavailable',404);
       const bytes=Buffer.from(await r.arrayBuffer());if(!bytes.length||bytes.length>MAX_PHOTO)throw new ApiError('photo_unavailable',404);return bytes;
     },
     async lookup(hash) { const x=await rpc('lookup_traveler_experience_invite',{p_token_hash:dbBytea(hash)}); return Array.isArray(x)?x[0]||null:x||null; },
     consume(data) { return rpc('consume_traveler_experience_invite',data); },
-    async upload(path, bytes, ownership) { const metadata=Buffer.from(JSON.stringify({experience_invitation_id:ownership.invitationId,upload_nonce:ownership.nonce})).toString('base64'); const headers={...serviceHeaders(),'Content-Type':'image/webp','Cache-Control':'no-store','x-upsert':'false','x-metadata':metadata}; const r=await fetcher(url+'/storage/v1/object/'+BUCKET+'/'+path,{method:'POST',headers,body:bytes}); if(!r.ok)throw new ApiError('storage_unavailable',503); },
-    async objectInfo(path) { const r=await fetcher(url+'/storage/v1/object/info/'+BUCKET+'/'+path,{headers:serviceHeaders()}); if(r.status===404)return null; if(!r.ok)throw new ApiError('storage_unavailable',503); return r.json(); },
+    async upload(path, bytes, ownership) { const stage='supabase_upload_experience_photo';const metadata=Buffer.from(JSON.stringify({experience_invitation_id:ownership.invitationId,upload_nonce:ownership.nonce})).toString('base64'); const headers={...serviceHeaders(false,stage),'Content-Type':'image/webp','Cache-Control':'no-store','x-upsert':'false','x-metadata':metadata}; const r=await request(stage,url+'/storage/v1/object/'+BUCKET+'/'+path,{method:'POST',headers,body:bytes}); if(!r.ok)throw diagnostic(new ApiError('storage_unavailable',503),stage,'supabase_http_error',r.status); },
+    async objectInfo(path) { const stage='supabase_verify_experience_photo';const r=await request(stage,url+'/storage/v1/object/info/'+BUCKET+'/'+path,{headers:serviceHeaders(false,stage)}); if(r.status===404)return null; if(!r.ok)throw diagnostic(new ApiError('storage_unavailable',503),stage,'supabase_http_error',r.status); return responseJson(r,stage); },
     photoReferenced(path) { return rpc('traveler_experience_photo_is_referenced',{p_photo_object_path:path}); },
-    async remove(path) { const r=await fetcher(url+'/storage/v1/object/'+BUCKET,{method:'DELETE',headers:serviceHeaders(true),body:JSON.stringify({prefixes:[path]})}); if(!r.ok)throw new ApiError('storage_unavailable',503); }
+    async remove(path) { const stage='supabase_remove_experience_photo';const r=await request(stage,url+'/storage/v1/object/'+BUCKET,{method:'DELETE',headers:serviceHeaders(true,stage),body:JSON.stringify({prefixes:[path]})}); if(!r.ok)throw diagnostic(new ApiError('storage_unavailable',503),stage,'supabase_http_error',r.status); }
   };
 }
 function createHandler(options) {
@@ -112,6 +128,15 @@ function createHandler(options) {
   const db=options.backend||createBackend(env,fetcher); const log=options.log||((x)=>console.error(x));
   const now=options.now||Date.now; const newToken=options.newToken||(()=>crypto.randomBytes(32).toString('base64url'));
   const newId=options.newId||(()=>crypto.randomUUID()); const processImage=options.processImage||processPhoto; const hits=new Map();
+  function logDiagnostic(error, fallbackStage, fallbackCategory) {
+    const source=error&&error.diagnostic||{};
+    const record={event:'traveler_experience_api_failure',stage:source.stage||fallbackStage||'request',category:source.category||fallbackCategory||'unexpected_error'};
+    if(Number.isInteger(source.httpStatus)&&source.httpStatus>=100&&source.httpStatus<=599)record.http_status=source.httpStatus;
+    const allowedMissing=new Set(['SUPABASE_SECRET_KEY','SUPABASE_SERVICE_ROLE_KEY']);
+    const missing=Array.isArray(source.missingEnvironmentVariables)?source.missingEnvironmentVariables.filter(name=>allowedMissing.has(name)):[];
+    if(missing.length)record.missing_environment_variables=missing;
+    log(JSON.stringify(record));
+  }
   function limited(req,action) { const t=now(); for(const [k,v] of hits)if(t-v.start>900000)hits.delete(k); const ip=String(req.headers['x-real-ip']||req.headers['x-forwarded-for']||'unknown').split(',')[0].slice(0,80); const k=action+':'+ip; const v=hits.get(k)||{start:t,count:0}; const limit=['list-invitations','list-experiences','get-experience-photo'].includes(action)?60:['create-invitation','revoke-invitation','moderate-experience'].includes(action)?20:action==='validate-invitation'?30:8; if(v.count>=limit)return true; v.count++;hits.set(k,v);if(hits.size>1200)hits.clear();return false; }
   function photoMatches(info,photo) { const metadata=info&&info.metadata||{},user=info&&(info.user_metadata||info.userMetadata)||{};return !!info&&info.name===photo.path&&Number(metadata.size)===photo.size&&metadata.mimetype==='image/webp'&&user.experience_invitation_id===photo.invitationId&&user.upload_nonce===photo.nonce; }
   async function cleanupOwnedPhoto(photo) {
@@ -146,9 +171,9 @@ function createHandler(options) {
         const programId=b.programId==null||b.programId===''?null:String(b.programId);
         if(!destination||(b.passengerName&&!passenger)||(programId&&!UUID_RE.test(programId)))return send(400,{ok:false,error:'invalid_request'});
         const program=programId?await db.getPublishedProgram(programId):null;if(programId&&!program)return send(400,{ok:false,error:'invalid_program'});
-        const token=newToken();if(!/^[A-Za-z0-9_-]{43}$/.test(token))throw new ApiError('service_unavailable',503);
+        const token=newToken();if(!/^[A-Za-z0-9_-]{43}$/.test(token))throw diagnostic(new ApiError('service_unavailable',503),'generate_invitation_token','invalid_generated_value');
         const result=await db.createInvite({p_admin_user_id:u.id,p_token_hash:dbBytea(hashToken(token)),p_program_id:programId,p_destination:destination,p_program_title:program?.title||null,p_passenger_name:passenger,p_valid_days:30});
-        const row=Array.isArray(result)?result[0]:result;if(!row||!UUID_RE.test(row.invite_id||''))throw new ApiError('service_unavailable',503);
+        const row=Array.isArray(result)?result[0]:result;if(!row||!UUID_RE.test(row.invite_id||''))throw diagnostic(new ApiError('service_unavailable',503),'create_invitation_rpc','invalid_rpc_result');
         return send(201,{ok:true,invitationId:row.invite_id,expiresAt:row.expires_at,link:publicOrigin(env)+'/compartir-experiencia.html#'+token});
       }
       if(action==='revoke-invitation') { const u=await admin(req);if(!UUID_RE.test(String(b.invitationId||'')))return send(400,{ok:false,error:'invalid_request'});const revoked=await db.revokeInvite({p_admin_user_id:u.id,p_invitation_id:b.invitationId});if(revoked===false)return send(409,{ok:false,error:'invitation_unavailable'});return send(200,{ok:true}); }
@@ -169,9 +194,9 @@ function createHandler(options) {
         await db.consume({p_token_hash:dbBytea(hash),p_passenger_name:name,p_travel_month:month,p_travel_year:year,p_rating:rating,p_comment:comment,p_publication_consent:true,p_photo_object_path:photoPath});
         photo=null;
       }
-      catch(err) { if(photo)try{await cleanupOwnedPhoto(photo);}catch(_){log('traveler_experience_photo_cleanup_deferred');} if(err.status===409||err.dbCode==='P0001'||err.dbCode==='22023')return send(409,{ok:false,error:'invitation_unavailable'});throw err; }
+      catch(err) { if(photo)try{await cleanupOwnedPhoto(photo);}catch(cleanupError){logDiagnostic(cleanupError,'cleanup_experience_photo','cleanup_failed');} if(err.status===409||err.dbCode==='P0001'||err.dbCode==='22023')return send(409,{ok:false,error:'invitation_unavailable'});throw err; }
       return send(201,{ok:true});
-    } catch(err) { if(err instanceof ApiError){if(err.status>=500)log('traveler_experience_service_unavailable');return send(err.status,{ok:false,error:err.status===401?'unauthorized':err.status===403?'forbidden':err.code});}log('traveler_experience_service_unavailable');return send(503,{ok:false,error:'service_unavailable'}); }
+    } catch(err) { if(err instanceof ApiError){if(err.status>=500)logDiagnostic(err,'request_'+action,'api_error');return send(err.status,{ok:false,error:err.status===401?'unauthorized':err.status===403?'forbidden':err.code});}logDiagnostic(err,'request_'+action,'unexpected_error');return send(503,{ok:false,error:'service_unavailable'}); }
   };
 }
 // Vercel's Node.js runtime invokes the CommonJS function export as the HTTP handler.

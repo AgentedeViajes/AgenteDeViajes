@@ -28,3 +28,5 @@
 .home-video-frame-status[hidden]{display:none}
 .home-video-form-grid input[type=file]{padding:8px;font-size:.7rem}
 @media(max-width:780px){.home-video-form-dialog{height:100dvh}.home-video-form-body{padding:14px 15px}.home-video-form-actions{bottom:0;margin:14px -15px -14px;padding:11px 15px}.home-video-image-preview{width:60%}.home-video-image-preview.vertical{width:min(100%,88px)}.home-video-frame-picker{grid-template-columns:1fr}.home-video-frame-player-wrap{max-width:360px;width:100%;margin:auto}.home-video-frame-player-wrap video{max-height:34dvh}.home-video-frame-controls .primary-button{width:100%}}
+.home-video-form-dialog:not([open]),
+.home-video-preview-dialog:not([open]){display:none}

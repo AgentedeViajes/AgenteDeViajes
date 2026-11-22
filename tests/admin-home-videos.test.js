@@ -8,6 +8,7 @@ const html = fs.readFileSync(path.join(root, 'admin/index.html'), 'utf8');
 const adminJs = fs.readFileSync(path.join(root, 'admin/home-videos-admin.js'), 'utf8');
 const serviceJs = fs.readFileSync(path.join(root, 'admin/data-service.js'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'admin/home-videos.css'), 'utf8');
+const baseAdminCss = fs.readFileSync(path.join(root, 'admin/admin.css'), 'utf8');
 const storageSql = fs.readFileSync(path.join(root, 'supabase/home-video-images-storage.sql'), 'utf8');
 const baseAdminJs = fs.readFileSync(path.join(root, 'admin/admin.js'), 'utf8');
 
@@ -23,6 +24,22 @@ test('la sección usa el administrador y el servicio Supabase existentes',()=>{
   assert.match(html,/home-videos-admin\.js/);
   assert.match(serviceJs,/from\('home_videos'\)/);
   assert.match(serviceJs,/listHomeVideos,createHomeVideo,updateHomeVideo,deleteHomeVideo/);
+});
+
+test('los diálogos de agregar y previsualizar videos permanecen ocultos hasta abrirse',()=>{
+  assert.match(html,/<dialog class="home-video-form-dialog" id="homeVideoFormDialog"/);
+  assert.match(html,/<dialog class="home-video-preview-dialog" id="homeVideoPreviewDialog"/);
+  assert.match(css,/\.home-video-form-dialog:not\(\[open\]\),\s*\.home-video-preview-dialog:not\(\[open\]\)\s*\{\s*display:none\s*\}/);
+  assert.match(adminJs,/\$\('#homeVideoFormDialog'\)\.showModal\(\)/);
+  assert.match(adminJs,/\$\('#homeVideoPreviewDialog'\)\.showModal\(\)/);
+});
+
+test('la navegación del administrador muestra un panel y oculta los demás',()=>{
+  assert.match(baseAdminCss,/\.view\{display:none\}/);
+  assert.match(baseAdminCss,/\.view\.active\{display:block\}/);
+  assert.match(baseAdminJs,/const views=\{programs:\$\('#programsView'\),editor:\$\('#editorView'\),homeVideos:\$\('#homeVideosView'\),experiences:\$\('#travelerExperiencesView'\)\}/);
+  assert.match(baseAdminJs,/Object\.entries\(views\)\.forEach/);
+  assert.match(baseAdminJs,/classList\.toggle\('active',key===name\)/);
 });
 
 test('el listado consulta los registros publicados y ocultos, ordenados, sin cambiar datos de programas',async()=>{
