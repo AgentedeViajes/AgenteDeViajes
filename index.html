@@ -174,6 +174,7 @@
     }
   </style>
   <link rel="stylesheet" href="premium-home.css?v=20261122a">
+  <link rel="stylesheet" href="traveler-experiences-public.css?v=20261122a">
   <link rel="stylesheet" href="search-final.css?v=20261120a">
   <link rel="stylesheet" href="home-videos.css?v=20261121e">
 </head>
@@ -600,6 +601,17 @@
           <div class="featured-carousel-pagination" id="featuredPagination" aria-label="Páginas de programas destacados"></div>
           <button type="button" id="featuredNext" aria-label="Programas destacados siguientes" aria-controls="featuredTripsGrid"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
         </div>
+      </div>
+    </section>
+
+    <section class="premium-section soft" id="traveler-experiences-home" hidden aria-labelledby="traveler-experiences-home-title">
+      <div class="premium-container">
+        <header class="premium-heading">
+          <div class="premium-eyebrow">Historias reales</div>
+          <h2 id="traveler-experiences-home-title">Experiencias de viajeros</h2>
+          <p>Conocé las experiencias que pasajeros de Modo Rumbo eligieron compartir.</p>
+        </header>
+        <div class="traveler-public-grid" id="travelerPublicExperiences" aria-live="polite"></div>
       </div>
     </section>
 
@@ -3260,6 +3272,7 @@
   <script src="featured-carousel.js?v=20261121f"></script>
   <script src="travel-search.js?v=20261122a"></script>
   <script src="admin/config.js?v=20261121e"></script>
+  <script src="traveler-experiences-public.js?v=20261122a"></script>
   <script src="home-video-public-data.js?v=20261121e"></script>
   <script src="home-explainer-videos.js?v=20261121e"></script>
   <script src="hero-carousel.js?v=20261017a"></script>

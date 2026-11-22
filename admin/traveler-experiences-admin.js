@@ -73,7 +73,7 @@
     load();
   }
   nav.addEventListener('click',switchToExperiences);
-  $('#travelerExperiencesRefresh').addEventListener('click',load);
+  $('#travelerExperiencesRefresh').addEventListener('click',()=>load());
   $('#travelerInviteForm').addEventListener('submit',async event=>{
     event.preventDefault();if(state.busy)return;
     const submit=$('#travelerInviteSubmit');submit.disabled=true;submit.textContent='Generando…';clearGeneratedLink();
