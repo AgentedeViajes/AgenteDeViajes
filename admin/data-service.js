@@ -31,6 +31,7 @@
   }
   async function signIn(email,password){if(!client)throw new Error('Supabase todavía no está configurado.');const{data,error}=await client.auth.signInWithPassword({email,password});if(error)throw error;return data.user}
   async function signOut(){if(client){const{error}=await client.auth.signOut();if(error)throw error}}
+  async function getAccessToken(){if(!client)throw new Error('La gestión de Experiencias requiere conexión con Supabase.');const{data,error}=await client.auth.getSession();if(error)throw error;if(!data.session?.access_token)throw new Error('Tu sesión expiró. Iniciá sesión nuevamente.');return data.session.access_token}
   async function listPrograms(){
     if(!client)return readLocal();
     const{data,error}=await client.from('programs').select('*, departures(*), itinerary_days(*)').order('updated_at',{ascending:false});if(error)throw error;return(data||[]).map(fromDatabase);
@@ -98,5 +99,5 @@
     return{deleted:true,referenced:false};
   }
 
-  window.ModoRumboData={configured,initialize,signIn,signOut,listPrograms,saveProgram,deleteProgram,uploadImage,listHomeVideos,createHomeVideo,updateHomeVideo,deleteHomeVideo,uploadHomeVideoImage,deleteHomeVideoImage,deleteHomeVideoImageIfUnreferenced};
+  window.ModoRumboData={configured,initialize,signIn,signOut,getAccessToken,listPrograms,saveProgram,deleteProgram,uploadImage,listHomeVideos,createHomeVideo,updateHomeVideo,deleteHomeVideo,uploadHomeVideoImage,deleteHomeVideoImage,deleteHomeVideoImageIfUnreferenced};
 })();

@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css?v=20261120b">
   <link rel="stylesheet" href="home-videos.css?v=20261121b">
+  <link rel="stylesheet" href="traveler-experiences-admin.css?v=20261122a">
 </head>
 <body>
   <svg class="brand-logo-defs" aria-hidden="true" focusable="false">
@@ -45,6 +46,7 @@
       <button class="nav-button active" type="button" data-view="programs">Programas</button>
       <button class="nav-button" type="button" data-view="editor">Nuevo programa</button>
       <button class="nav-button" type="button" data-view="homeVideos">Videos de portada</button>
+      <button class="nav-button" type="button" data-view="experiences">Experiencias de viajeros</button>
     </nav>
     <div class="prototype-note">
       <strong id="backendMode">Conectando con Supabase</strong>
@@ -110,6 +112,43 @@
         <p>Podés cambiar los números de orden y guardar los cambios.</p>
         <button class="secondary-button" id="homeVideosSaveOrder" type="button">Guardar orden</button>
       </div>
+    </section>
+
+    <section class="view traveler-experiences-admin" id="travelerExperiencesView" aria-labelledby="travelerExperiencesHeading">
+      <div class="traveler-experiences-toolbar">
+        <div>
+          <p class="eyebrow">Comunidad Modo Rumbo</p>
+          <h2 id="travelerExperiencesHeading">Experiencias de viajeros</h2>
+          <p>Generá invitaciones para tus pasajeros y moderá los relatos recibidos antes de publicarlos.</p>
+        </div>
+        <button class="secondary-button" id="travelerExperiencesRefresh" type="button">Actualizar</button>
+      </div>
+      <div class="traveler-experiences-notice" id="travelerExperiencesNotice" role="status" aria-live="polite" hidden></div>
+
+      <section class="traveler-invite-panel" aria-labelledby="travelerInviteHeading">
+        <div class="traveler-panel-heading"><div><span>01</span><h3 id="travelerInviteHeading">Solicitar una experiencia</h3></div><p>El enlace se muestra una sola vez al crearlo. Copialo para enviarlo al pasajero.</p></div>
+        <form class="traveler-invite-form" id="travelerInviteForm">
+          <label>Destino del viaje *<input id="travelerInviteDestination" maxlength="160" required placeholder="Ej. Japón, Kioto"></label>
+          <label>Programa (opcional)<select id="travelerInviteProgram"><option value="">Sin asociar a un programa</option></select></label>
+          <label>Nombre del pasajero (opcional)<input id="travelerInvitePassenger" maxlength="120" placeholder="Nombre y apellido"></label>
+          <label>Vencimiento<input value="30 días" readonly aria-label="Vencimiento: 30 días"></label>
+          <div class="traveler-invite-submit"><button class="primary-button" id="travelerInviteSubmit" type="submit">Generar enlace</button></div>
+        </form>
+        <div class="traveler-created-invite" id="travelerCreatedInvite" hidden>
+          <div><strong>Invitación lista</strong><p>Copiá el enlace ahora; el token no se puede recuperar desde el panel.</p><input id="travelerCreatedInviteLink" type="text" readonly aria-label="Enlace de invitación generado"></div>
+          <button class="secondary-button" id="travelerCopyInvite" type="button">Copiar enlace</button>
+        </div>
+      </section>
+
+      <section class="traveler-admin-section" aria-labelledby="travelerInvitesHeading">
+        <div class="traveler-panel-heading"><div><span>02</span><h3 id="travelerInvitesHeading">Invitaciones</h3></div><p id="travelerInvitesCount">Cargando…</p></div>
+        <div class="traveler-admin-list" id="travelerInvitesList" aria-busy="false"></div>
+      </section>
+
+      <section class="traveler-admin-section" aria-labelledby="travelerSubmissionsHeading">
+        <div class="traveler-panel-heading"><div><span>03</span><h3 id="travelerSubmissionsHeading">Experiencias recibidas</h3></div><p id="travelerSubmissionsCount">Cargando…</p></div>
+        <div class="traveler-experience-list" id="travelerExperiencesList" aria-busy="false"></div>
+      </section>
     </section>
 
     <section class="view" id="editorView">
@@ -381,5 +420,6 @@
   <script src="data-service.js?v=20261121b"></script>
   <script src="admin.js?v=20261121b"></script>
   <script src="home-videos-admin.js?v=20261121b"></script>
+  <script src="traveler-experiences-admin.js?v=20261122a"></script>
 </body>
 </html>

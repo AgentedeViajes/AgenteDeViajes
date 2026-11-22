@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es-AR"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b2346"><meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow"><meta name="description" content="Compartí tu experiencia de viaje con Modo Rumbo.">
+  <title>Compartí tu experiencia | Modo Rumbo</title><link rel="stylesheet" href="traveler-experiences.css">
+</head><body class="traveler-page">
+  <header class="traveler-header"><a class="traveler-brand" href="index.html" aria-label="Modo Rumbo, volver al inicio">
+    <svg class="traveler-brand-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#ff6508"/><path d="M8 22.3 39.8 9.1c1.3-.5 2.4.7 1.7 1.9L25.9 40.2c-.7 1.2-2.4 1-2.7-.3l-3-11.3 12.4-11.3-16 8.7-8.5-1.5c-1.2-.2-1.4-1.7-.1-2.2Z" fill="#fff"/><path d="m20.2 28.6 6 4.8-3-5.6" fill="#d8e7f5"/></svg>
+    <span class="traveler-brand-type"><span>Modo</span><span>Rumbo</span></span></a><a class="traveler-back" href="index.html">Volver al inicio</a></header>
+  <main class="traveler-shell"><section class="traveler-card">
+    <p class="traveler-eyebrow">MODO RUMBO · TU VIAJE, TU HISTORIA</p><h1>Compartí tu experiencia</h1>
+    <p class="traveler-intro">Nos encantaría conocer cómo viviste tu viaje. Cada experiencia se revisa antes de publicarse.</p>
+    <div class="traveler-status" data-status role="status" aria-live="polite">Validando tu invitación…</div>
+    <form data-form hidden novalidate>
+      <div class="invite-context" data-context hidden><span>Tu viaje</span><strong data-destination-label></strong><small data-program-label></small></div>
+      <div class="traveler-fields">
+        <label class="field">Nombre y apellido<input name="passengerName" autocomplete="name" maxlength="120" required></label>
+        <label class="field">Destino del viaje<input name="destination" readonly placeholder="Se completa con tu invitación" required></label>
+        <fieldset class="field wide month-year"><legend>Mes y año del viaje</legend><label>Mes<select name="travelMonth" required><option value="">Elegí el mes</option><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select></label><label>Año<input name="travelYear" type="number" min="1900" max="2200" inputmode="numeric" placeholder="2026" required></label></fieldset>
+        <fieldset class="field wide rating-field"><legend>¿Cómo calificás tu experiencia?</legend><div class="stars" role="radiogroup" aria-label="Calificación de una a cinco estrellas"><label><input type="radio" name="rating" value="1" required><span aria-hidden="true">★</span><i>1 estrella</i></label><label><input type="radio" name="rating" value="2"><span aria-hidden="true">★</span><i>2 estrellas</i></label><label><input type="radio" name="rating" value="3"><span aria-hidden="true">★</span><i>3 estrellas</i></label><label><input type="radio" name="rating" value="4"><span aria-hidden="true">★</span><i>4 estrellas</i></label><label><input type="radio" name="rating" value="5"><span aria-hidden="true">★</span><i>5 estrellas</i></label></div><small>Seleccioná de 1 a 5 estrellas.</small></fieldset>
+        <label class="field wide">Tu comentario<textarea name="comment" rows="5" minlength="10" maxlength="4000" placeholder="¿Qué fue lo que más disfrutaste?" required></textarea></label>
+        <div class="field wide photo-field"><label for="experience-photo">Fotografía (opcional)</label><input id="experience-photo" type="file" accept="image/jpeg,image/png,image/webp"><small>Una imagen de hasta 10 MB. Se reducirá y enviará optimizada; el original no se guarda.</small><div class="photo-preview" data-photo-preview hidden><img data-preview-image alt="Vista previa de la fotografía seleccionada"><button type="button" data-remove>Quitar fotografía</button></div></div>
+      </div>
+      <label class="consent"><input name="publicationConsent" type="checkbox" required><span>Autorizo explícitamente a Modo Rumbo a publicar mi nombre, comentario y fotografía opcional si mi experiencia es aprobada.</span></label>
+      <div class="honeypot" aria-hidden="true"><label>Dejá este campo vacío<input name="website" tabindex="-1" autocomplete="off"></label></div>
+      <p class="privacy-note">Tu experiencia no se publicará automáticamente. La revisará el equipo de Modo Rumbo.</p>
+      <button class="submit" type="submit" data-submit>ENVIAR EXPERIENCIA</button>
+    </form>
+    <section class="success" data-success hidden role="status" aria-live="polite" tabindex="-1"><span aria-hidden="true">✓</span><h2>¡Gracias por compartir tu experiencia!</h2><p>La recibimos para revisión. Si se aprueba, se publicará con el consentimiento que nos diste.</p><a class="submit" href="index.html">Volver al inicio</a></section>
+    <aside class="demo" data-demo hidden><b>Vista de demostración local</b><p>El formulario se muestra para revisar el diseño. No valida invitaciones, no envía ni guarda información.</p></aside>
+  </section></main><footer>Modo Rumbo · VIAJÁ · EXPLORÁ · VIVÍ</footer>
+  <script src="traveler-experiences.js"></script>
+</body></html>

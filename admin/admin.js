@@ -5,7 +5,7 @@
   const dataService=window.ModoRumboData;
   const dateMode=window.ModoRumboDateMode;
   const state={programs:[],editingId:null,mode:'local',user:null,activeDateMode:dateMode.SPECIFIC_DATES,departureSort:'asc'};
-  const views={programs:$('#programsView'),editor:$('#editorView')};
+  const views={programs:$('#programsView'),editor:$('#editorView'),homeVideos:$('#homeVideosView'),experiences:$('#travelerExperiencesView')};
 
   function uid(){return crypto.randomUUID?crypto.randomUUID():`program-${Date.now()}-${Math.random().toString(16).slice(2)}`}
   function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]))}
@@ -19,7 +19,8 @@
   function switchView(name){
     Object.entries(views).forEach(([key,view])=>view.classList.toggle('active',key===name));
     $$('.nav-button').forEach(button=>button.classList.toggle('active',button.dataset.view===name));
-    $('#pageTitle').textContent=name==='editor'?(state.editingId?'Editar programa':'Nuevo programa'):'Programas de viajes';
+    $('#pageTitle').textContent=name==='editor'?(state.editingId?'Editar programa':'Nuevo programa'):name==='homeVideos'?'Videos de portada':name==='experiences'?'Experiencias de viajeros':'Programas de viajes';
+    $('#newProgramButton').hidden=name==='homeVideos'||name==='experiences';
     if(name==='programs')renderPrograms();
   }
 
