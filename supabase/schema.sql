@@ -91,14 +91,15 @@ alter table public.departures enable row level security;
 alter table public.itinerary_days enable row level security;
 
 create policy "Admins read their membership" on public.admin_users for select to authenticated using (user_id=auth.uid());
-create policy "Public reads published programs" on public.programs for select using (status='published' or public.is_modo_rumbo_admin());
+create policy "Public reads published programs" on public.programs for select to anon, authenticated using (status='published');
+create policy "Admins read all programs" on public.programs for select to authenticated using (public.is_modo_rumbo_admin());
 create policy "Admins insert programs" on public.programs for insert to authenticated with check (public.is_modo_rumbo_admin());
 create policy "Admins update programs" on public.programs for update to authenticated using (public.is_modo_rumbo_admin()) with check (public.is_modo_rumbo_admin());
 create policy "Admins delete programs" on public.programs for delete to authenticated using (public.is_modo_rumbo_admin());
 
-create policy "Public reads departures of published programs" on public.departures for select using (exists(select 1 from public.programs p where p.id=program_id and (p.status='published' or public.is_modo_rumbo_admin())));
+create policy "Public reads departures of published programs" on public.departures for select to anon, authenticated using (exists(select 1 from public.programs p where p.id=program_id and p.status='published'));
 create policy "Admins manage departures" on public.departures for all to authenticated using (public.is_modo_rumbo_admin()) with check (public.is_modo_rumbo_admin());
-create policy "Public reads itineraries of published programs" on public.itinerary_days for select using (exists(select 1 from public.programs p where p.id=program_id and (p.status='published' or public.is_modo_rumbo_admin())));
+create policy "Public reads itineraries of published programs" on public.itinerary_days for select to anon, authenticated using (exists(select 1 from public.programs p where p.id=program_id and p.status='published'));
 create policy "Admins manage itineraries" on public.itinerary_days for all to authenticated using (public.is_modo_rumbo_admin()) with check (public.is_modo_rumbo_admin());
 
 insert into storage.buckets(id,name,public)
