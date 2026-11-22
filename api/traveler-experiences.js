@@ -131,8 +131,20 @@ function createBackend(env, fetcher) {
     createInvite(data) { return rpc('create_traveler_experience_invite',data); },
     revokeInvite(data) { return rpc('revoke_traveler_experience_invite',data); },
     moderateExperience(data) { return rpc('moderate_traveler_experience',data); },
+    async deleteInvite(id) {
+      const association=new URLSearchParams({select:'id',invitation_id:'eq.'+id,limit:'1'});
+      if((await rest('traveler_experiences?'+association.toString(),'supabase_check_invitation_experience')).length)return{deleted:false,hasExperience:true};
+      const stage='supabase_delete_invitation';
+      const query=new URLSearchParams({id:'eq.'+id});
+      const r=await request(stage,url+'/rest/v1/traveler_experience_invites?'+query.toString(),{method:'DELETE',headers:{...serviceHeaders(true,stage),Prefer:'return=representation'}});
+      if(!r.ok){let result={};try{result=await r.json();}catch(_){}if(result.code==='23503')return{deleted:false,hasExperience:true};throw diagnostic(new ApiError('database_unavailable',r.status>=500?503:409),stage,'supabase_http_error',r.status);}
+      const rows=await responseJson(r,stage);
+      return{deleted:Array.isArray(rows)&&rows.length>0,hasExperience:false};
+    },
+    deleteExperience(data) { return rpc('delete_traveler_experience',data); },
     async listInvitations(){return rest('traveler_experience_invites?select=id,destination,program_title_snapshot,passenger_name,status,created_at,expires_at,used_at,revoked_at&order=created_at.desc&limit=100','supabase_list_invitations')},
     async listExperiences(){return rest('traveler_experiences?select=id,passenger_name,destination,travel_month,travel_year,rating,comment,photo_object_path,status,created_at,reviewed_at,published_at&order=created_at.desc&limit=100','supabase_list_experiences')},
+    async listPhotoCleanups(){return rest('traveler_experience_photo_cleanups?select=id,photo_object_path,invitation_id&order=created_at.asc&limit=100','supabase_list_photo_cleanups')},
     async getPublishedProgram(id){const query=new URLSearchParams({select:'id,title',id:'eq.'+id,status:'eq.published',limit:'1'});const rows=await rest('programs?'+query.toString(),'supabase_get_published_program');return rows[0]||null},
     async getExperiencePhoto(id){
       const query=new URLSearchParams({select:'photo_object_path',id:'eq.'+id,limit:'1'});const rows=await rest('traveler_experiences?'+query.toString(),'supabase_get_experience_photo_record');
@@ -146,6 +158,7 @@ function createBackend(env, fetcher) {
     async upload(path, bytes, ownership) { const stage='supabase_upload_experience_photo';const metadata=Buffer.from(JSON.stringify({experience_invitation_id:ownership.invitationId,upload_nonce:ownership.nonce})).toString('base64'); const headers={...serviceHeaders(false,stage),'Content-Type':'image/webp','Cache-Control':'no-store','x-upsert':'false','x-metadata':metadata}; const r=await request(stage,url+'/storage/v1/object/'+BUCKET+'/'+path,{method:'POST',headers,body:bytes}); if(!r.ok)throw diagnostic(new ApiError('storage_unavailable',503),stage,'supabase_http_error',r.status); },
     async objectInfo(path) { const stage='supabase_verify_experience_photo';const r=await request(stage,url+'/storage/v1/object/info/'+BUCKET+'/'+path,{headers:serviceHeaders(false,stage)}); if(r.status===404)return null; if(!r.ok)throw diagnostic(new ApiError('storage_unavailable',503),stage,'supabase_http_error',r.status); return responseJson(r,stage); },
     photoReferenced(path) { return rpc('traveler_experience_photo_is_referenced',{p_photo_object_path:path}); },
+    async removePhotoCleanup(id) { const stage='supabase_complete_experience_photo_cleanup';const query=new URLSearchParams({id:'eq.'+id});const r=await request(stage,url+'/rest/v1/traveler_experience_photo_cleanups?'+query.toString(),{method:'DELETE',headers:{...serviceHeaders(true,stage),Prefer:'return=minimal'}});if(!r.ok)throw diagnostic(new ApiError('database_unavailable',r.status>=500?503:409),stage,'supabase_http_error',r.status); },
     async remove(path) { const stage='supabase_remove_experience_photo';const r=await request(stage,url+'/storage/v1/object/'+BUCKET,{method:'DELETE',headers:serviceHeaders(true,stage),body:JSON.stringify({prefixes:[path]})}); if(!r.ok)throw diagnostic(new ApiError('storage_unavailable',503),stage,'supabase_http_error',r.status); }
   };
 }
@@ -163,7 +176,7 @@ function createHandler(options) {
     if(missing.length)record.missing_environment_variables=missing;
     log(JSON.stringify(record));
   }
-  function limited(req,action) { const t=now(); for(const [k,v] of hits)if(t-v.start>900000)hits.delete(k); const ip=String(req.headers['x-real-ip']||req.headers['x-forwarded-for']||'unknown').split(',')[0].slice(0,80); const k=action+':'+ip; const v=hits.get(k)||{start:t,count:0}; const limit=['list-invitations','list-experiences','get-experience-photo'].includes(action)?60:['create-invitation','revoke-invitation','moderate-experience'].includes(action)?20:action==='validate-invitation'?30:8; if(v.count>=limit)return true; v.count++;hits.set(k,v);if(hits.size>1200)hits.clear();return false; }
+  function limited(req,action) { const t=now(); for(const [k,v] of hits)if(t-v.start>900000)hits.delete(k); const ip=String(req.headers['x-real-ip']||req.headers['x-forwarded-for']||'unknown').split(',')[0].slice(0,80); const k=action+':'+ip; const v=hits.get(k)||{start:t,count:0}; const limit=['list-invitations','list-experiences','get-experience-photo'].includes(action)?60:['create-invitation','revoke-invitation','delete-invitation','delete-experience','moderate-experience'].includes(action)?20:action==='validate-invitation'?30:8; if(v.count>=limit)return true; v.count++;hits.set(k,v);if(hits.size>1200)hits.clear();return false; }
   function photoMatches(info,photo) { const metadata=info&&info.metadata||{},user=info&&(info.user_metadata||info.userMetadata)||{};return !!info&&info.name===photo.path&&Number(metadata.size)===photo.size&&metadata.mimetype==='image/webp'&&user.experience_invitation_id===photo.invitationId&&user.upload_nonce===photo.nonce; }
   async function cleanupOwnedPhoto(photo) {
     const referenced=await db.photoReferenced(photo.path);
@@ -174,6 +187,28 @@ function createHandler(options) {
     if(!photoMatches(info,photo))throw new ApiError('photo_ownership_unverified',503);
     await db.remove(photo.path);
     return true;
+  }
+  function deletionPhotoMatches(info,cleanup) {
+    const metadata=info&&info.metadata||{},user=info&&(info.user_metadata||info.userMetadata)||{};
+    return !!info&&info.name===cleanup.photo_object_path&&metadata.mimetype==='image/webp'&&Number(metadata.size)>0&&Number(metadata.size)<=MAX_PHOTO&&user.experience_invitation_id===cleanup.invitation_id&&UUID_RE.test(String(user.upload_nonce||''));
+  }
+  async function cleanupDeletedPhoto(cleanup) {
+    const photoId=typeof cleanup?.photo_object_path==='string'?cleanup.photo_object_path.match(/^traveler-experiences\/([^/]+)\.webp$/i)?.[1]:null;
+    if(!cleanup||!UUID_RE.test(String(cleanup.id||''))||!UUID_RE.test(String(cleanup.invitation_id||''))||!photoId||!UUID_RE.test(photoId))throw new ApiError('photo_cleanup_unverified',503);
+    const referenced=await db.photoReferenced(cleanup.photo_object_path);
+    if(referenced===true){await db.removePhotoCleanup(cleanup.id);return;}
+    if(referenced!==false)throw new ApiError('photo_reference_unverified',503);
+    const info=await db.objectInfo(cleanup.photo_object_path);
+    if(info){if(!deletionPhotoMatches(info,cleanup))throw new ApiError('photo_ownership_unverified',503);await db.remove(cleanup.photo_object_path);}
+    await db.removePhotoCleanup(cleanup.id);
+  }
+  async function retryPendingPhotoCleanups() {
+    const cleanups=await db.listPhotoCleanups();let completed=0;
+    for(const cleanup of (cleanups||[]).slice(0,10)){
+      try{await cleanupDeletedPhoto(cleanup);completed++;}
+      catch(error){logDiagnostic(error,'cleanup_deleted_experience_photo','cleanup_failed');}
+    }
+    return Math.max(0,(cleanups||[]).length-completed);
   }
   async function admin(req) { const m=String(req.headers.authorization||'').match(/^Bearer ([^\s]{20,4096})$/);if(!m)throw new ApiError('unauthorized',401);const u=await db.getUser(m[1]);if(!u)throw new ApiError('unauthorized',401);if(!(await db.isAdmin(u.id)))throw new ApiError('forbidden',403);return u; }
   return async function handler(req,res) {
@@ -187,7 +222,7 @@ function createHandler(options) {
     if(!/^application\/json(?:\s*;|$)/i.test(String(req.headers['content-type']||'')))return send(415,{ok:false,error:'unsupported_media_type'});
     const parsed=bodyOf(req);if(parsed.error==='large')return send(413,{ok:false,error:'request_too_large'});if(parsed.error)return send(400,{ok:false,error:'invalid_request'});
     const b=parsed.body, action=b.action;
-    if(!['create-invitation','revoke-invitation','list-invitations','list-experiences','moderate-experience','get-experience-photo','validate-invitation','submit-experience'].includes(action))return send(400,{ok:false,error:'invalid_request'});
+    if(!['create-invitation','revoke-invitation','delete-invitation','delete-experience','list-invitations','list-experiences','moderate-experience','get-experience-photo','validate-invitation','submit-experience'].includes(action))return send(400,{ok:false,error:'invalid_request'});
     if(limited(req,action))return send(429,{ok:false,error:'too_many_requests'});
     if(typeof b.website==='string'&&b.website.trim())return send(202,{ok:true});
     try {
@@ -203,8 +238,10 @@ function createHandler(options) {
         return send(201,{ok:true,invitationId:row.invite_id,expiresAt:row.expires_at,link:publicOrigin(env)+'/compartir-experiencia.html#'+token});
       }
       if(action==='revoke-invitation') { const u=await admin(req);if(!UUID_RE.test(String(b.invitationId||'')))return send(400,{ok:false,error:'invalid_request'});const revoked=await db.revokeInvite({p_admin_user_id:u.id,p_invitation_id:b.invitationId});if(revoked===false)return send(409,{ok:false,error:'invitation_unavailable'});return send(200,{ok:true}); }
+      if(action==='delete-invitation') { await admin(req);if(!UUID_RE.test(String(b.invitationId||'')))return send(400,{ok:false,error:'invalid_request'});const result=await db.deleteInvite(b.invitationId);if(result?.hasExperience)return send(409,{ok:false,error:'invitation_has_experience'});if(!result?.deleted)return send(409,{ok:false,error:'invitation_unavailable'});return send(200,{ok:true}); }
       if(action==='list-invitations') { await admin(req);const rows=await db.listInvitations();return send(200,{ok:true,invitations:(rows||[]).map(i=>({id:i.id,destination:i.destination,programTitle:i.program_title_snapshot||null,passengerName:i.passenger_name||null,status:i.status==='pending'&&Date.parse(i.expires_at)<=now()?'expired':i.status,createdAt:i.created_at,expiresAt:i.expires_at,usedAt:i.used_at||null,revokedAt:i.revoked_at||null}))}); }
-      if(action==='list-experiences') { await admin(req);const rows=await db.listExperiences();return send(200,{ok:true,experiences:(rows||[]).map(e=>({id:e.id,passengerName:e.passenger_name,destination:e.destination,travelMonth:e.travel_month,travelYear:e.travel_year,rating:e.rating,comment:e.comment,status:e.status,createdAt:e.created_at,reviewedAt:e.reviewed_at||null,publishedAt:e.published_at||null,hasPhoto:Boolean(e.photo_object_path)}))}); }
+      if(action==='list-experiences') { await admin(req);const photoCleanupPendingCount=await retryPendingPhotoCleanups();const rows=await db.listExperiences();return send(200,{ok:true,photoCleanupPendingCount,experiences:(rows||[]).map(e=>({id:e.id,passengerName:e.passenger_name,destination:e.destination,travelMonth:e.travel_month,travelYear:e.travel_year,rating:e.rating,comment:e.comment,status:e.status,createdAt:e.created_at,reviewedAt:e.reviewed_at||null,publishedAt:e.published_at||null,hasPhoto:Boolean(e.photo_object_path)}))}); }
+      if(action==='delete-experience') { const u=await admin(req);if(!UUID_RE.test(String(b.experienceId||'')))return send(400,{ok:false,error:'invalid_request'});const result=await db.deleteExperience({p_admin_user_id:u.id,p_experience_id:b.experienceId});const row=Array.isArray(result)?result[0]:result;if(!row||!UUID_RE.test(String(row.experience_id||'')))return send(409,{ok:false,error:'experience_unavailable'});let photoCleanupPending=false;if(row.photo_cleanup_id){try{await cleanupDeletedPhoto({id:row.photo_cleanup_id,photo_object_path:row.photo_object_path,invitation_id:row.invitation_id});}catch(error){photoCleanupPending=true;logDiagnostic(error,'cleanup_deleted_experience_photo','cleanup_failed');}}return send(200,{ok:true,photoCleanupPending}); }
       if(action==='moderate-experience') { const u=await admin(req);if(!UUID_RE.test(String(b.experienceId||''))||!['approve','reject','hide'].includes(b.moderationAction))return send(400,{ok:false,error:'invalid_request'});const changed=await db.moderateExperience({p_admin_user_id:u.id,p_experience_id:b.experienceId,p_action:b.moderationAction});if(changed===false)return send(409,{ok:false,error:'experience_unavailable'});return send(200,{ok:true}); }
       if(action==='get-experience-photo') { await admin(req);if(!UUID_RE.test(String(b.experienceId||'')))return send(400,{ok:false,error:'invalid_request'});const bytes=await db.getExperiencePhoto(b.experienceId);return send(200,{ok:true,mimeType:'image/webp',imageData:bytes.toString('base64')}); }
       if(typeof b.token!=='string'||!TOKEN_RE.test(b.token))return send(404,{ok:false,error:'invitation_unavailable'});

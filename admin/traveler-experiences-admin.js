@@ -29,7 +29,8 @@
     if (!state.invitations.length) { node.innerHTML='<p class="traveler-list-empty">Todavía no hay invitaciones.</p>';return; }
     node.innerHTML=state.invitations.map(item=>{
       const status=item.status||'pending';
-      return `<article class="traveler-invite-row"><div class="traveler-record-main"><strong>${escapeHtml(item.destination)}</strong><span>${escapeHtml(item.programTitle||'Sin programa asociado')}${item.passengerName?` · ${escapeHtml(item.passengerName)}`:''}</span><small>Creada ${escapeHtml(dateLabel(item.createdAt))} · vence ${escapeHtml(dateLabel(item.expiresAt))}</small></div><span class="traveler-status ${escapeHtml(status)}">${escapeHtml(statusLabels[status]||status)}</span>${status==='pending'?`<button class="text-button traveler-revoke" type="button" data-traveler-action="revoke" data-id="${escapeHtml(item.id)}">Revocar</button>`:''}</article>`;
+      const actions=`<div class="traveler-invite-actions">${status==='pending'?`<button class="text-button traveler-revoke" type="button" data-traveler-action="revoke" data-id="${escapeHtml(item.id)}">Revocar</button>`:''}<button class="text-button traveler-delete" type="button" data-traveler-action="delete-invitation" data-id="${escapeHtml(item.id)}">Eliminar</button></div>`;
+      return `<article class="traveler-invite-row"><div class="traveler-record-main"><strong>${escapeHtml(item.destination)}</strong><span>${escapeHtml(item.programTitle||'Sin programa asociado')}${item.passengerName?` · ${escapeHtml(item.passengerName)}`:''}</span><small>Creada ${escapeHtml(dateLabel(item.createdAt))} · vence ${escapeHtml(dateLabel(item.expiresAt))}</small></div><span class="traveler-status ${escapeHtml(status)}">${escapeHtml(statusLabels[status]||status)}</span>${actions}</article>`;
     }).join('');
   }
   function renderExperiences() {
@@ -43,7 +44,7 @@
       const stars='★'.repeat(rating)+'☆'.repeat(5-rating);
       const photoUrl=state.photoUrls.get(item.id);
       const photo=item.hasPhoto?`<div class="traveler-photo-area">${photoUrl?`<img src="${escapeHtml(photoUrl)}" alt="Fotografía enviada por ${escapeHtml(item.passengerName)}">`:`<button class="secondary-button" type="button" data-traveler-action="photo" data-id="${escapeHtml(item.id)}">Ver fotografía privada</button>`}</div>`:'';
-      const actions=status==='pending'?`<button class="primary-button" type="button" data-traveler-action="approve" data-id="${escapeHtml(item.id)}">Aprobar</button><button class="secondary-button" type="button" data-traveler-action="reject" data-id="${escapeHtml(item.id)}">Rechazar</button>`:status==='approved'?`<button class="secondary-button" type="button" data-traveler-action="hide" data-id="${escapeHtml(item.id)}">Ocultar publicación</button>`:'';
+      const actions=(status==='pending'?`<button class="primary-button" type="button" data-traveler-action="approve" data-id="${escapeHtml(item.id)}">Aprobar</button><button class="secondary-button" type="button" data-traveler-action="reject" data-id="${escapeHtml(item.id)}">Rechazar</button>`:status==='approved'?`<button class="secondary-button" type="button" data-traveler-action="hide" data-id="${escapeHtml(item.id)}">Ocultar publicación</button>`:'')+`<button class="secondary-button traveler-delete" type="button" data-traveler-action="delete-experience" data-id="${escapeHtml(item.id)}">Eliminar definitivamente</button>`;
       return `<article class="traveler-experience-card"><header><div><h4>${escapeHtml(item.passengerName)}</h4><p>${escapeHtml(item.destination)} · ${when}</p></div><span class="traveler-status ${escapeHtml(status)}">${escapeHtml(statusLabels[status]||status)}</span></header><div class="traveler-stars" aria-label="${rating} de 5 estrellas">${stars}</div><blockquote>${escapeHtml(item.comment)}</blockquote>${photo}<footer><small>Recibida ${escapeHtml(dateLabel(item.createdAt))} · consentimiento registrado</small><div class="traveler-review-actions">${actions}</div></footer></article>`;
     }).join('');
   }
@@ -52,7 +53,7 @@
     const token=await service.getAccessToken();
     const response=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({action,...payload})});
     let data={};try{data=await response.json();}catch(_){throw new Error('El servidor devolvió una respuesta inesperada.');}
-    if(!response.ok||data.ok===false){const messages={unauthorized:'La sesión venció. Iniciá sesión nuevamente.',forbidden:'La cuenta no tiene permisos para administrar Experiencias.',service_unavailable:'El servicio de Experiencias no está disponible ahora.',database_unavailable:'No se pudieron consultar los datos. Intentá de nuevo.',storage_unavailable:'No se pudo abrir la fotografía privada.',invitation_unavailable:'La invitación ya no está pendiente o no se encuentra disponible.',experience_unavailable:'La experiencia ya cambió de estado. Actualizá el listado.',invalid_program:'El programa seleccionado no está publicado.'};throw new Error(messages[data.error]||'No se pudo completar la acción. Intentá nuevamente.');}
+    if(!response.ok||data.ok===false){const messages={unauthorized:'La sesión venció. Iniciá sesión nuevamente.',forbidden:'La cuenta no tiene permisos para administrar Experiencias.',service_unavailable:'El servicio de Experiencias no está disponible ahora.',database_unavailable:'No se pudieron consultar los datos. Intentá de nuevo.',storage_unavailable:'No se pudo abrir la fotografía privada.',invitation_unavailable:'La invitación ya no está disponible.',invitation_has_experience:'Esta invitación tiene una experiencia asociada y no se puede eliminar.',experience_unavailable:'La experiencia ya cambió o fue eliminada. Actualizá el listado.',invalid_program:'El programa seleccionado no está publicado.'};throw new Error(messages[data.error]||'No se pudo completar la acción. Intentá nuevamente.');}
     return data;
   }
   async function load(successMessage = '') {
@@ -61,8 +62,8 @@
     if(state.busy)return;state.busy=true;notice('Cargando invitaciones y experiencias…');$('#travelerInvitesList').setAttribute('aria-busy','true');$('#travelerExperiencesList').setAttribute('aria-busy','true');
     try {
       const [invites,experiences,programs]=await Promise.all([api('list-invitations'),api('list-experiences'),service.listPrograms()]);
-      state.invitations=invites.invitations||[];state.experiences=experiences.experiences||[];state.programs=programs||[];fillPrograms();renderInvitations();renderExperiences();notice(successMessage,successMessage?'success':'');
-    } catch(error) { notice(error.message||'No se pudieron cargar los datos.','error'); }
+      state.invitations=invites.invitations||[];state.experiences=experiences.experiences||[];state.programs=programs||[];fillPrograms();renderInvitations();renderExperiences();const pendingPhotos=Number(experiences.photoCleanupPendingCount)||0;notice(pendingPhotos?`Hay ${pendingPhotos} fotografía${pendingPhotos===1?'':'s'} privada${pendingPhotos===1?'':'s'} pendiente${pendingPhotos===1?'':'s'} de limpieza. Actualizá para volver a intentar.`:successMessage,pendingPhotos?'error':successMessage?'success':'');return pendingPhotos;
+    } catch(error) { notice(error.message||'No se pudieron cargar los datos.','error');return null; }
     finally { state.busy=false;$('#travelerInvitesList').removeAttribute('aria-busy');$('#travelerExperiencesList').removeAttribute('aria-busy'); }
   }
   function switchToExperiences() {
@@ -94,10 +95,14 @@
     const button=event.target.closest('[data-traveler-action]');if(!button||!view.contains(button)||button.disabled)return;
     const {travelerAction:action,id}=button.dataset;
     if(action==='revoke'&&!window.confirm('¿Revocar esta invitación pendiente?'))return;
+    if(action==='delete-invitation'&&!window.confirm('¿Eliminar esta invitación? Si tiene una experiencia asociada, la operación será bloqueada. Esta acción no se puede deshacer.'))return;
+    if(action==='delete-experience'&&!window.confirm('¿Eliminar definitivamente esta experiencia? La reseña dejará de publicarse y se intentará eliminar su fotografía privada. Esta operación es irreversible.'))return;
     button.disabled=true;
     try {
       if(action==='revoke'){await api('revoke-invitation',{invitationId:id});await load('Invitación revocada.');return;}
+      if(action==='delete-invitation'){await api('delete-invitation',{invitationId:id});await load('Invitación eliminada.');return;}
       if(action==='approve'||action==='reject'||action==='hide') { await api('moderate-experience',{experienceId:id,moderationAction:action});await load(action==='approve'?'Experiencia aprobada y publicada.':action==='hide'?'Experiencia ocultada.':'Experiencia rechazada.');return; }
+      if(action==='delete-experience') { const deletion=await api('delete-experience',{experienceId:id});const photoUrl=state.photoUrls.get(id);if(photoUrl)URL.revokeObjectURL(photoUrl);state.photoUrls.delete(id);const pendingPhotos=await load();if(pendingPhotos===0)notice('Experiencia eliminada definitivamente.','success');else if(pendingPhotos>0)notice('Experiencia eliminada. La fotografía privada quedó pendiente de limpieza; actualizá para reintentar.','error');else if(deletion.photoCleanupPending)notice('La experiencia fue eliminada, pero el estado de limpieza de la fotografía no pudo verificarse. Actualizá para comprobarlo.','error');return; }
       if(action==='photo') {
         const result=await api('get-experience-photo',{experienceId:id});
         const bytes=Uint8Array.from(atob(result.imageData),char=>char.charCodeAt(0));const url=URL.createObjectURL(new Blob([bytes],{type:'image/webp'}));
