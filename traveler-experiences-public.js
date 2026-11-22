@@ -42,10 +42,56 @@
     const stars='★'.repeat(item.rating)+'☆'.repeat(5-item.rating);
     return `<article class="traveler-public-card"><header class="traveler-public-card-header"><div><h3>${escapeHtml(item.passengerName)}</h3><p>${escapeHtml(item.destination)} <span aria-hidden="true">·</span> ${escapeHtml(when)}</p></div><span class="traveler-public-stars" role="img" aria-label="${item.rating} de 5 estrellas">${stars}</span></header><blockquote>${escapeHtml(item.comment)}</blockquote></article>`;
   }
+  function visibleCapacity(width){return width<=680?1:width<=1024?2:3;}
+  function carouselState(count,width,start){
+    const capacity=visibleCapacity(width),maxStart=Math.max(0,count-capacity);
+    const currentStart=Math.min(Math.max(0,Number(start)||0),maxStart);
+    return{capacity,maxStart,start:currentStart,controlsHidden:count<=capacity,previousDisabled:currentStart===0,nextDisabled:currentStart>=maxStart,centered:count<=capacity,single:count===1};
+  }
+  function bindCarousel(section,target,doc,win){
+    const controls=doc.getElementById('travelerPublicCarouselControls');
+    const previous=doc.getElementById('travelerPublicPrevious');
+    const next=doc.getElementById('travelerPublicNext');
+    if(!controls||!previous||!next)return;
+    const reducedMotion=()=>win.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
+    function currentStart(){
+      const card=target.firstElementChild;
+      if(!card)return 0;
+      const gap=parseFloat(win.getComputedStyle(target).columnGap||win.getComputedStyle(target).gap)||0;
+      return Math.round(target.scrollLeft/(card.getBoundingClientRect().width+gap||1));
+    }
+    function update(){
+      const state=carouselState(target.children.length,win.innerWidth,currentStart());
+      target.dataset.visibleCount=String(Math.min(target.children.length,state.capacity));
+      target.classList.toggle('is-centered',state.centered);
+      target.classList.toggle('is-single',state.single);
+      controls.hidden=state.controlsHidden;
+      previous.disabled=state.previousDisabled;
+      next.disabled=state.nextDisabled;
+    }
+    function scrollToStart(start){
+      const state=carouselState(target.children.length,win.innerWidth,start);
+      const card=target.children[state.start];
+      if(!card)return;
+      target.scrollTo({left:card.offsetLeft,behavior:reducedMotion()?'auto':'smooth'});
+    }
+    previous.addEventListener('click',()=>scrollToStart(currentStart()-visibleCapacity(win.innerWidth)));
+    next.addEventListener('click',()=>scrollToStart(currentStart()+visibleCapacity(win.innerWidth)));
+    target.addEventListener('scroll',update,{passive:true});
+    target.addEventListener('keydown',event=>{
+      if(event.key==='ArrowLeft'&&!previous.disabled){event.preventDefault();previous.click();}
+      if(event.key==='ArrowRight'&&!next.disabled){event.preventDefault();next.click();}
+    });
+    win.addEventListener('resize',update,{passive:true});
+    update();
+  }
   function render(section,target,rows){
     if(!section||!target)return 0;
     const safeRows=(rows||[]).map(normalizeRow).filter(Boolean);
     target.innerHTML=safeRows.map(cardHtml).join('');
+    target.dataset.visibleCount='3';
+    target.classList.toggle('is-centered',safeRows.length<=3);
+    target.classList.toggle('is-single',safeRows.length===1);
     section.hidden=safeRows.length===0;
     return safeRows.length;
   }
@@ -54,8 +100,12 @@
     const target=doc&&doc.getElementById('travelerPublicExperiences');
     if(!section||!target)return 0;
     section.hidden=true;target.innerHTML='';
-    try{return render(section,target,await (loader||loadApprovedExperiences)(win.MODO_RUMBO_CONFIG,win.fetch.bind(win)));}
+    try{
+      const count=render(section,target,await (loader||loadApprovedExperiences)(win.MODO_RUMBO_CONFIG,win.fetch.bind(win)));
+      bindCarousel(section,target,doc,win);
+      return count;
+    }
     catch(_){section.hidden=true;target.innerHTML='';return 0;}
   }
-  return{fields,normalizeRow,loadApprovedExperiences,cardHtml,render,init};
+  return{fields,normalizeRow,loadApprovedExperiences,cardHtml,visibleCapacity,carouselState,render,init};
 });

@@ -27,7 +27,7 @@ test('solo renderiza filas con campos válidos y escapa contenido aportado por p
     {...sample,rating:6},
     {...sample,comment:'<script>alert(1)</script> comentario de prueba'}
   ]}));
-  const section={hidden:true},target={innerHTML:''};
+  const section={hidden:true},target={innerHTML:'',dataset:{},classList:{toggle(){}}};
   assert.equal(experiences.render(section,target,rows),2);assert.equal(section.hidden,false);
   assert.match(target.innerHTML,/Lucía Pérez/);assert.match(target.innerHTML,/5 de 5 estrellas/);
   assert.match(target.innerHTML,/&lt;script&gt;/);assert.doesNotMatch(target.innerHTML,/<script>/);
@@ -35,19 +35,63 @@ test('solo renderiza filas con campos válidos y escapa contenido aportado por p
 });
 
 test('la sección permanece oculta si la vista no tiene reseñas o falla la consulta',async()=>{
-  const section={hidden:false},target={innerHTML:'contenido anterior'},doc={getElementById:id=>id==='traveler-experiences-home'?section:target};
+  const section={hidden:false},target={innerHTML:'contenido anterior',dataset:{},classList:{toggle(){}}},doc={getElementById:id=>id==='traveler-experiences-home'?section:target};
   assert.equal(experiences.render(section,target,[]),0);assert.equal(section.hidden,true);assert.equal(target.innerHTML,'');
   const count=await experiences.init(doc,{MODO_RUMBO_CONFIG:{},fetch:async()=>{}},async()=>{throw new Error('private detail must not leak');});
   assert.equal(count,0);assert.equal(section.hidden,true);assert.equal(target.innerHTML,'');
 });
 
-test('la portada conserva Tipos de viajes y Salidas destacadas e incorpora reseñas antes de beneficios',()=>{
+test('el carrusel ajusta capacidad y controles según cantidad, ancho y posición',()=>{
+  assert.equal(experiences.visibleCapacity(1440),3);
+  assert.equal(experiences.visibleCapacity(1024),2);
+  assert.equal(experiences.visibleCapacity(768),2);
+  assert.equal(experiences.visibleCapacity(680),1);
+  assert.equal(experiences.visibleCapacity(390),1);
+  assert.deepEqual({...experiences.carouselState(1,1440,0)},{capacity:3,maxStart:0,start:0,controlsHidden:true,previousDisabled:true,nextDisabled:true,centered:true,single:true});
+  assert.equal(experiences.carouselState(3,1440,0).controlsHidden,true);
+  const first=experiences.carouselState(5,1440,0),last=experiences.carouselState(5,1440,2);
+  assert.equal(first.controlsHidden,false);assert.equal(first.previousDisabled,true);assert.equal(first.nextDisabled,false);
+  assert.equal(last.previousDisabled,false);assert.equal(last.nextDisabled,true);assert.equal(last.maxStart,2);
+  const mobile=experiences.carouselState(4,390,3);
+  assert.equal(mobile.capacity,1);assert.equal(mobile.previousDisabled,false);assert.equal(mobile.nextDisabled,true);
+  const css=fs.readFileSync(path.join(root,'traveler-experiences-public.css'),'utf8');
+  assert.match(css,/max-width:400px/);
+  assert.match(css,/data-visible-count="2"\] \.traveler-public-card\{flex-basis:min\(400px/);
+  assert.match(css,/is-centered\{justify-content:center\}/);
+  assert.match(css,/is-single \.traveler-public-card\{flex:0 0 min\(400px,100%\)\}/);
+  assert.doesNotMatch(css,/min\(100%,760px\)/);
+});
+
+test('los controles del carrusel son accesibles, táctiles y respetan movimiento reducido',()=>{
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const source=fs.readFileSync(path.join(root,'traveler-experiences-public.js'),'utf8');
+  const css=fs.readFileSync(path.join(root,'traveler-experiences-public.css'),'utf8');
+  assert.match(html,/id="travelerPublicPrevious"[^>]*aria-label="Experiencias anteriores"/);
+  assert.match(html,/id="travelerPublicNext"[^>]*aria-label="Más experiencias"/);
+  assert.match(html,/id="travelerPublicExperiences"[^>]*role="region"[^>]*tabindex="0"/);
+  assert.match(source,/target\.addEventListener\('keydown'/);
+  assert.match(source,/target\.addEventListener\('scroll',update/);
+  assert.match(source,/previous\.addEventListener\('click'/);
+  assert.match(source,/next\.addEventListener\('click'/);
+  assert.match(source,/left:card\.offsetLeft/);
+  assert.match(source,/previous\.disabled=state\.previousDisabled/);
+  assert.match(source,/next\.disabled=state\.nextDisabled/);
+  assert.match(css,/scroll-snap-type:x mandatory/);
+  assert.match(css,/touch-action:pan-x pan-y/);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+  assert.doesNotMatch(source,/setInterval|autoplay/);
+});
+
+test('la portada conserva sus secciones y ubica reseñas después de Viajes a tu medida y antes del footer',()=>{
   const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   assert.match(html,/id="experiences-home"[\s\S]*?Tipos de viajes/);
   assert.match(html,/id="featured-home"[\s\S]*?Salidas destacadas/);
   assert.match(html,/id="traveler-experiences-home"[\s\S]*?Experiencias de viajeros[\s\S]*?id="travelerPublicExperiences"/);
   assert.ok(html.indexOf('id="featured-home"')<html.indexOf('id="traveler-experiences-home"'));
-  assert.ok(html.indexOf('id="traveler-experiences-home"')<html.indexOf('class="trust-strip"'));
+  assert.ok(html.indexOf('class="trust-strip"')<html.indexOf('id="custom-home"'));
+  assert.ok(html.indexOf('id="custom-home"')<html.indexOf('id="traveler-experiences-home"'));
+  assert.ok(html.indexOf('id="traveler-experiences-home"')<html.indexOf('id="hotel-search-home"'));
+  assert.ok(html.indexOf('id="traveler-experiences-home"')<html.indexOf('<footer id="mainFooter"'));
   assert.match(html,/traveler-experiences-public\.css\?v=/);
   assert.match(html,/traveler-experiences-public\.js\?v=/);
 });

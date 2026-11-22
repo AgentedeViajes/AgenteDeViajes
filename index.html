@@ -604,17 +604,6 @@
       </div>
     </section>
 
-    <section class="premium-section soft" id="traveler-experiences-home" hidden aria-labelledby="traveler-experiences-home-title">
-      <div class="premium-container">
-        <header class="premium-heading">
-          <div class="premium-eyebrow">Historias reales</div>
-          <h2 id="traveler-experiences-home-title">Experiencias de viajeros</h2>
-          <p>Conocé las experiencias que pasajeros de Modo Rumbo eligieron compartir.</p>
-        </header>
-        <div class="traveler-public-grid" id="travelerPublicExperiences" aria-live="polite"></div>
-      </div>
-    </section>
-
     <div class="trust-strip" aria-label="Beneficios de la agencia">
       <div class="trust-item"><i class="fas fa-paper-plane"></i><span>Asesoramiento<br>personalizado</span></div>
       <div class="trust-item"><i class="fas fa-shield-alt"></i><span>Operadores<br>confiables</span></div>
@@ -633,6 +622,21 @@
       <div class="premium-container custom-trip-banner">
         <div class="custom-trip-copy"><h2>Viajes a tu medida</h2><p>Diseñamos tu viaje ideal, con la flexibilidad, experiencia y respaldo que necesitás.</p><button class="premium-button" type="button" data-search-type="personalizado">Quiero un viaje a medida <i class="fas fa-arrow-right"></i></button></div>
         <div class="custom-trip-image"><img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=900&q=85" alt="Viajes personalizados por Europa" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section class="premium-section soft" id="traveler-experiences-home" hidden aria-labelledby="traveler-experiences-home-title">
+      <div class="premium-container">
+        <header class="premium-heading">
+          <div class="premium-eyebrow">Historias reales</div>
+          <h2 id="traveler-experiences-home-title">Experiencias de viajeros</h2>
+          <p>Conocé las experiencias que pasajeros de Modo Rumbo eligieron compartir.</p>
+        </header>
+        <div class="traveler-public-carousel-controls" id="travelerPublicCarouselControls" hidden>
+          <button type="button" id="travelerPublicPrevious" aria-label="Experiencias anteriores" aria-controls="travelerPublicExperiences"><i class="fas fa-arrow-left" aria-hidden="true"></i></button>
+          <button type="button" id="travelerPublicNext" aria-label="Más experiencias" aria-controls="travelerPublicExperiences"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+        <div class="traveler-public-grid" id="travelerPublicExperiences" role="region" aria-label="Reseñas aprobadas de viajeros" aria-live="polite" tabindex="0"></div>
       </div>
     </section>
 
