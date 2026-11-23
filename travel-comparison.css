@@ -1,0 +1,80 @@
+.travel-comparison-section[hidden] { display:none!important; }
+.travel-comparison-section { font-family:Inter,sans-serif; scroll-margin-top:86px; }
+.travel-comparison-section .section-topline { align-items:flex-end; }
+.travel-comparison-section .premium-heading { margin:0; text-align:left; }
+.travel-comparison-section .premium-heading .premium-eyebrow { justify-content:flex-start; }
+.travel-comparison-section .premium-heading .premium-eyebrow::before { display:none; }
+.travel-comparison-section .premium-heading h2 {
+  margin:0;
+  color:var(--premium-navy);
+  font:900 1.75rem/1.15 Inter,sans-serif;
+  letter-spacing:-.04em;
+}
+.travel-comparison-section .premium-heading p { margin:6px 0 0; color:#53647c; font:500 .86rem/1.45 Inter,sans-serif; }
+.comparison-summary { margin:0 0 14px; color:#53647c; font:600 .86rem Inter,sans-serif; }
+.comparison-empty { grid-column:1/-1; display:flex; flex-direction:column; align-items:center; gap:8px; min-height:150px; justify-content:center; padding:22px; border:1px dashed #d5dfeb; border-radius:14px; color:#6d7d93; background:rgba(255,255,255,.78); text-align:center; font-family:Inter,sans-serif; }
+.comparison-empty > i { color:#c28e39; font-size:1.5rem; }
+.comparison-empty strong { color:#15315e; font-size:.94rem; }
+.comparison-empty p { margin:0; font-size:.8rem; }
+.comparison-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+.comparison-card { min-width:0; overflow:hidden; border:1px solid #dbe3ee; border-radius:15px; background:#fff; box-shadow:0 5px 15px rgba(6,39,95,.08); }
+.comparison-card-media { position:relative; height:156px; overflow:hidden; background:linear-gradient(135deg,#e7eef7,#f7f9fc); }
+.comparison-image { display:block; width:100%; height:100%; object-fit:cover; }
+.comparison-image-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; color:#74849b; font:600 .78rem Inter,sans-serif; }
+.comparison-image-empty i { color:#9aa9bd; font-size:1.5rem; }
+.comparison-remove { position:absolute; top:9px; right:9px; display:grid; place-items:center; width:34px; height:34px; padding:0; border:1px solid rgba(255,255,255,.8); border-radius:50%; color:#17345d; background:rgba(255,255,255,.94); box-shadow:0 3px 10px rgba(5,28,62,.16); font:700 1.2rem Inter,sans-serif; cursor:pointer; }
+.comparison-remove:hover,.comparison-remove:focus-visible { color:#fff; background:var(--premium-orange); }
+.comparison-card-content { padding:15px; }
+.comparison-card h3 { margin:0 0 8px; color:#06275f; font:850 1.05rem/1.25 Inter,sans-serif; overflow-wrap:anywhere; }
+.comparison-open-program { display:inline-flex; align-items:center; gap:7px; margin:0 0 13px; padding:0; border:0; color:var(--premium-orange); background:transparent; font:750 .78rem Inter,sans-serif; cursor:pointer; text-align:left; }
+.comparison-open-program:hover { text-decoration:underline; }
+.comparison-fields { display:grid; gap:0; margin:0; border-top:1px solid #e5eaf1; }
+.comparison-field { display:grid; grid-template-columns:minmax(110px,.75fr) minmax(0,1.25fr); gap:10px; padding:9px 0; border-bottom:1px solid #e5eaf1; }
+.comparison-field dt { color:#53647c; font:700 .72rem/1.4 Inter,sans-serif; }
+.comparison-field dd { display:grid; gap:4px; min-width:0; margin:0; color:#17345d; font:500 .75rem/1.45 Inter,sans-serif; overflow-wrap:anywhere; }
+.comparison-field dd span { display:block; }
+.comparison-field .comparison-unreported { color:#8a96a8; font-style:italic; }
+.comparison-close { display:inline-flex; align-items:center; gap:8px; min-height:40px; flex:0 0 auto; padding:8px 13px; border:1px solid #dbe3ee; border-radius:999px; color:#0b2859; background:#fff; font:700 .8rem Inter,sans-serif; cursor:pointer; }
+.comparison-close:hover,.comparison-close:focus-visible { border-color:var(--premium-orange); color:var(--premium-orange); }
+.trip-compare-button { position:absolute; z-index:3; top:10px; right:56px; display:inline-flex; align-items:center; justify-content:center; gap:5px; min-height:34px; padding:0 9px; border:1px solid rgba(255,255,255,.9); border-radius:999px; color:#12305c; background:rgba(255,255,255,.96); box-shadow:0 3px 10px rgba(5,28,62,.17); font:750 .66rem Inter,sans-serif; cursor:pointer; }
+.trip-compare-button:hover,.trip-compare-button:focus-visible,.trip-compare-button.is-compared { color:#fff; border-color:var(--premium-orange); background:var(--premium-orange); }
+.trip-compare-button:focus-visible,.nav-comparison-button:focus-visible,.comparison-remove:focus-visible,.comparison-open-program:focus-visible,.comparison-close:focus-visible { outline:3px solid #ffad75; outline-offset:3px; }
+.comparison-limit-toast { position:fixed; z-index:1200; right:20px; bottom:22px; max-width:min(420px,calc(100vw - 32px)); padding:13px 16px; border:1px solid rgba(255,255,255,.14); border-radius:12px; color:#fff; background:#102b59; box-shadow:0 10px 28px rgba(3,22,52,.25); font:650 .84rem/1.4 Inter,sans-serif; }
+.comparison-limit-toast[hidden] { display:none!important; }
+.package-card { position:relative; }
+@media (min-width:681px) and (max-width:1050px) { .comparison-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:680px) {
+  .travel-comparison-section { padding:34px 16px 26px; }
+  .travel-comparison-section .section-topline { align-items:flex-start; flex-wrap:wrap; }
+  .travel-comparison-section .premium-heading h2 { font-size:1.45rem; }
+  .comparison-grid { display:flex; gap:12px; margin-right:-16px; padding:0 16px 8px 0; overflow-x:auto; overscroll-behavior-inline:contain; scroll-snap-type:x mandatory; }
+  .comparison-card { flex:0 0 min(88vw,360px); scroll-snap-align:start; }
+  .comparison-card-media { height:170px; }
+  .comparison-field { grid-template-columns:minmax(100px,.75fr) minmax(0,1.25fr); }
+  .comparison-close { min-height:38px; font-size:.72rem; }
+  .comparison-limit-toast { right:12px; bottom:14px; }
+  #navbar .premium-nav-links .nav-tools { flex-wrap:wrap; }
+}
+@media (max-width:1100px) { #navbar .premium-nav-links .nav-tools { flex-wrap:wrap; } }
+
+/* Comparison selection is intentionally available only from saved favorites. */
+.favorite-compare-actions { padding:0 14px 14px; }
+.travel-favorites-section .favorite-card-compare-button { position:static; inset:auto; z-index:auto; width:100%; min-height:40px; padding:9px 12px; border:1px solid #dbe3ee; border-radius:10px; color:#12305c; background:#fff; box-shadow:none; font:750 .78rem Inter,sans-serif; }
+.travel-favorites-section .favorite-card-compare-button:hover,.travel-favorites-section .favorite-card-compare-button:focus-visible { border-color:var(--premium-orange); color:var(--premium-orange); background:#fff8f2; }
+.travel-favorites-section .favorite-card-compare-button.is-compared { border-color:var(--premium-orange); color:#fff; background:var(--premium-orange); }
+.favorite-comparison-toolbar { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-top:18px; color:#53647c; font:600 .82rem Inter,sans-serif; }
+.favorite-compare-submit { min-height:42px; padding:10px 17px; border:0; border-radius:999px; color:#fff; background:#ff6508; font:750 .82rem Inter,sans-serif; cursor:pointer; }
+.favorite-compare-submit:hover:not(:disabled),.favorite-compare-submit:focus-visible { background:#e95700; }
+.favorite-compare-submit:disabled { color:#8b98a9; background:#e5eaf1; cursor:not-allowed; }
+.clear-all-confirm-dialog { width:min(500px,calc(100vw - 32px)); margin:auto; padding:26px; border:1px solid #dbe3ee; border-radius:20px; color:#17345d; background:#fff; box-shadow:0 22px 70px rgba(8,32,69,.28); font-family:Inter,sans-serif; }
+.clear-all-confirm-dialog::backdrop { background:rgba(7,26,56,.58); backdrop-filter:blur(3px); }
+.clear-all-confirm-dialog h2 { margin:0 0 12px; color:#0b2859; font:800 1.2rem Inter,sans-serif; }
+.clear-all-confirm-dialog p { margin:0; color:#53647c; font:500 .94rem/1.55 Inter,sans-serif; }
+.clear-all-confirm-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin-top:22px; }
+.clear-all-confirm-actions button { min-height:42px; padding:9px 16px; border:1px solid #dbe3ee; border-radius:999px; color:#17345d; background:#fff; font:700 .82rem Inter,sans-serif; cursor:pointer; }
+.clear-all-confirm-actions button.confirm { border-color:#ff6508; color:#fff; background:#ff6508; }
+.travel-view-actions { display:flex; align-items:center; justify-content:flex-end; gap:9px; flex-wrap:wrap; }
+.clear-all-trigger { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:38px; padding:8px 12px; border:1px solid #dbe3ee; border-radius:999px; color:#53647c; background:rgba(255,255,255,.86); font:650 .76rem Inter,sans-serif; cursor:pointer; transition:border-color .18s ease,color .18s ease,background .18s ease; }
+.clear-all-trigger:hover,.clear-all-trigger:focus-visible { border-color:#ffb180; color:#d94e00; background:#fff8f2; }
+.clear-all-trigger:focus-visible { outline:3px solid #ffad75; outline-offset:3px; }
+@media(max-width:680px) { .favorite-comparison-toolbar { align-items:stretch; flex-direction:column; } .favorite-compare-submit { width:100%; min-height:44px; } .clear-all-confirm-dialog { padding:22px 18px; } .clear-all-confirm-actions { display:grid; grid-template-columns:1fr 1fr; } .travel-view-actions { width:100%; justify-content:space-between; gap:8px; } .travel-view-actions .clear-all-trigger,.travel-view-actions .travel-favorites-close,.travel-view-actions .comparison-close { min-height:40px; font-size:.7rem; padding:8px 10px; } }

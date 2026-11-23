@@ -1,0 +1,98 @@
+.nav-favorites-button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:38px;
+  padding:7px 10px;
+  border:1px solid rgba(255,255,255,.55);
+  border-radius:999px;
+  color:#fff;
+  background:transparent;
+  font:700 .78rem Inter,sans-serif;
+  cursor:pointer;
+  transition:background-color 180ms ease,border-color 180ms ease,transform 180ms ease;
+}
+.nav-favorites-button:hover,.nav-favorites-button:focus-visible { border-color:var(--premium-orange); color:#fff; background:var(--premium-orange); }
+.nav-favorites-button:focus-visible,.trip-favorite-button:focus-visible,.travel-favorites-close:focus-visible { outline:3px solid #ffad75; outline-offset:3px; }
+.nav-favorites-button i { font-size:.88rem; }
+.nav-favorites-count { display:inline-grid; place-items:center; min-width:19px; height:19px; padding:0 5px; border-radius:999px; color:#092b5c; background:#fff; font-size:.68rem; line-height:1; }
+.trip-card { position:relative; }
+.package-card { position:relative; }
+.trip-favorite-button {
+  position:absolute;
+  z-index:3;
+  top:10px;
+  right:10px;
+  display:grid;
+  place-items:center;
+  width:38px;
+  height:38px;
+  padding:0;
+  border:1px solid rgba(255,255,255,.82);
+  border-radius:50%;
+  color:#102c59;
+  background:rgba(255,255,255,.95);
+  box-shadow:0 3px 12px rgba(5,28,62,.2);
+  font-size:1rem;
+  cursor:pointer;
+  transition:color 180ms ease,background-color 180ms ease,transform 180ms ease;
+}
+.trip-favorite-button:hover { transform:scale(1.06); color:#e95730; }
+.trip-favorite-button.is-favorite { color:#e95730; }
+.trip-favorite-button.is-favorite:hover { color:#fff; background:#e95730; }
+.detail-favorite-button {
+  display:grid;
+  place-items:center;
+  width:44px;
+  min-width:44px;
+  min-height:44px;
+  padding:0;
+  border:1px solid #dbe3ee;
+  border-radius:11px;
+  color:#e95730;
+  background:#fff;
+  font-size:1.08rem;
+  cursor:pointer;
+}
+.detail-favorite-button:hover,.detail-favorite-button.is-favorite { border-color:#e95730; color:#fff; background:#e95730; }
+.detail-favorite-button:focus-visible { outline:3px solid #ffad75; outline-offset:3px; }
+.program-dialog-v2 .detail-actions { grid-template-columns:minmax(0,1fr) minmax(100px,.65fr) 44px; }
+.travel-favorites-section[hidden] { display:none!important; }
+.travel-favorites-section { scroll-margin-top:86px; }
+.travel-favorites-section .section-topline { align-items:flex-end; }
+.travel-favorites-section .premium-heading { margin-bottom:0; }
+.travel-favorites-section .premium-heading h2 { margin-bottom:0; font-family:Inter,sans-serif; font-size:1.75rem; font-weight:900; font-style:normal; letter-spacing:-.04em; line-height:1.15; }
+.travel-favorites-summary { margin:0 0 17px; color:#5b6c82; font:500 .86rem Inter,sans-serif; }
+.travel-favorites-section .trip-card-grid { grid-template-columns:repeat(auto-fill,minmax(min(100%,255px),1fr)); }
+.travel-favorites-close {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:40px;
+  padding:8px 13px;
+  border:1px solid #dbe3ee;
+  border-radius:999px;
+  color:#0b2859;
+  background:#fff;
+  font:700 .8rem Inter,sans-serif;
+  cursor:pointer;
+}
+.travel-favorites-close:hover { border-color:#ff6508; color:#e95730; }
+@media(max-width:900px) {
+  #navbar .nav-favorites-button { justify-content:flex-start; min-width:112px; }
+}
+@media(min-width:901px) and (max-width:1100px) {
+  #navbar .nav-favorites-button span:first-of-type { display:none; }
+  #navbar .nav-favorites-button { min-width:42px; padding-inline:8px; }
+}
+@media(max-width:680px) {
+  .nav-favorites-button { min-height:40px; padding-inline:11px; }
+  .trip-favorite-button { top:9px; right:9px; width:40px; height:40px; font-size:1.05rem; }
+  .travel-favorites-section .section-topline { align-items:flex-start; flex-direction:row; }
+  .travel-favorites-section .premium-heading h2 { font-size:1.45rem; }
+  .travel-favorites-close { flex:0 0 auto; font-size:.72rem; }
+}
+@media(max-width:700px) {
+  .program-dialog-v2 .detail-actions { grid-template-columns:minmax(0,1fr) minmax(95px,.6fr) 44px; }
+}

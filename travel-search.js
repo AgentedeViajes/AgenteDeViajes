@@ -6,6 +6,12 @@
   const programSharing = window.ModoRumboProgramSharing;
   const featuredCarousel = window.ModoRumboFeaturedCarousel;
   const programBooking = window.ModoRumboProgramBooking;
+  const favoritesModule = window.ModoRumboTravelFavorites;
+  const comparisonModule = window.ModoRumboTravelComparison;
+  let favoritesStore = null;
+  let comparisonStoreInstance = null;
+  let comparisonToastTimer = null;
+  let publicCatalogReady = false;
 
   const MONTHS = [
     ['enero','Enero'],['febrero','Febrero'],['marzo','Marzo'],['abril','Abril'],
@@ -88,6 +94,156 @@
       '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
     })[char]);
   }
+
+  function favoriteStore() {
+    if (favoritesStore) return favoritesStore;
+    let storage = null;
+    try { storage = window.localStorage; } catch (_) { /* Favorites remain unavailable if browser storage is blocked. */ }
+    favoritesStore = favoritesModule && favoritesModule.create(storage);
+    return favoritesStore;
+  }
+
+  function comparisonStore() {
+    if (comparisonStoreInstance) return comparisonStoreInstance;
+    let storage = null;
+    try { storage = window.localStorage; } catch (_) { /* Comparison stays in memory when storage is blocked. */ }
+    comparisonStoreInstance = comparisonModule && comparisonModule.create(storage);
+    return comparisonStoreInstance;
+  }
+
+  function canCompare(record) {
+    return Boolean(comparisonModule && record && record.source !== 'custom personalizado' && comparisonModule.isValidId(record.id));
+  }
+
+  function favoritePrograms() {
+    return favoriteStore()?.available(catalog) || [];
+  }
+
+  function updateComparisonButtons() {
+    const store = comparisonStore();
+    if (!store) return;
+    document.querySelectorAll('[data-toggle-compare]').forEach(button => {
+      const id = button.dataset.toggleCompare;
+      const active = store.has(id);
+      const record = catalogById.get(id);
+      const name = record?.name || button.dataset.compareName || 'viaje';
+      const label = active ? `Quitar ${name} del comparador` : `Agregar ${name} a comparar`;
+      button.classList.toggle('is-compared', active);
+      button.setAttribute('aria-pressed', String(active));
+      button.setAttribute('aria-label', label);
+      button.title = label;
+      const text = button.querySelector('span');
+      if (text) text.textContent = active ? 'Seleccionado' : 'Comparar';
+    });
+    const count = store.available(favoritePrograms()).length;
+    const action = document.getElementById('compareFavoritesButton');
+    const status = document.getElementById('favoriteComparisonStatus');
+    if (action) {
+      action.textContent = `Comparar seleccionados (${count})`;
+      action.disabled = count < 2;
+      action.setAttribute('aria-label', `Comparar seleccionados (${count})`);
+    }
+    if (status) status.textContent = `${count} ${count === 1 ? 'viaje seleccionado' : 'viajes seleccionados'} para comparar`;
+  }
+
+  function renderComparisonView() {
+    const section = document.getElementById('travelComparisonSection');
+    const grid = document.getElementById('travelComparisonGrid');
+    const summary = document.getElementById('comparisonSummary');
+    const store = comparisonStore();
+    if (!section || !grid || !summary || !store || !comparisonModule) return;
+    const favorites = favoritePrograms();
+    if (publicCatalogReady) store.reconcile(favorites);
+    const records = store.available(favorites);
+    summary.textContent = records.length
+      ? `${records.length} de ${comparisonModule.MAX_PROGRAMS} programas seleccionados`
+      : 'Elegí al menos dos viajes desde Mis favoritos para compararlos acá.';
+    grid.innerHTML = records.length
+      ? records.map(comparisonModule.renderCard).join('')
+      : '<div class="comparison-empty"><i class="fas fa-scale-balanced" aria-hidden="true"></i><strong>Todavía no seleccionaste viajes</strong><p>Agregá tus programas a Favoritos y elegí cuáles querés comparar.</p></div>';
+    section.hidden = false;
+    updateComparisonButtons();
+  }
+
+  function showComparisonLimitNotice() {
+    const notice = document.getElementById('comparisonLimitToast');
+    if (!notice) return;
+    notice.textContent = `Podés comparar hasta ${comparisonModule.MAX_PROGRAMS} programas. Quitá uno para agregar otro.`;
+    notice.hidden = false;
+    window.clearTimeout(comparisonToastTimer);
+    comparisonToastTimer = window.setTimeout(() => { notice.hidden = true; }, 4500);
+  }
+
+  function canFavorite(record) {
+    return Boolean(favoritesModule && record && record.source !== 'custom personalizado' && favoritesModule.isValidId(record.id));
+  }
+
+  function updateFavoriteCount() {
+    const count = document.getElementById('favoriteCount');
+    const store = favoriteStore();
+    if (!count || !store) return;
+    const available = store.available(catalog).length;
+    count.textContent = String(available);
+    const button = count.closest('[aria-label]');
+    if (button) button.setAttribute('aria-label', `Ver mis favoritos (${available})`);
+  }
+
+  function updateFavoriteButtons() {
+    const store = favoriteStore();
+    if (!store) return;
+    document.querySelectorAll('[data-toggle-favorite]').forEach(button => {
+      const active = store.has(button.dataset.toggleFavorite);
+      const name = button.closest('[data-open-trip]')?.querySelector('.trip-card-body h3')?.textContent.trim()
+        || button.closest('.detail-summary')?.querySelector('#detailProgramTitle')?.textContent.trim()
+        || button.dataset.favoriteName || 'viaje';
+      const label = active ? `Quitar ${name} de favoritos` : `Guardar ${name} en favoritos`;
+      button.classList.toggle('is-favorite', active);
+      button.setAttribute('aria-pressed', String(active));
+      button.setAttribute('aria-label', label);
+      button.title = label;
+      const icon = button.querySelector('i');
+      if (icon) { icon.classList.toggle('fas', active); icon.classList.toggle('far', !active); }
+    });
+    updateFavoriteCount();
+  }
+
+  function renderFavoriteTrips() {
+    const section = document.getElementById('favoriteTripsSection');
+    const grid = document.getElementById('favoriteTripsGrid');
+    const summary = document.getElementById('favoriteTripsSummary');
+    const store = favoriteStore();
+    if (!section || !grid || !summary || !store) return;
+    const records = store.available(catalog);
+    if (publicCatalogReady) comparisonStore()?.reconcile(records);
+    summary.textContent = records.length
+      ? `${records.length} ${records.length === 1 ? 'viaje guardado' : 'viajes guardados'}`
+      : 'Todavía no tenés viajes favoritos disponibles. Podés guardar uno con el corazón de cada tarjeta.';
+    grid.innerHTML = records.length
+      ? records.map(record => cardHtml(record, {includeCompare:true})).join('')
+      : '<div class="search-results-empty" style="grid-column:1/-1"><i class="far fa-heart" aria-hidden="true"></i><strong>No hay favoritos disponibles</strong><p>Los programas que ya no están publicados no aparecen en esta lista.</p></div>';
+    section.hidden = false;
+    updateFavoriteButtons();
+    updateComparisonButtons();
+  }
+
+  window.showFavoriteTrips = function () {
+    showSection('home');
+    renderFavoriteTrips();
+    document.getElementById('favoriteTripsSection')?.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+
+  window.hideTravelComparisonView = function () {
+    const section = document.getElementById('travelComparisonSection');
+    if (section) section.hidden = true;
+  };
+
+  window.showTravelComparison = function () {
+    if (comparisonStore()?.available(favoritePrograms()).length < 2) return;
+    showSection('home');
+    document.getElementById('favoriteTripsSection')?.setAttribute('hidden', '');
+    renderComparisonView();
+    document.getElementById('travelComparisonSection')?.scrollIntoView({behavior:'smooth',block:'start'});
+  };
 
   function inferRegion(text, source) {
     const n = normalize(`${source} ${text}`);
@@ -244,6 +400,9 @@
         const img = card.querySelector('.package-image img, img');
         const explicitTypes = (card.dataset.travelTypes || section.dataset.travelTypes || '').split(',').map(type => type.trim()).filter(Boolean);
         const programName = title.textContent.trim();
+        const staticAvailability = [...card.querySelectorAll('.package-details li')].map(item => item.textContent.replace(/\s+/g,' ').trim()).filter(text => /fecha|salida|vigencia|per[ií]odo|inicio/i.test(text));
+        const staticRange = staticAvailability.some(text => /vigencia|per[ií]odo|para viajar/i.test(text));
+        const staticFixedDates = staticAvailability.some(text => hasConcreteDepartureDate(text));
         const baseId = programSharing.createLegacyIdentifier(sectionKey, programName);
         const occurrence = (identifiersByBase.get(baseId) || 0) + 1;
         identifiersByBase.set(baseId, occurrence);
@@ -266,6 +425,17 @@
           experienceTypes:explicitTypes,
           authoritativeTypes: explicitTypes.length > 0,
           duration: extractDuration(info.textContent),
+          comparison: {
+            image:img ? img.currentSrc || img.src : '',
+            destinations:[card.dataset.destinations || section.dataset.destinations || '',card.dataset.countries || section.dataset.countries || ''].filter(Boolean),
+            duration:extractDuration(info.textContent),
+            availabilityLabel:staticRange ? 'Período de viaje' : staticFixedDates ? 'Fechas de salida' : 'Disponibilidad informada',
+            availability:staticAvailability,
+            priceText:prices.join(' · '),
+            included:readHeadingItems(card,/^(incluye|servicios incluidos|el programa incluye)$/),
+            excluded:readHeadingItems(card,/(no incluye|servicios no incluidos|no incluido)/),
+            operatorCode:card.dataset.operatorCode || card.querySelector('[data-operator-code],.operator-code')?.textContent.trim() || ''
+          },
           open: function () {
             if (showHistoricalProgram(record, card, section)) return;
             showSection(sectionKey);
@@ -276,6 +446,9 @@
           }
         };
         addRecord(record);
+        if (canFavorite(record) && !card.querySelector('[data-toggle-favorite]')) {
+          card.insertAdjacentHTML('afterbegin', favoritesModule.buttonHtml(id, favoriteStore()?.has(id), record.name));
+        }
       });
     });
   }
@@ -306,7 +479,9 @@
 
   function collectObjectPrograms(object, source, openFn, options) {
     if (!object) return;
-    Object.entries(object).forEach(([key, trip]) => {
+    const entries = Object.entries(object);
+    const identifiers = programSharing.createCatalogIdentifiers(source, entries.map(([key]) => key));
+    entries.forEach(([key, trip], index) => {
       const name = trip.name || key;
       const route = trip.route || trip.itinerary || [];
       const routeText = route.map(item => Array.isArray(item) ? item.join(' ') : typeof item === 'object' ? [item.title, item.description, item.text].filter(Boolean).join(' ') : item).join(' ');
@@ -318,11 +493,17 @@
         ...programFilters.extractConcreteDates(departures)
       ];
       const prices = Array.isArray(trip.prices) ? trip.prices.join(' ') : (trip.price || '');
+      const priceValue = Array.isArray(trip.prices) ? trip.prices[0] : trip.price;
+      const priceText = typeof priceValue === 'number'
+        ? `${trip.currency || 'USD'} ${new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(priceValue)}`
+        : String(priceValue == null ? prices : priceValue);
+      const routeItems = (Array.isArray(route) ? route : []).map(item => typeof item === 'string' ? item : Array.isArray(item) ? item.join(' · ') : item && typeof item === 'object' ? [item.title || item.name, item.description || item.text].filter(Boolean).join(' · ') : '').filter(Boolean);
+      const departureItems = departureList.map(item => typeof item === 'string' ? item : item && typeof item === 'object' ? item.departure_date || item.date || item.label || '' : '').filter(Boolean);
       const rawTaggedTypes = trip.travel_types || trip.travelTypes || [];
       const taggedTypes = Array.isArray(rawTaggedTypes) ? rawTaggedTypes : String(rawTaggedTypes).split(/[,;|]+/).map(type => type.trim()).filter(Boolean);
       const text = [name, trip.subtitle, trip.cities, trip.duration, departures, prices, includes, routeText].filter(Boolean).join(' ');
       const record = {
-        id: `${source}:${key}`,
+        id: identifiers[index],
         name,
         source,
         searchText: text,
@@ -340,6 +521,19 @@
         authoritativeTypes:taggedTypes.length > 0,
         experienceTypes:taggedTypes,
         published: true,
+        comparison: {
+          image:trip.image_path || trip.image || (Array.isArray(trip.images) ? (typeof trip.images[0] === 'string' ? trip.images[0] : trip.images[0]?.url || '') : ''),
+          destinations:trip.destinations || trip.countries || trip.cities || '',
+          route:routeItems,
+          duration:trip.duration || '',
+          availabilityLabel:isRangeProgram({date_mode:trip.date_mode || trip.dateMode}) ? 'Período de viaje' : departureItems.some(value => hasConcreteDepartureDate(String(value))) ? 'Fechas de salida' : 'Disponibilidad informada',
+          availability:departureItems.length ? departureItems : (departures ? [String(departures)] : []),
+          priceText:priceText || '',
+          priceBasis:trip.price_basis || trip.priceBasis || '',
+          included:detailValues(trip.includes),
+          excluded:detailValues(trip.excludes || trip.notIncluded || trip.not_included),
+          operatorCode:trip.operator_code || trip.operatorCode || trip.code || ''
+        },
         open: function () { showObjectProgram(record, trip, source, key, openFn); }
       };
       addRecord(record);
@@ -361,6 +555,12 @@
     const prefix = program.price_prefix === 'from' ? 'Desde ' : '';
     const basis = {double:' por persona en doble',single:' por persona en single',package:' por paquete'}[program.price_basis] || '';
     return `${prefix}${program.currency || 'USD'} ${amount}${basis}`;
+  }
+
+  function basePriceForComparison(program) {
+    if (program.price_prefix === 'consult' || program.price == null || !Number.isFinite(Number(program.price))) return '';
+    const amount = new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(Number(program.price));
+    return `${program.price_prefix === 'from' ? 'Desde ' : ''}${program.currency || 'USD'} ${amount}`;
   }
 
   function publicDate(value) {
@@ -492,6 +692,9 @@
       ? `<span class="detail-code">Código ${escapeHtml(detail.operatorCode)}</span>` : '';
     const typeHtml = detail.type ? `<span class="detail-type">${escapeHtml(detail.type)}</span>` : '';
     const summaryHtml = detail.summary ? `<p class="detail-summary-copy">${detailText(detail.summary)}</p>` : '';
+    const detailFavoriteHtml = favoritesModule && favoritesModule.isValidId(detail.programId)
+      ? favoritesModule.buttonHtml(detail.programId, favoriteStore()?.has(detail.programId), detail.title || 'viaje').replace('trip-favorite-button','detail-favorite-button')
+      : '';
     const priceHtml = `<div class="detail-price"><small data-detail-price-label>${escapeHtml(displayedPriceLabel)}</small><strong data-detail-price-value>${detailText(displayedPriceValue)}</strong><span data-detail-price-basis${waitingForDeparture || !detail.priceBasis ? ' hidden' : ''}>${!waitingForDeparture ? escapeHtml(detail.priceBasis || '') : ''}</span></div>`;
     const emailUrl = 'mailto:javier@tresortravel.com.ar?subject=' + encodeURIComponent('Consulta: ' + (detail.title || ''));
     dialog.innerHTML = `<article class="detail-v2">
@@ -508,6 +711,7 @@
           <div class="detail-actions">
             <a class="detail-whatsapp" data-detail-whatsapp href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i><span><strong>Consultá por WhatsApp</strong><small>Quiero más información</small></span></a>
             <button class="detail-share" type="button" data-share-program="${escapeHtml(detail.programId || '')}" aria-label="Compartir ${title}"><i class="fas fa-share-alt" aria-hidden="true"></i><span>Compartir</span></button>
+            ${detailFavoriteHtml}
           </div>
           ${detail.bookingProgramId ? `<a class="detail-booking" data-detail-booking href="${escapeHtml(programBooking.buildBookingUrl(detail.bookingProgramId, selectedDepartureItem?.date || null))}"><i class="fas fa-suitcase" aria-hidden="true"></i> RESERVAR</a>` : ''}
           <span class="detail-share-status" role="status" aria-live="polite"></span>
@@ -851,10 +1055,26 @@
         authoritativeTypes:true,
         months:isRangeProgram(program)?dateMode.rangeMonths(program.travel_start_date,program.travel_end_date):departures.map(item => MONTHS[new Date(`${item.departure_date}T12:00:00`).getMonth()]?.[0]).filter(Boolean),
         featured:Boolean(program.featured),
+        comparison: {
+          image:program.image_path || '',
+          destinations:[...(Array.isArray(program.destinations) ? program.destinations : detailValues(program.destinations)),...(Array.isArray(program.countries) ? program.countries : detailValues(program.countries))],
+          route:[...(program.itinerary_days || [])].sort((a,b) => Number(a.position || 0) - Number(b.position || 0)).map(day => day.title || '').filter(Boolean),
+          duration:program.duration || '',
+          availabilityLabel:isRangeProgram(program) ? 'Período de viaje' : departures.some(item => item.departure_date) ? 'Fechas de salida' : 'Disponibilidad informada',
+          availability:isRangeProgram(program) ? [dateMode.rangeLabel(program.travel_start_date,program.travel_end_date)].filter(Boolean) : departures.map(item => item.departure_date ? publicDate(item.departure_date) : '').filter(Boolean).concat(!departures.length && program.departure_type === 'weekly' ? ['Salidas semanales'] : !departures.length && program.departure_type === 'on-request' ? ['A solicitud'] : []),
+          priceText:basePriceForComparison(program),
+          priceBasis:({double:'Por persona en doble',single:'Por persona en single',package:'Por paquete'}[program.price_basis] || ''),
+          included:detailValues(program.includes),
+          excluded:detailValues(program.excludes || program.not_included),
+          operatorCode:program.operator_code || ''
+        },
         open:function () { showPublicProgram(program); }
       });
     });
     window.travelCatalog = catalog;
+    comparisonStore()?.reconcile(favoritePrograms());
+    updateComparisonButtons();
+    if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
   }
 
   function isExoticQuery(query) {
@@ -921,15 +1141,21 @@
     return clean ? (clean.length > 46 ? `${clean.slice(0,43)}…` : clean) : 'Consultar salida';
   }
 
-  function cardHtml(record) {
+  function cardHtml(record, options = {}) {
     const departure = record.nextDepartureDate ? displayUpcomingDate(record.nextDepartureDate) : compactDeparture(record.departureText);
-    return `<article class="trip-card" data-open-trip="${escapeHtml(record.id)}" tabindex="0" role="button" aria-label="Ver ${escapeHtml(record.name)}">
+    const favorite = canFavorite(record) ? favoritesModule.buttonHtml(record.id, favoriteStore()?.has(record.id), record.name) : '';
+    const compare = options.includeCompare && canCompare(record)
+      ? comparisonModule.buttonHtml(record.id, record.name, comparisonStore()?.has(record.id)).replace('trip-compare-button','favorite-card-compare-button')
+      : '';
+    return `<article class="trip-card" data-open-trip="${escapeHtml(record.id)}" tabindex="0" role="group" aria-label="Programa ${escapeHtml(record.name)}">
+      ${favorite}
       <div class="trip-card-media"><img src="${escapeHtml(record.image)}" alt="${escapeHtml(record.name)}" loading="lazy"><span class="trip-chip">${escapeHtml(readableType(record))}</span></div>
       <div class="trip-card-body">
         <h3>${escapeHtml(record.name)}</h3>
         <div class="trip-meta"><span><i class="far fa-calendar-alt"></i>${escapeHtml(departure)}</span>${record.duration ? `<span><i class="far fa-clock"></i>${escapeHtml(record.duration)}</span>` : ''}</div>
         <div class="trip-price">${record.priceText ? escapeHtml(compactPrice(record.priceText)) : 'Precio a consultar'}</div>
       </div>
+      ${compare ? `<div class="favorite-compare-actions">${compare}</div>` : ''}
     </article>`;
   }
 
@@ -941,6 +1167,7 @@
   }
 
   function renderResults(records, filters, emptyMessage) {
+    window.hideFavoriteTripsView?.();
     const section = document.getElementById('travelResults');
     const summary = document.getElementById('travelResultsSummary');
     const grid = document.getElementById('travelResultsGrid');
@@ -955,6 +1182,8 @@
     grid.innerHTML = records.length
       ? records.map(cardHtml).join('')
       : `<div class="search-results-empty" style="grid-column:1/-1"><i class="fas fa-compass"></i><strong>${escapeHtml(emptyMessage || 'No encontramos programas con esos filtros.')}</strong><p>${emptyMessage ? 'Volvé a consultar más adelante o probá con otro destino.' : 'Probá con otro destino, mes o tipo de viaje.'}</p></div>`;
+    updateFavoriteButtons();
+    updateComparisonButtons();
     section.scrollIntoView({behavior:'smooth',block:'start'});
   }
 
@@ -1011,6 +1240,8 @@
     const picks = featuredCarousel.selectPublishedFeatured(catalog);
     target.innerHTML = picks.map(cardHtml).join('');
     section.hidden = picks.length === 0;
+    updateFavoriteButtons();
+    updateComparisonButtons();
     renderFeaturedCarouselControls();
   }
 
@@ -1083,11 +1314,80 @@
     runSearch(null,'No hay salidas confirmadas dentro de los próximos 60 días.');
   };
 
+  function clearAllFiltersFavoritesAndComparison() {
+    activeNavigationFilter = null;
+    clearTravelFilters();
+    favoriteStore()?.clear?.();
+    comparisonStore()?.clear?.();
+    updateFavoriteButtons();
+    updateComparisonButtons();
+    if (!document.getElementById('favoriteTripsSection')?.hidden) renderFavoriteTrips();
+    if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
+    window.showAllTrips();
+  }
+
+  window.requestClearAll = function () {
+    const dialog = document.getElementById('clearAllConfirmDialog');
+    if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+    else if (window.confirm('¿Querés limpiar los filtros y eliminar todos tus favoritos y viajes seleccionados para comparar?')) clearAllFiltersFavoritesAndComparison();
+  };
+
   function bindEvents() {
     bindFeaturedCarousel();
     const form = document.getElementById('travelSearchForm');
     if (form) form.addEventListener('submit', runSearch);
+    const clearDialog = document.getElementById('clearAllConfirmDialog');
+    clearDialog?.querySelector('[data-cancel-clear-all]')?.addEventListener('click', () => clearDialog.close());
+    clearDialog?.querySelector('[data-confirm-clear-all]')?.addEventListener('click', () => { clearDialog.close(); clearAllFiltersFavoritesAndComparison(); });
     document.addEventListener('click', event => {
+      const clearRequest = event.target.closest('[data-request-clear-all]');
+      if (clearRequest) { event.preventDefault(); window.requestClearAll(); return; }
+      const comparisonButton = event.target.closest('[data-toggle-compare]');
+      if (comparisonButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!comparisonButton.closest('#favoriteTripsGrid') || document.getElementById('favoriteTripsSection')?.hidden) return;
+        const result = comparisonStore()?.toggle(comparisonButton.dataset.toggleCompare);
+        if (result?.reason === 'limit') showComparisonLimitNotice();
+        if (result?.changed) {
+          updateComparisonButtons();
+          if (!document.getElementById('favoriteTripsSection')?.hidden) renderFavoriteTrips();
+          if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
+        }
+        return;
+      }
+      const removeComparison = event.target.closest('[data-remove-comparison]');
+      if (removeComparison) {
+        event.preventDefault();
+        event.stopPropagation();
+        comparisonStore()?.toggle(removeComparison.dataset.removeComparison);
+        updateComparisonButtons();
+        if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
+        return;
+      }
+      if (event.target.closest('[data-close-comparison]')) {
+        window.hideTravelComparisonView?.();
+        document.getElementById('travel-search')?.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
+      const favoriteButton = event.target.closest('[data-toggle-favorite]');
+      if (favoriteButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        favoriteStore()?.toggle(favoriteButton.dataset.toggleFavorite);
+        if (publicCatalogReady) comparisonStore()?.reconcile(favoritePrograms());
+        updateFavoriteButtons();
+        updateComparisonButtons();
+        if (!document.getElementById('favoriteTripsSection')?.hidden) renderFavoriteTrips();
+        if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
+        return;
+      }
+      if (event.target.closest('[data-close-favorites]')) {
+        const section = document.getElementById('favoriteTripsSection');
+        if (section) section.hidden = true;
+        document.getElementById('travel-search')?.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
       const opener = event.target.closest('[data-open-trip]');
       if (opener) openTrip(opener.dataset.openTrip, opener);
       const query = event.target.closest('[data-search-query]');
@@ -1124,10 +1424,25 @@
       }
     });
     document.addEventListener('keydown', event => {
+      if (event.target.closest && event.target.closest('[data-toggle-favorite]')) return;
+      if (event.target.closest && event.target.closest('[data-toggle-compare],[data-remove-comparison]')) return;
       const action = event.target.closest && event.target.closest('[data-open-trip],[data-search-query],[data-search-type],[data-search-experience],[data-search-mode],[data-upcoming-departures]');
       if (action && (event.key === 'Enter' || event.key === ' ')) {
         event.preventDefault();
         action.click();
+      }
+    });
+    window.addEventListener('storage', event => {
+      if (favoritesModule && event.key === favoritesModule.STORAGE_KEY) {
+        if (publicCatalogReady) comparisonStore()?.reconcile(favoritePrograms());
+        updateFavoriteButtons();
+        updateComparisonButtons();
+        if (!document.getElementById('favoriteTripsSection')?.hidden) renderFavoriteTrips();
+        if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
+      }
+      if (comparisonModule && event.key === comparisonModule.STORAGE_KEY) {
+        updateComparisonButtons();
+        if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
       }
     });
   }
@@ -1159,6 +1474,8 @@
     bindEvents();
     renderFeatured();
     renderDepartures();
+    updateFavoriteButtons();
+    updateComparisonButtons();
     const count = document.getElementById('catalogCount');
     if (count) count.textContent = catalog.length;
     let publicCatalogLoadFailed = false;
@@ -1167,6 +1484,7 @@
         collectPublicPrograms(await window.loadModoRumboPrograms());
         renderFeatured();
         renderDepartures();
+        updateFavoriteButtons();
         if (count) count.textContent = catalog.length;
         if (document.getElementById('travelResults')?.classList.contains('visible')) runSearch();
       } catch (error) {
@@ -1174,6 +1492,10 @@
         console.warn('Los programas del panel no pudieron cargarse; se conserva el catálogo local.', error);
       }
     }
+    publicCatalogReady = true;
+    comparisonStore()?.reconcile(favoritePrograms());
+    updateFavoriteButtons();
+    updateComparisonButtons();
     const requestedProgramId = new URLSearchParams(window.location.search).get('programa');
     if (requestedProgramId) {
       const resolution = await programSharing.openProgramLink(

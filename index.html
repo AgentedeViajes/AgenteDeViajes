@@ -173,10 +173,12 @@
       footer { padding: 40px 20px 20px; }
     }
   </style>
-  <link rel="stylesheet" href="premium-home.css?v=20261122a">
+  <link rel="stylesheet" href="premium-home.css?v=20261122b">
   <link rel="stylesheet" href="traveler-experiences-public.css?v=20261122a">
   <link rel="stylesheet" href="search-final.css?v=20261120a">
   <link rel="stylesheet" href="home-videos.css?v=20261121e">
+  <link rel="stylesheet" href="travel-favorites.css?v=20261122b">
+  <link rel="stylesheet" href="travel-comparison.css?v=20261122a">
 </head>
 <body>
 
@@ -218,6 +220,7 @@
       <li class="nav-item"><a onclick="goHomeTo('custom-home')">Viajes a medida</a></li>
       <li class="nav-item"><a onclick="goHomeTo('mainFooter')">Contacto</a></li>
       <li class="nav-item nav-tools">
+        <button class="nav-favorites-button" type="button" onclick="showFavoriteTrips()" aria-label="Ver mis favoritos"><i class="far fa-heart" aria-hidden="true"></i><span>Favoritos</span><span class="nav-favorites-count" id="favoriteCount" aria-live="polite">0</span></button>
         <button class="nav-search-button" type="button" aria-label="Buscar viajes" aria-expanded="false" aria-controls="navSearchPanel"><i class="fas fa-search"></i></button>
         <a class="nav-whatsapp" href="https://wa.me/5491134821978" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i><span>Consultanos</span></a>
       </li>
@@ -560,11 +563,52 @@
 
     <section class="premium-section search-results-section soft" id="travelResults" aria-live="polite">
       <div class="premium-container">
-        <div class="section-topline"><div><div class="premium-eyebrow">Resultados de búsqueda</div><h2>Encontrá tu próximo viaje</h2></div><a class="view-all-link" onclick="showAllTrips()">Limpiar filtros <i class="fas fa-redo-alt"></i></a></div>
+        <div class="section-topline"><div><div class="premium-eyebrow">Resultados de búsqueda</div><h2>Encontrá tu próximo viaje</h2></div><button class="clear-all-trigger" type="button" data-request-clear-all>Limpiar todo <i class="fas fa-broom" aria-hidden="true"></i></button></div>
         <p class="search-results-summary" id="travelResultsSummary"></p>
         <div class="trip-card-grid" id="travelResultsGrid"></div>
       </div>
     </section>
+
+    <section class="premium-section travel-favorites-section soft" id="favoriteTripsSection" hidden aria-labelledby="favoriteTripsTitle" aria-live="polite">
+      <div class="premium-container">
+        <div class="section-topline">
+          <header class="premium-heading"><div class="premium-eyebrow">Tus viajes guardados</div><h2 id="favoriteTripsTitle">Mis favoritos</h2></header>
+          <div class="travel-view-actions">
+            <button class="clear-all-trigger" type="button" data-request-clear-all>Limpiar todo <i class="fas fa-broom" aria-hidden="true"></i></button>
+            <button class="travel-favorites-close" type="button" data-close-favorites>Volver a explorar <i class="fas fa-arrow-up" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <p class="travel-favorites-summary" id="favoriteTripsSummary"></p>
+        <div class="trip-card-grid" id="favoriteTripsGrid"></div>
+        <div class="favorite-comparison-toolbar">
+          <span id="favoriteComparisonStatus" role="status" aria-live="polite">0 seleccionados</span>
+          <button class="favorite-compare-submit" id="compareFavoritesButton" type="button" onclick="showTravelComparison()" disabled>Comparar seleccionados (0)</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="premium-section travel-comparison-section soft" id="travelComparisonSection" hidden aria-labelledby="travelComparisonTitle" aria-live="polite">
+      <div class="premium-container">
+        <div class="section-topline">
+          <header class="premium-heading"><div class="premium-eyebrow">Elegí con información clara</div><h2 id="travelComparisonTitle">Compará tus viajes</h2><p>Hasta tres programas, lado a lado.</p></header>
+          <div class="travel-view-actions">
+            <button class="clear-all-trigger" type="button" data-request-clear-all>Limpiar todo <i class="fas fa-broom" aria-hidden="true"></i></button>
+            <button class="comparison-close" type="button" data-close-comparison>Volver a explorar <i class="fas fa-arrow-up" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <p class="comparison-summary" id="comparisonSummary"></p>
+        <div class="comparison-grid" id="travelComparisonGrid"></div>
+      </div>
+    </section>
+    <div class="comparison-limit-toast" id="comparisonLimitToast" role="status" aria-live="polite" hidden></div>
+    <dialog class="clear-all-confirm-dialog" id="clearAllConfirmDialog" aria-modal="true" aria-labelledby="clearAllConfirmTitle" aria-describedby="clearAllConfirmMessage">
+      <h2 id="clearAllConfirmTitle">Limpiar todo</h2>
+      <p id="clearAllConfirmMessage">¿Querés limpiar todos los filtros, favoritos y viajes seleccionados para comparar?</p>
+      <div class="clear-all-confirm-actions">
+        <button type="button" data-cancel-clear-all>Cancelar</button>
+        <button type="button" class="confirm" data-confirm-clear-all>Limpiar todo</button>
+      </div>
+    </dialog>
 
     <section class="premium-section" id="destinations-home">
       <div class="premium-container">
@@ -2339,7 +2383,14 @@
   <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
 
   <script>
+    function hideFavoriteTripsView() {
+      const favorites = document.getElementById('favoriteTripsSection');
+      if (favorites) favorites.hidden = true;
+    }
+
     function showSection(id) {
+      hideFavoriteTripsView();
+      window.hideTravelComparisonView?.();
       document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
       const section = document.getElementById('section-' + id);
       if (section) section.classList.add('active');
@@ -3271,7 +3322,9 @@
   <script src="date-mode.js?v=20261025a"></script>
   <script src="public-programs.js?v=20261025a"></script>
   <script src="program-search-filters.js?v=20261120h"></script>
-  <script src="program-sharing.js?v=20261120b"></script>
+  <script src="program-sharing.js?v=20261122c"></script>
+  <script src="travel-favorites.js?v=20261122a"></script>
+  <script src="travel-comparison.js?v=20261122a"></script>
   <script src="program-booking.js?v=20261122a"></script>
   <script src="featured-carousel.js?v=20261121f"></script>
   <script src="travel-search.js?v=20261122a"></script>

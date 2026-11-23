@@ -15,6 +15,29 @@
     return `static:${normalizeSlug(section)}:${normalizeSlug(title)}${suffix}`;
   }
 
+  function createCatalogIdentifiers(namespace, values) {
+    const acceptedNamespaces = new Set(['loaded', 'europa-medida', 'lowcost']);
+    if (!acceptedNamespaces.has(namespace) || !Array.isArray(values)) return [];
+
+    const keys = values.map(value => String(value == null ? '' : value));
+    const isValid = value => new RegExp(`^${namespace}:[A-Za-z0-9._-]+$`).test(value);
+    const reserved = new Set(keys.map(key => `${namespace}:${key}`).filter(isValid));
+    const assigned = new Set();
+
+    return keys.map(key => {
+      const original = `${namespace}:${key}`;
+      let id = original;
+      if (!isValid(original) || assigned.has(id)) {
+        const base = `${namespace}:${normalizeSlug(key)}`;
+        id = base;
+        let suffix = 2;
+        while (reserved.has(id) || assigned.has(id)) id = `${base}-${suffix++}`;
+      }
+      assigned.add(id);
+      return id;
+    });
+  }
+
   function buildProgramUrl(identifier, baseUrl) {
     if (!identifier) throw new TypeError('Falta el identificador del programa');
     const url = new URL(baseUrl || (typeof location !== 'undefined' ? location.href : 'https://modorumbo.vercel.app/'));
@@ -117,5 +140,5 @@
     return copyUrl();
   }
 
-  return {normalizeSlug, createLegacyIdentifier, buildProgramUrl, isPublished, findPublishedProgram, resolveProgramLink, openProgramLink, shareOrCopy};
+  return {normalizeSlug, createLegacyIdentifier, createCatalogIdentifiers, buildProgramUrl, isPublished, findPublishedProgram, resolveProgramLink, openProgramLink, shareOrCopy};
 });

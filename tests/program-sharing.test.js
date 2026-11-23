@@ -21,6 +21,13 @@ test('genera identificadores locales legibles, namespaced y únicos sin usar el 
   );
 });
 
+test('normaliza nombres históricos para IDs guardables sin cambiar los IDs ya válidos', () => {
+  const ids = sharing.createCatalogIdentifiers('lowcost', ['Europa Chic', 'Eurojet', 'Río de Janeiro', 'rio-de-janeiro']);
+  assert.deepEqual(ids, ['lowcost:europa-chic', 'lowcost:Eurojet', 'lowcost:rio-de-janeiro-2', 'lowcost:rio-de-janeiro']);
+  assert.equal(sharing.createCatalogIdentifiers('loaded', ['tailandia-clasica'])[0], 'loaded:tailandia-clasica');
+  assert.deepEqual(sharing.createCatalogIdentifiers('custom', ['Viaje a medida']), []);
+});
+
 test('construye enlaces directos y conserva los parámetros presentes', () => {
   const result = new URL(sharing.buildProgramUrl('supabase:abc-123','https://modorumbo.vercel.app/?utm_source=whatsapp#inicio'));
   assert.equal(result.searchParams.get('programa'),'supabase:abc-123');
