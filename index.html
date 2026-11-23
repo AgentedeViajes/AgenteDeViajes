@@ -3212,10 +3212,30 @@
     }
 
     let navDropdownCloseTimer = null;
+    const navLinks = document.getElementById('navLinks');
+    function clearDismissedNavDropdown(item) {
+      item?.classList.remove('dropdown-dismissed');
+      item?.removeAttribute('data-dropdown-dismissed-by');
+    }
+    function dismissNavDropdown(item, source='keyboard') {
+      item?.classList.add('dropdown-dismissed');
+      if (item) item.dataset.dropdownDismissedBy = source;
+    }
+    function closeNavDropdowns({suppressReopen=true, source='keyboard'}={}) {
+      navLinks.querySelectorAll('.has-dropdown').forEach(item => {
+        const button = item.querySelector('.nav-link-btn');
+        const open = button?.getAttribute('aria-expanded') === 'true';
+        if (suppressReopen && (open || item.matches(':hover,:focus-within'))) {
+          dismissNavDropdown(item, item.matches(':hover') ? 'pointer' : source);
+        }
+      });
+      setOpenNavDropdown(null);
+    }
     function setOpenNavDropdown(target) {
       window.clearTimeout(navDropdownCloseTimer);
-      document.querySelectorAll('#navLinks .has-dropdown > .nav-link-btn').forEach(button => {
+      navLinks.querySelectorAll('.has-dropdown > .nav-link-btn').forEach(button => {
         const active = button === target;
+        if (active) clearDismissedNavDropdown(button.parentElement);
         button.nextElementSibling.classList.toggle('show',active);
         button.setAttribute('aria-expanded',String(active));
       });
@@ -3227,7 +3247,13 @@
     function toggleDropdown(e, el) {
       e.preventDefault();
       e.stopPropagation();
-      setOpenNavDropdown(el.getAttribute('aria-expanded') === 'true' ? null : el);
+      const item = el.parentElement;
+      if (el.getAttribute('aria-expanded') === 'true') {
+        closeNavDropdowns({source: e.detail > 0 ? 'pointer' : 'keyboard'});
+      } else {
+        clearDismissedNavDropdown(item);
+        setOpenNavDropdown(el);
+      }
     }
 
     // Keep off-canvas links out of keyboard and assistive-technology navigation
@@ -3236,8 +3262,25 @@
     window.addEventListener('resize', () => setMobileMenuOpen(document.getElementById('navbar').classList.contains('menu-open')));
 
     document.getElementById('navToggle').addEventListener('click', toggleMenu);
-    document.getElementById('navLinks').addEventListener('click', event => {
+    navLinks.querySelectorAll('.has-dropdown').forEach(item => {
+      item.addEventListener('pointerleave', () => {
+        if (window.innerWidth <= 1100 || item.dataset.dropdownDismissedBy !== 'pointer') clearDismissedNavDropdown(item);
+      });
+      item.addEventListener('focusout', event => {
+        if (!item.contains(event.relatedTarget) && !item.matches(':hover') && item.dataset.dropdownDismissedBy !== 'pointer') clearDismissedNavDropdown(item);
+      });
+    });
+    document.addEventListener('pointermove', event => {
+      if (window.innerWidth <= 1100 || event.pointerType !== 'mouse') return;
+      const pointerTarget = document.elementFromPoint(event.clientX, event.clientY);
+      navLinks.querySelectorAll('.has-dropdown.dropdown-dismissed[data-dropdown-dismissed-by="pointer"]').forEach(item => {
+        if (pointerTarget && !item.contains(pointerTarget)) clearDismissedNavDropdown(item);
+      });
+    }, {passive:true});
+    navLinks.addEventListener('click', event => {
       if (event.target.closest('a')) {
+        const selectedDropdown = event.target.closest('.dropdown')?.closest('.has-dropdown');
+        if (selectedDropdown) dismissNavDropdown(selectedDropdown, event.detail > 0 ? 'pointer' : 'keyboard');
         setMobileMenuOpen(false);
         setOpenNavDropdown(null);
       }
@@ -3245,6 +3288,9 @@
     document.getElementById('navLinks').addEventListener('keydown', event => {
       const submenuButton = event.target.closest('.nav-link-btn[role="button"]');
       if (submenuButton && (event.key === 'Enter' || event.key === ' ')) toggleDropdown(event, submenuButton);
+    });
+    document.addEventListener('click', event => {
+      if (!navLinks.contains(event.target)) closeNavDropdowns({source:'pointer'});
     });
     const navSearchButton = document.querySelector('.nav-search-button');
     const navSearchPanel = document.getElementById('navSearchPanel');
@@ -3280,9 +3326,14 @@
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && document.getElementById('navbar').classList.contains('menu-open')) setMobileMenuOpen(false);
       if (event.key === 'Escape' && !navSearchPanel.hidden) closeNavSearch();
-      if (event.key === 'Escape' && document.querySelector('#navLinks .has-dropdown > .nav-link-btn[aria-expanded="true"]')) {
-        setOpenNavDropdown(null);
-        document.querySelector('#navLinks .has-dropdown > .nav-link-btn:focus')?.focus();
+      if (event.key === 'Escape') {
+        const activeItem = [...navLinks.querySelectorAll('.has-dropdown')].find(item =>
+          item.querySelector('.nav-link-btn[aria-expanded="true"]') || item.matches(':hover,:focus-within')
+        );
+        if (activeItem) {
+          closeNavDropdowns({source: activeItem.matches(':hover') ? 'pointer' : 'keyboard'});
+          if (activeItem.contains(document.activeElement)) activeItem.querySelector('.nav-link-btn')?.focus();
+        }
       }
     });
 
@@ -3298,7 +3349,7 @@
       const trigger = item.querySelector(':scope > .nav-link-btn');
       const dropdown = item.querySelector(':scope > .dropdown');
       item.addEventListener('mouseenter', () => {
-        if (window.innerWidth > 1100) setOpenNavDropdown(trigger);
+        if (window.innerWidth > 1100 && !item.classList.contains('dropdown-dismissed')) setOpenNavDropdown(trigger);
       });
       item.addEventListener('mouseleave', () => {
         if (window.innerWidth > 1100) scheduleNavDropdownClose();

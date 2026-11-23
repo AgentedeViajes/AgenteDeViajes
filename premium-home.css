@@ -1179,6 +1179,17 @@ body:has(.program-dialog[open]) { overflow: hidden; }
 }
 @media (max-width:680px) { .travel-search-wrap { margin:-16px auto 0!important; } }
 
+/* A closed menu selection must stay closed while hover or focus remains on its item. */
+#navbar .premium-nav-links .has-dropdown.dropdown-dismissed > .dropdown {
+  opacity:0!important;
+  visibility:hidden!important;
+  transform:translateY(-10px)!important;
+  pointer-events:none!important;
+}
+@media (max-width:900px) {
+  #navbar .premium-nav-links .has-dropdown.dropdown-dismissed > .dropdown { display:none!important; }
+}
+
 @media (min-width:901px) {
   #navbar { position:absolute!important; inset:0 0 auto!important; height:78px!important; background:linear-gradient(180deg,rgba(3,22,53,.68),rgba(3,22,53,.16))!important; }
   #navbar.scrolled { position:fixed!important; background:rgba(4,30,76,.94)!important; }
