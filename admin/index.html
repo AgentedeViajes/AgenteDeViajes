@@ -77,6 +77,7 @@
         <label>Código de operador<input id="operatorCodeFilter" type="search" placeholder="Ej. VIE, PI, MIDAS"></label>
         <label>Estado<select id="statusFilter"><option value="">Todos</option><option value="published">Publicado</option><option value="draft">Borrador</option><option value="paused">Pausado</option></select></label>
         <label>Tipo<select id="typeFilter"><option value="">Todos</option><option value="grupal">Viaje grupal</option><option value="personalizado">Viaje a medida</option><option value="sin-aereo">Circuito sin aéreo</option><option value="lujo">Viaje de lujo</option><option value="luna-de-miel">Luna de miel</option><option value="low-cost">Low Cost</option></select></label>
+        <label>Estado de destinos<select id="destinationStatusFilter"><option value="all">Todos los programas (0)</option><option value="with-destinations">Con destinos cargados (0)</option><option value="without-destinations">Sin destinos cargados (0)</option><option value="without-destinations-with-itinerary">Sin destinos y con itinerario (0)</option><option value="without-destinations-without-itinerary">Sin destinos y sin itinerario (0)</option></select></label>
       </div>
 
       <div class="panel table-panel">
@@ -163,7 +164,27 @@
             <label>Estado<select id="status"><option value="draft">Borrador</option><option value="published">Publicado</option><option value="paused">Pausado</option></select></label>
             <label>Región<select id="region"><option value="">Seleccionar</option><option>Europa</option><option>Caribe</option><option>Brasil</option><option>Estados Unidos</option><option>Asia</option><option>África</option><option>Islas del Índico</option><option>Medio Oriente</option><option>Oriente</option><option>Sudeste Asiático</option><option>Subcontinente Indio</option><option>Oceanía</option></select></label>
             <label>País o países<input id="countries" placeholder="Japón, Emiratos Árabes"></label>
-            <label class="span-2">Ciudades o destinos<input id="destinations" placeholder="Tokyo, Kyoto, Osaka, Dubai"></label>
+            <div class="span-2 destination-entry">
+              <label for="destinations">Ciudades o destinos</label>
+              <div class="destination-entry-row">
+                <input id="destinations" placeholder="Tokyo, Kyoto, Osaka, Dubai">
+                <button class="secondary-button" id="suggestDestinationsButton" type="button" aria-expanded="false" aria-controls="destinationSuggestionsPanel">Sugerir destinos desde el itinerario</button>
+              </div>
+              <section class="destination-suggestion-panel" id="destinationSuggestionsPanel" hidden aria-labelledby="destinationSuggestionsTitle">
+                <header class="destination-suggestion-header">
+                  <div><h3 id="destinationSuggestionsTitle">Revisá los destinos sugeridos</h3><p>Las sugerencias no se guardan hasta que guardes el programa.</p></div>
+                  <button class="icon-button" type="button" data-cancel-destination-suggestions aria-label="Cerrar sugerencias">×</button>
+                </header>
+                <p class="destination-suggestion-status" id="destinationSuggestionStatus" role="status" aria-live="polite"></p>
+                <div class="destination-suggestion-toolbar">
+                  <button class="text-button" type="button" data-select-all-suggestions>Seleccionar todas las nuevas</button>
+                  <button class="text-button" type="button" data-clear-suggestion-selection>Desmarcar todas</button>
+                  <button class="text-button" type="button" data-cancel-destination-suggestions>Cancelar</button>
+                </div>
+                <div class="destination-suggestion-list" id="destinationSuggestionList"></div>
+                <div class="destination-suggestion-footer"><button class="primary-button" type="button" data-add-selected-destinations disabled>Agregar destinos seleccionados</button></div>
+              </section>
+            </div>
             <label>Duración<input id="duration" placeholder="15 días / 14 noches"></label>
             <label class="check-label"><input id="featured" type="checkbox"> Mostrar como destacado</label>
           </div>
@@ -417,8 +438,9 @@
   <script src="itinerary-parser.js"></script>
   <script src="document-reader.js"></script>
   <script src="itinerary-importer.js"></script>
+  <script src="destination-suggestions.js?v=20261123a"></script>
   <script src="data-service.js?v=20261121b"></script>
-  <script src="admin.js?v=20261121b"></script>
+  <script src="admin.js?v=20261123a"></script>
   <script src="home-videos-admin.js?v=20261121b"></script>
   <script src="traveler-experiences-admin.js?v=20261122a"></script>
 </body>

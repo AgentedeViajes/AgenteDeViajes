@@ -4,7 +4,8 @@
   const $$=selector=>Array.from(document.querySelectorAll(selector));
   const dataService=window.ModoRumboData;
   const dateMode=window.ModoRumboDateMode;
-  const state={programs:[],editingId:null,mode:'local',user:null,activeDateMode:dateMode.SPECIFIC_DATES,departureSort:'asc'};
+  const destinationSuggestions=window.ModoRumboDestinationSuggestions;
+  const state={programs:[],editingId:null,mode:'local',user:null,activeDateMode:dateMode.SPECIFIC_DATES,departureSort:'asc',destinationSuggestions:[],selectedDestinationSuggestionIds:new Set()};
   const views={programs:$('#programsView'),editor:$('#editorView'),homeVideos:$('#homeVideosView'),experiences:$('#travelerExperiencesView')};
 
   function uid(){return crypto.randomUUID?crypto.randomUUID():`program-${Date.now()}-${Math.random().toString(16).slice(2)}`}
@@ -29,10 +30,24 @@
     const operatorCode=$('#operatorCodeFilter').value.trim().toLowerCase();
     const status=$('#statusFilter').value;
     const type=$('#typeFilter').value;
-    const filtered=state.programs.filter(program=>{
+    const destinationStatus=$('#destinationStatusFilter').value||'all';
+    const baseFiltered=state.programs.filter(program=>{
       const haystack=[program.title,program.operatorCode,program.countries,program.destinations].join(' ').toLowerCase();
-      return(!query||haystack.includes(query))&&(!operatorCode||String(program.operatorCode||'').trim().toLowerCase()===operatorCode)&&(!status||program.status===status)&&(!type||program.travelTypes.includes(type));
-    }).map((program,index)=>({program,index,date:nextDepartureDate(program)})).sort((a,b)=>{
+      return(!query||haystack.includes(query))&&(!operatorCode||String(program.operatorCode||'').trim().toLowerCase()===operatorCode)&&(!status||program.status===status)&&(!type||(program.travelTypes||[]).includes(type));
+    });
+    const destinationCounts=destinationSuggestions.destinationCounts(baseFiltered);
+    const destinationOptions={
+      all:`Todos los programas (${destinationCounts.all})`,
+      'with-destinations':`Con destinos cargados (${destinationCounts['with-destinations']})`,
+      'without-destinations':`Sin destinos cargados (${destinationCounts['without-destinations']})`,
+      'without-destinations-with-itinerary':`Sin destinos y con itinerario (${destinationCounts['without-destinations-with-itinerary']})`,
+      'without-destinations-without-itinerary':`Sin destinos y sin itinerario (${destinationCounts['without-destinations-without-itinerary']})`
+    };
+    Object.entries(destinationOptions).forEach(([value,label])=>{
+      const option=$(`#destinationStatusFilter option[value="${value}"]`);
+      if(option)option.textContent=label;
+    });
+    const filtered=destinationSuggestions.filterPrograms(baseFiltered,destinationStatus).map((program,index)=>({program,index,date:nextDepartureDate(program)})).sort((a,b)=>{
       if(!a.date&&!b.date)return a.index-b.index;
       if(!a.date)return 1;
       if(!b.date)return -1;
@@ -76,8 +91,63 @@
     return true;
   }
 
+  function closeDestinationSuggestions(){
+    const panel=$('#destinationSuggestionsPanel');
+    if(!panel)return;
+    panel.hidden=true;$('#suggestDestinationsButton').setAttribute('aria-expanded','false');
+  }
+  function updateDestinationSelectionState(){
+    const selectedCount=state.selectedDestinationSuggestionIds.size;
+    const addButton=$('[data-add-selected-destinations]');
+    addButton.disabled=selectedCount===0;
+    addButton.textContent=selectedCount?`Agregar destinos seleccionados (${selectedCount})`:'Agregar destinos seleccionados';
+    if(state.destinationSuggestions.length){
+      const newCount=state.destinationSuggestions.filter(item=>!item.alreadyLoaded).length;
+      $('#destinationSuggestionStatus').textContent=selectedCount?`${selectedCount} de ${newCount} destinos nuevos seleccionados. Revisalos antes de agregarlos.`:`${state.destinationSuggestions.length} sugerencia${state.destinationSuggestions.length===1?'':'s'} para revisar. Las nuevas aparecen desmarcadas.`;
+    }
+  }
+  function renderDestinationSuggestions(){
+    const list=$('#destinationSuggestionList');
+    const status=$('#destinationSuggestionStatus');
+    if(!state.destinationSuggestions.length){list.innerHTML='';return}
+    list.innerHTML=state.destinationSuggestions.map(item=>{
+      const checked=item.alreadyLoaded||state.selectedDestinationSuggestionIds.has(item.id);
+      const sources=item.sources.map(source=>`<li><strong>Día ${escapeHtml(source.day)}:</strong> ${escapeHtml(source.title)}</li>`).join('');
+      const warnings=item.reviewWarnings.map(warning=>`<li>${escapeHtml(warning)}</li>`).join('');
+      const kind=item.kind==='known'?'Destino conocido':item.alreadyLoaded?'Candidato del itinerario sin confirmar':'Candidato nuevo · requiere confirmación';
+      return`<article class="destination-suggestion-card ${item.kind==='unknown'?'is-candidate':''} ${item.alreadyLoaded?'is-loaded':''}">
+        <label class="destination-suggestion-choice"><input type="checkbox" data-suggestion-id="${escapeHtml(item.id)}" ${checked?'checked':''} ${item.alreadyLoaded?'disabled':''}><span><strong>${escapeHtml(item.name)}</strong><small>${kind}${item.alreadyLoaded?' · Ya cargado':''}</small></span></label>
+        <div class="destination-suggestion-evidence"><strong>Origen en el itinerario</strong><ul>${sources}</ul></div>
+        ${warnings?`<div class="destination-suggestion-warning" role="note"><strong>Revisar antes de agregar</strong><ul>${warnings}</ul></div>`:''}
+      </article>`;
+    }).join('');
+    status.textContent=`${state.destinationSuggestions.length} sugerencia${state.destinationSuggestions.length===1?'':'s'} para revisar. Las nuevas aparecen desmarcadas.`;
+    updateDestinationSelectionState();
+  }
+  function openDestinationSuggestions(){
+    const panel=$('#destinationSuggestionsPanel');
+    state.selectedDestinationSuggestionIds.clear();
+    const itinerary=$$('#itineraryList .itinerary-day').map((row,index)=>({position:index+1,...rowData(row)})).filter(day=>day.title);
+    const currentProgram={destinations:$('#destinations').value,countries:$('#countries').value,itinerary};
+    state.destinationSuggestions=destinationSuggestions.suggest(currentProgram,[...state.programs,currentProgram]);
+    panel.hidden=false;$('#suggestDestinationsButton').setAttribute('aria-expanded','true');
+    if(!itinerary.length){$('#destinationSuggestionStatus').textContent='Este programa no tiene títulos de itinerario. Cargá los destinos manualmente en el campo.';$('#destinationSuggestionList').innerHTML='';updateDestinationSelectionState();return}
+    if(!state.destinationSuggestions.length){$('#destinationSuggestionStatus').textContent='No se encontraron destinos en los títulos del itinerario. Podés cargarlos manualmente.';$('#destinationSuggestionList').innerHTML='';updateDestinationSelectionState();return}
+    renderDestinationSuggestions();
+  }
+  function addSelectedDestinations(){
+    const input=$('#destinations');
+    const originalCount=input.value.split(/[,;]+/).map(value=>value.trim()).filter(Boolean).length;
+    const selectedCount=state.selectedDestinationSuggestionIds.size;
+    const merged=destinationSuggestions.mergeSelected(input.value,state.destinationSuggestions,state.selectedDestinationSuggestionIds);
+    input.value=merged.join(', ');
+    const added=merged.length-originalCount;
+    closeDestinationSuggestions();state.selectedDestinationSuggestionIds.clear();
+    showToast(added>0?`${added} destino${added===1?'':'s'} agregado${added===1?'':'s'} al formulario. Guardá el programa para confirmar los cambios.`:selectedCount?'Los destinos seleccionados ya estaban cargados.':'No había destinos nuevos seleccionados.');
+  }
+
   function resetForm(){
-    $('#programForm').reset();state.editingId=null;$('#programId').value='';$('#departuresList').innerHTML='';$('#itineraryList').innerHTML='';$('#rangeStartDate').value='';$('#rangeEndDate').value='';updateImagePreview('');addDeparture();addDay();setDateMode(dateMode.SPECIFIC_DATES);
+    $('#programForm').reset();state.editingId=null;state.destinationSuggestions=[];state.selectedDestinationSuggestionIds.clear();closeDestinationSuggestions();$('#programId').value='';$('#departuresList').innerHTML='';$('#itineraryList').innerHTML='';$('#rangeStartDate').value='';$('#rangeEndDate').value='';updateImagePreview('');addDeparture();addDay();setDateMode(dateMode.SPECIFIC_DATES);
   }
   function openNew(){resetForm();switchView('editor')}
   function editProgram(id){
@@ -121,7 +191,23 @@
   $$('[name="dateMode"]').forEach(input=>input.addEventListener('change',()=>setDateMode(input.value,{confirmChange:true,autoPrice:true})));
   $('#imageFile').addEventListener('change',event=>{const file=event.target.files[0];if(!file)return;updateImagePreview(URL.createObjectURL(file))});
   $$('.nav-button').forEach(button=>button.addEventListener('click',()=>button.dataset.view==='editor'?openNew():switchView(button.dataset.view)));
-  ['programSearch','operatorCodeFilter','statusFilter','typeFilter'].forEach(id=>$(`#${id}`).addEventListener('input',renderPrograms));
+  ['programSearch','operatorCodeFilter','statusFilter','typeFilter','destinationStatusFilter'].forEach(id=>$(`#${id}`).addEventListener('input',renderPrograms));
+  $('#destinationStatusFilter').addEventListener('change',renderPrograms);
+  $('#suggestDestinationsButton').addEventListener('click',()=>$('#destinationSuggestionsPanel').hidden?openDestinationSuggestions():closeDestinationSuggestions());
+  $('#destinationSuggestionsPanel').addEventListener('change',event=>{
+    const checkbox=event.target.closest('[data-suggestion-id]');if(!checkbox)return;
+    if(checkbox.checked)state.selectedDestinationSuggestionIds.add(checkbox.dataset.suggestionId);else state.selectedDestinationSuggestionIds.delete(checkbox.dataset.suggestionId);
+    updateDestinationSelectionState();
+  });
+  $('#destinationSuggestionsPanel').addEventListener('click',event=>{
+    if(event.target.closest('[data-select-all-suggestions]')){
+      state.destinationSuggestions.filter(item=>!item.alreadyLoaded).forEach(item=>state.selectedDestinationSuggestionIds.add(item.id));renderDestinationSuggestions();
+    }
+    if(event.target.closest('[data-clear-suggestion-selection]')){state.selectedDestinationSuggestionIds.clear();renderDestinationSuggestions()}
+    if(event.target.closest('[data-cancel-destination-suggestions]')){state.selectedDestinationSuggestionIds.clear();closeDestinationSuggestions()}
+    if(event.target.closest('[data-add-selected-destinations]'))addSelectedDestinations();
+  });
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('#destinationSuggestionsPanel').hidden){state.selectedDestinationSuggestionIds.clear();closeDestinationSuggestions();$('#suggestDestinationsButton').focus()}});
   $('#sortDepartureButton').addEventListener('click',()=>{state.departureSort=state.departureSort==='asc'?'desc':'asc';renderPrograms()});
   document.addEventListener('click',event=>{
     const action=event.target.closest('[data-action]');if(action?.dataset.action==='new')openNew();
