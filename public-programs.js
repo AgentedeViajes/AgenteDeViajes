@@ -11,6 +11,7 @@
       order: 'sort_order.asc,updated_at.desc'
     });
     const response = await fetch(`${SUPABASE_URL}/rest/v1/programs?${query}`, {
+      cache: 'no-store',
       headers: {
         apikey: SUPABASE_PUBLISHABLE_KEY,
         Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`

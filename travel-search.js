@@ -12,6 +12,13 @@
   let comparisonStoreInstance = null;
   let comparisonToastTimer = null;
   let publicCatalogReady = false;
+  let advancedSearchActive = false;
+  const QUICK_CATEGORY_IDS = ['grupal','sin-aereo','personalizado','low-cost','lujo'];
+  let activeQuickCategories = new Set(QUICK_CATEGORY_IDS);
+  let activeResultSort = 'default';
+  let resultBaseRecords = [];
+  let resultBaseFilters = {};
+  let resultBaseEmptyMessage = '';
 
   const MONTHS = [
     ['enero','Enero'],['febrero','Febrero'],['marzo','Marzo'],['abril','Abril'],
@@ -549,6 +556,17 @@
     window.travelCatalog = catalog;
   }
 
+  function notifyAdvancedSearchCatalogReady() {
+    window.dispatchEvent(new CustomEvent('modo-rumbo:catalog-geography-updated', {
+      detail: {
+        programs: catalog.map(program => ({
+          countries: program.countries || [],
+          destinations: program.destinations || []
+        }))
+      }
+    }));
+  }
+
   function publicPrice(program) {
     if (program.price_prefix === 'consult' || program.price == null) return '';
     const amount = new Intl.NumberFormat('es-AR', {maximumFractionDigits:0}).format(Number(program.price));
@@ -1054,6 +1072,11 @@
         types:publicTypes(program),
         authoritativeTypes:true,
         months:isRangeProgram(program)?dateMode.rangeMonths(program.travel_start_date,program.travel_end_date):departures.map(item => MONTHS[new Date(`${item.departure_date}T12:00:00`).getMonth()]?.[0]).filter(Boolean),
+        searchDepartures:isRangeProgram(program) ? [] : departures.map(item => ({
+          date:item.departure_date || '',
+          month:item.departure_date ? MONTHS[new Date(`${item.departure_date}T12:00:00`).getMonth()]?.[0] || '' : '',
+          price:item.price != null ? detailMoney(item.price,program.currency || 'USD') : ''
+        })),
         featured:Boolean(program.featured),
         comparison: {
           image:program.image_path || '',
@@ -1074,6 +1097,7 @@
     window.travelCatalog = catalog;
     comparisonStore()?.reconcile(favoritePrograms());
     updateComparisonButtons();
+    if (!document.getElementById('favoriteTripsSection')?.hidden) renderFavoriteTrips();
     if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
   }
 
@@ -1142,7 +1166,8 @@
   }
 
   function cardHtml(record, options = {}) {
-    const departure = record.nextDepartureDate ? displayUpcomingDate(record.nextDepartureDate) : compactDeparture(record.departureText);
+    const departure = record.displayDepartureText || (record.nextDepartureDate ? displayUpcomingDate(record.nextDepartureDate) : compactDeparture(record.departureText));
+    const cardPrice = Object.prototype.hasOwnProperty.call(record, 'displayPriceText') ? record.displayPriceText : record.priceText;
     const favorite = canFavorite(record) ? favoritesModule.buttonHtml(record.id, favoriteStore()?.has(record.id), record.name) : '';
     const compare = options.includeCompare && canCompare(record)
       ? comparisonModule.buttonHtml(record.id, record.name, comparisonStore()?.has(record.id)).replace('trip-compare-button','favorite-card-compare-button')
@@ -1153,7 +1178,7 @@
       <div class="trip-card-body">
         <h3>${escapeHtml(record.name)}</h3>
         <div class="trip-meta"><span><i class="far fa-calendar-alt"></i>${escapeHtml(departure)}</span>${record.duration ? `<span><i class="far fa-clock"></i>${escapeHtml(record.duration)}</span>` : ''}</div>
-        <div class="trip-price">${record.priceText ? escapeHtml(compactPrice(record.priceText)) : 'Precio a consultar'}</div>
+        <div class="trip-price">${cardPrice ? escapeHtml(compactPrice(cardPrice)) : 'Precio a consultar'}</div>
       </div>
       ${compare ? `<div class="favorite-compare-actions">${compare}</div>` : ''}
     </article>`;
@@ -1166,31 +1191,111 @@
     return clean.length > 38 ? `${clean.slice(0,35)}…` : clean;
   }
 
-  function renderResults(records, filters, emptyMessage) {
-    window.hideFavoriteTripsView?.();
+  function renderResultRefinements() {
+    const root = document.getElementById('searchResultRefinements');
+    const engine = window.ModoRumboAdvancedSearchUI;
+    if (!root || !engine) return;
+    const sortLabels = [
+      ['default','Orden habitual'],['price-asc','Menor precio'],['price-desc','Mayor precio'],
+      ['departure-asc','Próxima salida'],['departure-desc','Salida más lejana']
+    ];
+    const chips = engine.QUICK_FILTERS.map(filter => `<button type="button" class="search-result-category-chip" data-result-category="${filter.id}" aria-pressed="${activeQuickCategories.has(filter.id)}">${filter.label}</button>`).join('');
+    const options = sortLabels.map(([value,label]) => `<option value="${value}"${activeResultSort === value ? ' selected' : ''}>${label}</option>`).join('');
+    root.hidden = false;
+    root.innerHTML = `<div class="search-result-category-group" role="group" aria-label="Filtrar resultados por modalidad">${chips}</div><label class="search-result-sort"><span>Ordenar:</span><select id="searchResultSort" aria-label="Ordenar resultados">${options}</select></label>`;
+  }
+
+  function renderRefinedResults(shouldScroll = false) {
     const section = document.getElementById('travelResults');
     const summary = document.getElementById('travelResultsSummary');
     const grid = document.getElementById('travelResultsGrid');
-    section.classList.add('visible');
-    const experienceLabels = {grupal:'Viajes grupales',personalizado:'Viajes a medida','sin-aereo':'Circuitos sin aéreo',lujo:'Viajes de lujo','low-cost':'Low cost'};
+    const engine = window.ModoRumboAdvancedSearchUI;
+    if (!section || !summary || !grid || !engine) return;
+    const filters = resultBaseFilters || {};
+    const refined = engine.filterQuickCategories(resultBaseRecords, [...activeQuickCategories]);
+    const sorted = engine.sortPrograms(refined, activeResultSort, filters.month || '');
+    const records = sorted.map(row => {
+      const record = row.program;
+      if (activeResultSort === 'default') return record;
+      const display = { ...record };
+      if (row.departure?.date) display.displayDepartureText = publicDate(row.departure.date);
+      if (activeResultSort === 'price-asc' || activeResultSort === 'price-desc') {
+        if (row.departure) display.displayPriceText = row.departure.price || '';
+      } else if ((activeResultSort === 'departure-asc' || activeResultSort === 'departure-desc') && row.departure?.price) {
+        display.displayPriceText = row.departure.price;
+      }
+      return display;
+    });
+    const experienceLabels = {grupal:'Viajes grupales',personalizado:'Viajes a medida','sin-aereo':'Circuitos sin aéreo',lujo:'Viajes de lujo','low-cost':'Low Cost'};
     const navigationLabel = filters.navigation && filters.navigation.kind === 'destination' ? filters.navigation.value
       : filters.navigation && filters.navigation.kind === 'experience' ? experienceLabels[filters.navigation.value]
       : filters.navigation && filters.navigation.kind === 'upcoming' ? 'Próximas salidas · próximos 60 días'
       : filters.navigation && filters.navigation.kind === 'mode' ? ({playa:'Modo Playa'}[filters.navigation.value] || 'este modo') : '';
-    const detail = [navigationLabel, filters.query && `“${document.getElementById('travelDestination').value.trim()}”`, filters.month && MONTHS.find(m => m[0] === filters.month)?.[1], filters.type && document.getElementById('travelType').selectedOptions[0].text].filter(Boolean).join(' · ');
+    const monthLabel = filters.month && MONTHS.find(m => m[0] === filters.month)?.[1];
+    const typeSelect = document.getElementById('travelType');
+    const typeLabel = filters.type && typeSelect?.selectedOptions[0]?.text;
+    const selectedCountries = (filters.countries || []).join(', ');
+    const selectedDestinations = (filters.destinations || []).join(', ');
+    const detail = [navigationLabel, filters.name && `“${filters.name}”`, filters.query && `“${document.getElementById('travelDestination')?.value.trim() || filters.query}”`, selectedCountries, selectedDestinations, monthLabel, typeLabel].filter(Boolean).join(' · ');
     summary.textContent = `${records.length} ${records.length === 1 ? 'viaje encontrado' : 'viajes encontrados'}${detail ? ` para ${detail}` : ''}`;
     grid.innerHTML = records.length
       ? records.map(cardHtml).join('')
-      : `<div class="search-results-empty" style="grid-column:1/-1"><i class="fas fa-compass"></i><strong>${escapeHtml(emptyMessage || 'No encontramos programas con esos filtros.')}</strong><p>${emptyMessage ? 'Volvé a consultar más adelante o probá con otro destino.' : 'Probá con otro destino, mes o tipo de viaje.'}</p></div>`;
+      : `<div class="search-results-empty" style="grid-column:1/-1"><i class="fas fa-compass"></i><strong>${escapeHtml(resultBaseEmptyMessage || (activeQuickCategories.size ? 'No encontramos programas con esos filtros.' : 'Activá al menos una modalidad para ver programas.'))}</strong><p>${resultBaseEmptyMessage ? 'Volvé a consultar más adelante o probá con otro destino.' : 'Probá con otra combinación o activá alguna modalidad.'}</p></div>`;
     updateFavoriteButtons();
     updateComparisonButtons();
-    section.scrollIntoView({behavior:'smooth',block:'start'});
+    if (shouldScroll) section.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function renderResults(records, filters, emptyMessage) {
+    window.hideFavoriteTripsView?.();
+    const section = document.getElementById('travelResults');
+    section.classList.add('visible');
+    resultBaseRecords = Array.isArray(records) ? [...records] : [];
+    resultBaseFilters = filters || {};
+    resultBaseEmptyMessage = emptyMessage || '';
+    renderResultRefinements();
+    renderRefinedResults(true);
   }
 
   function runSearch(event, emptyMessage) {
     if (event) event.preventDefault();
+    advancedSearchActive = false;
     const filters = currentFilters();
     renderResults(filterCatalog(filters), filters, emptyMessage);
+  }
+
+  function advancedSearchCriteria() {
+    const selectors = window.modoRumboAdvancedSearchSelectors || {};
+    return {
+      name:document.getElementById('advancedProgramName')?.value || '',
+      countries:selectors.countrySelector?.values() || [],
+      destinations:selectors.destinationSelector?.values() || [],
+      month:document.getElementById('travelMonth')?.value || '',
+      type:document.getElementById('travelType')?.value || ''
+    };
+  }
+
+  function runAdvancedSearch(event) {
+    if (event) event.preventDefault();
+    const engine = window.ModoRumboAdvancedSearchUI;
+    if (!engine || !publicCatalogReady) {
+      const status = document.getElementById('travelResultsSummary');
+      if (status) status.textContent = 'Estamos actualizando los programas. Probá nuevamente en unos segundos.';
+      return;
+    }
+    advancedSearchActive = true;
+    activeNavigationFilter = null;
+    const filters = advancedSearchCriteria();
+    const matches = engine.filterPrograms(catalog, filters).map(record => {
+      const departure = engine.matchingDeparture(record, filters.month);
+      if (!departure) return record;
+      return {
+        ...record,
+        displayDepartureText:departure.date ? publicDate(departure.date) : record.departureText,
+        displayPriceText:departure.price || ''
+      };
+    });
+    renderResults(matches, {...filters, advanced:true});
   }
 
   window.runModoRumboSearch = function () {
@@ -1205,7 +1310,10 @@
   }
 
   function clearTravelFilters() {
-    document.getElementById('travelDestination').value = '';
+    const legacyDestination = document.getElementById('travelDestination');
+    if (legacyDestination) legacyDestination.value = '';
+    const programName = document.getElementById('advancedProgramName');
+    if (programName) programName.value = '';
     ['travelMonth','travelType'].forEach(id => {
       const select = document.getElementById(id);
       if (!select) return;
@@ -1214,6 +1322,10 @@
       const valueLabel = field && field.querySelector('[data-select-value]');
       if (valueLabel && field.dataset.placeholder) valueLabel.textContent = field.dataset.placeholder;
     });
+    window.dispatchEvent(new CustomEvent('modo-rumbo:clear-search-filters'));
+    window.dispatchEvent(new CustomEvent('modo-rumbo:clear-result-refinements'));
+    const advancedName = document.getElementById('advancedProgramName');
+    if (advancedName) advancedName.value = '';
   }
 
   function hideTravelResults() {
@@ -1314,34 +1426,75 @@
     runSearch(null,'No hay salidas confirmadas dentro de los próximos 60 días.');
   };
 
-  function clearAllFiltersFavoritesAndComparison() {
+  function clearAllSearchFilters() {
     activeNavigationFilter = null;
+    activeQuickCategories = new Set(QUICK_CATEGORY_IDS);
+    activeResultSort = 'default';
     clearTravelFilters();
-    favoriteStore()?.clear?.();
-    comparisonStore()?.clear?.();
-    updateFavoriteButtons();
-    updateComparisonButtons();
-    if (!document.getElementById('favoriteTripsSection')?.hidden) renderFavoriteTrips();
-    if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
-    window.showAllTrips();
+    advancedSearchActive = true;
+    runAdvancedSearch();
   }
 
   window.requestClearAll = function () {
     const dialog = document.getElementById('clearAllConfirmDialog');
     if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
-    else if (window.confirm('¿Querés limpiar los filtros y eliminar todos tus favoritos y viajes seleccionados para comparar?')) clearAllFiltersFavoritesAndComparison();
+    else if (window.confirm('¿Querés limpiar todos los criterios de búsqueda? Tus favoritos y comparaciones se conservarán.')) clearAllSearchFilters();
+  };
+
+  function clearFavoritesAndComparisons() {
+    favoriteStore()?.clear?.();
+    comparisonStore()?.clear?.();
+    updateFavoriteButtons();
+    updateComparisonButtons();
+    renderFavoriteTrips();
+    if (!document.getElementById('travelComparisonSection')?.hidden) renderComparisonView();
+  }
+
+  window.requestClearFavorites = function () {
+    const dialog = document.getElementById('clearFavoritesConfirmDialog');
+    const message = '¿Querés eliminar todos tus favoritos y todas tus comparaciones? Esta acción no se puede deshacer';
+    if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+    else if (window.confirm(message)) clearFavoritesAndComparisons();
   };
 
   function bindEvents() {
     bindFeaturedCarousel();
     const form = document.getElementById('travelSearchForm');
     if (form) form.addEventListener('submit', runSearch);
+    document.getElementById('advancedSearchForm')?.addEventListener('submit', runAdvancedSearch);
+    const resultRefinements = document.getElementById('searchResultRefinements');
+    resultRefinements?.addEventListener('click', event => {
+      const chip = event.target.closest('[data-result-category]');
+      if (!chip) return;
+      const key = chip.dataset.resultCategory;
+      if (activeQuickCategories.has(key)) activeQuickCategories.delete(key);
+      else activeQuickCategories.add(key);
+      renderResultRefinements();
+      renderRefinedResults(false);
+    });
+    resultRefinements?.addEventListener('change', event => {
+      if (event.target.id !== 'searchResultSort') return;
+      activeResultSort = event.target.value || 'default';
+      renderRefinedResults(false);
+    });
+    document.querySelectorAll('#travelMonth,#travelType').forEach(select => {
+      const field = select.closest('.compact-select-field');
+      const valueLabel = field?.querySelector('[data-select-value]');
+      select.addEventListener('change', () => {
+        if (valueLabel) valueLabel.textContent = select.value ? select.selectedOptions[0].text : field.dataset.placeholder;
+      });
+    });
     const clearDialog = document.getElementById('clearAllConfirmDialog');
     clearDialog?.querySelector('[data-cancel-clear-all]')?.addEventListener('click', () => clearDialog.close());
-    clearDialog?.querySelector('[data-confirm-clear-all]')?.addEventListener('click', () => { clearDialog.close(); clearAllFiltersFavoritesAndComparison(); });
+    clearDialog?.querySelector('[data-confirm-clear-all]')?.addEventListener('click', () => { clearDialog.close(); clearAllSearchFilters(); });
+    const clearFavoritesDialog = document.getElementById('clearFavoritesConfirmDialog');
+    clearFavoritesDialog?.querySelector('[data-cancel-clear-favorites]')?.addEventListener('click', () => clearFavoritesDialog.close());
+    clearFavoritesDialog?.querySelector('[data-confirm-clear-favorites]')?.addEventListener('click', () => { clearFavoritesDialog.close(); clearFavoritesAndComparisons(); });
     document.addEventListener('click', event => {
       const clearRequest = event.target.closest('[data-request-clear-all]');
       if (clearRequest) { event.preventDefault(); window.requestClearAll(); return; }
+      const clearFavoritesRequest = event.target.closest('[data-request-clear-favorites]');
+      if (clearFavoritesRequest) { event.preventDefault(); window.requestClearFavorites(); return; }
       const comparisonButton = event.target.closest('[data-toggle-compare]');
       if (comparisonButton) {
         event.preventDefault();
@@ -1471,6 +1624,7 @@
 
   async function init() {
     buildCatalog();
+    notifyAdvancedSearchCatalogReady();
     bindEvents();
     renderFeatured();
     renderDepartures();
@@ -1482,11 +1636,15 @@
     if (typeof window.loadModoRumboPrograms === 'function') {
       try {
         collectPublicPrograms(await window.loadModoRumboPrograms());
+        notifyAdvancedSearchCatalogReady();
         renderFeatured();
         renderDepartures();
         updateFavoriteButtons();
         if (count) count.textContent = catalog.length;
-        if (document.getElementById('travelResults')?.classList.contains('visible')) runSearch();
+      if (document.getElementById('travelResults')?.classList.contains('visible')) {
+        if (advancedSearchActive) runAdvancedSearch();
+        else runSearch();
+      }
       } catch (error) {
         publicCatalogLoadFailed = true;
         console.warn('Los programas del panel no pudieron cargarse; se conserva el catálogo local.', error);

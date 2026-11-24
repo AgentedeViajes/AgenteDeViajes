@@ -176,9 +176,10 @@
   <link rel="stylesheet" href="premium-home.css?v=20261122b">
   <link rel="stylesheet" href="traveler-experiences-public.css?v=20261122a">
   <link rel="stylesheet" href="search-final.css?v=20261120a">
+  <link rel="stylesheet" href="advanced-search-ui.css?v=20261123b">
   <link rel="stylesheet" href="home-videos.css?v=20261121e">
   <link rel="stylesheet" href="travel-favorites.css?v=20261122b">
-  <link rel="stylesheet" href="travel-comparison.css?v=20261122a">
+  <link rel="stylesheet" href="travel-comparison.css?v=20261123c">
 </head>
 <body>
 
@@ -460,31 +461,61 @@
     </section>
 
     <div class="travel-search-wrap" id="travel-search">
-      <form class="travel-search" id="travelSearchForm" role="search">
-        <div class="search-field">
-          <label for="travelDestination"><i class="fas fa-search"></i> ¿A dónde querés ir?</label>
-          <input id="travelDestination" type="search" autocomplete="off" placeholder="Destino, país, ciudad o región">
+      <section class="advanced-search-preview" id="advancedSearchPreview" aria-labelledby="advancedSearchHeading">
+        <div class="advanced-search-intro">
+          <div>
+            <span class="advanced-search-kicker">ENCONTRÁ TU PRÓXIMO VIAJE</span>
+            <h2 id="advancedSearchHeading">Buscá tu próximo viaje</h2>
+          </div>
         </div>
-        <div class="search-field compact-select-field" data-placeholder="¿Cuándo viajás?">
-          <label for="travelMonth"><i class="far fa-calendar-alt"></i><span data-select-value>¿Cuándo viajás?</span><i class="fas fa-chevron-down select-chevron" aria-hidden="true"></i></label>
-          <select id="travelMonth">
-            <option value="" aria-label="Cualquier fecha"></option>
-            <option value="enero">Enero</option><option value="febrero">Febrero</option><option value="marzo">Marzo</option>
-            <option value="abril">Abril</option><option value="mayo">Mayo</option><option value="junio">Junio</option>
-            <option value="julio">Julio</option><option value="agosto">Agosto</option><option value="septiembre">Septiembre</option>
-            <option value="octubre">Octubre</option><option value="noviembre">Noviembre</option><option value="diciembre">Diciembre</option>
-          </select>
-        </div>
-        <div class="search-field compact-select-field" data-placeholder="Estilo de viaje">
-          <label for="travelType"><i class="fas fa-suitcase"></i><span data-select-value>Estilo de viaje</span><i class="fas fa-chevron-down select-chevron" aria-hidden="true"></i></label>
-          <select id="travelType">
-            <option value="" aria-label="Todos los tipos"></option>
-            <option value="con-aereo">Con aéreo</option><option value="sin-aereo">Sin aéreo</option>
-            <option value="grupal">Grupal</option><option value="personalizado">Personalizado</option>
-            <option value="luna-de-miel">Luna de miel</option><option value="lujo">Lujo</option><option value="low-cost">Low cost</option>
-          </select>
-        </div>
-        <button class="travel-search-submit" type="submit"><i class="fas fa-search"></i> Buscar</button>
+        <form class="advanced-search-grid" id="advancedSearchForm">
+          <div class="advanced-search-field advanced-search-name">
+            <label for="advancedProgramName"><i class="fas fa-search" aria-hidden="true"></i>Nombre del programa</label>
+            <input id="advancedProgramName" type="search" autocomplete="off" placeholder="Ej.: Conociendo Europa">
+          </div>
+          <div class="advanced-search-field" data-search-selector="countries">
+            <label for="advancedCountriesInput"><i class="fas fa-globe-americas" aria-hidden="true"></i>Países</label>
+            <div class="advanced-token-control">
+              <div class="advanced-selected-values" id="advancedCountriesSelected" aria-label="Países seleccionados"></div>
+              <input id="advancedCountriesInput" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="advancedCountriesOptions" aria-describedby="advancedCountriesStatus" autocomplete="off" placeholder="Escribí un país...">
+            </div>
+            <ul class="advanced-suggestions" id="advancedCountriesOptions" role="listbox" aria-label="Países disponibles" hidden></ul>
+            <div class="advanced-suggestion-status" id="advancedCountriesStatus" role="status" aria-live="polite"></div>
+          </div>
+          <div class="advanced-search-field" data-search-selector="destinations">
+            <label for="advancedDestinationsInput"><i class="fas fa-map-marker-alt" aria-hidden="true"></i>Ciudades y lugares</label>
+            <div class="advanced-token-control">
+              <div class="advanced-selected-values" id="advancedDestinationsSelected" aria-label="Ciudades y lugares seleccionados"></div>
+              <input id="advancedDestinationsInput" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="advancedDestinationsOptions" aria-describedby="advancedDestinationsStatus" autocomplete="off" placeholder="Escribí una ciudad o lugar...">
+            </div>
+            <ul class="advanced-suggestions" id="advancedDestinationsOptions" role="listbox" aria-label="Ciudades y lugares disponibles" hidden></ul>
+            <div class="advanced-suggestion-status" id="advancedDestinationsStatus" role="status" aria-live="polite"></div>
+          </div>
+          <div class="search-field compact-select-field advanced-existing-filter" data-placeholder="¿Cuándo viajás?">
+            <label for="travelMonth"><i class="far fa-calendar-alt"></i><span data-select-value>¿Cuándo viajás?</span><i class="fas fa-chevron-down select-chevron" aria-hidden="true"></i></label>
+            <select id="travelMonth">
+              <option value="" aria-label="Cualquier fecha"></option>
+              <option value="enero">Enero</option><option value="febrero">Febrero</option><option value="marzo">Marzo</option>
+              <option value="abril">Abril</option><option value="mayo">Mayo</option><option value="junio">Junio</option>
+              <option value="julio">Julio</option><option value="agosto">Agosto</option><option value="septiembre">Septiembre</option>
+              <option value="octubre">Octubre</option><option value="noviembre">Noviembre</option><option value="diciembre">Diciembre</option>
+            </select>
+          </div>
+          <div class="search-field compact-select-field advanced-existing-filter" data-placeholder="Estilo de viaje">
+            <label for="travelType"><i class="fas fa-suitcase"></i><span data-select-value>Estilo de viaje</span><i class="fas fa-chevron-down select-chevron" aria-hidden="true"></i></label>
+            <select id="travelType">
+              <option value="" aria-label="Todos los tipos"></option>
+              <option value="con-aereo">Con aéreo</option><option value="sin-aereo">Sin aéreo</option>
+              <option value="grupal">Grupal</option><option value="personalizado">Personalizado</option>
+              <option value="luna-de-miel">Luna de miel</option><option value="lujo">Lujo</option><option value="low-cost">Low cost</option>
+            </select>
+          </div>
+          <button class="travel-search-submit" type="submit"><i class="fas fa-search" aria-hidden="true"></i> Buscar</button>
+        </form>
+      </section>
+      <form class="travel-search" id="travelSearchForm" role="search" hidden aria-hidden="true">
+        <input id="travelDestination" type="search" autocomplete="off" tabindex="-1" aria-hidden="true">
+        <button class="travel-search-submit" type="submit" tabindex="-1">Buscar</button>
       </form>
     </div>
 
@@ -565,6 +596,7 @@
       <div class="premium-container">
         <div class="section-topline"><div><div class="premium-eyebrow">Resultados de búsqueda</div><h2>Encontrá tu próximo viaje</h2></div><button class="clear-all-trigger" type="button" data-request-clear-all>Limpiar todo <i class="fas fa-broom" aria-hidden="true"></i></button></div>
         <p class="search-results-summary" id="travelResultsSummary"></p>
+        <div class="search-result-refinements" id="searchResultRefinements" hidden></div>
         <div class="trip-card-grid" id="travelResultsGrid"></div>
       </div>
     </section>
@@ -575,6 +607,7 @@
           <header class="premium-heading"><div class="premium-eyebrow">Tus viajes guardados</div><h2 id="favoriteTripsTitle">Mis favoritos</h2></header>
           <div class="travel-view-actions">
             <button class="clear-all-trigger" type="button" data-request-clear-all>Limpiar todo <i class="fas fa-broom" aria-hidden="true"></i></button>
+            <button class="clear-favorites-trigger" type="button" data-request-clear-favorites>Vaciar favoritos</button>
             <button class="travel-favorites-close" type="button" data-close-favorites>Volver a explorar <i class="fas fa-arrow-up" aria-hidden="true"></i></button>
           </div>
         </div>
@@ -602,11 +635,19 @@
     </section>
     <div class="comparison-limit-toast" id="comparisonLimitToast" role="status" aria-live="polite" hidden></div>
     <dialog class="clear-all-confirm-dialog" id="clearAllConfirmDialog" aria-modal="true" aria-labelledby="clearAllConfirmTitle" aria-describedby="clearAllConfirmMessage">
-      <h2 id="clearAllConfirmTitle">Limpiar todo</h2>
-      <p id="clearAllConfirmMessage">¿Querés limpiar todos los filtros, favoritos y viajes seleccionados para comparar?</p>
+      <h2 id="clearAllConfirmTitle">Limpiar filtros</h2>
+      <p id="clearAllConfirmMessage">¿Querés limpiar todos los criterios de búsqueda? Tus favoritos y comparaciones se conservarán.</p>
       <div class="clear-all-confirm-actions">
         <button type="button" data-cancel-clear-all>Cancelar</button>
         <button type="button" class="confirm" data-confirm-clear-all>Limpiar todo</button>
+      </div>
+    </dialog>
+    <dialog class="clear-all-confirm-dialog" id="clearFavoritesConfirmDialog" aria-modal="true" aria-labelledby="clearFavoritesConfirmTitle" aria-describedby="clearFavoritesConfirmMessage">
+      <h2 id="clearFavoritesConfirmTitle">Vaciar favoritos</h2>
+      <p id="clearFavoritesConfirmMessage">¿Querés eliminar todos tus favoritos y todas tus comparaciones? Esta acción no se puede deshacer</p>
+      <div class="clear-all-confirm-actions">
+        <button type="button" data-cancel-clear-favorites>Cancelar</button>
+        <button type="button" class="confirm" data-confirm-clear-favorites>Vaciar favoritos</button>
       </div>
     </dialog>
 
@@ -3379,6 +3420,7 @@
   <script src="program-booking.js?v=20261122a"></script>
   <script src="featured-carousel.js?v=20261121f"></script>
   <script src="travel-search.js?v=20261122a"></script>
+  <script src="advanced-search-ui.js?v=20261123b"></script>
   <script src="admin/config.js?v=20261121e"></script>
   <script src="traveler-experiences-public.js?v=20261122a"></script>
   <script src="home-video-public-data.js?v=20261121e"></script>

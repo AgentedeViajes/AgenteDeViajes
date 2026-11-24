@@ -1,0 +1,271 @@
+.advanced-search-preview {
+  position: relative;
+  z-index: 24;
+  padding: 15px 18px 14px;
+  border: 1px solid #e1e8f0;
+  border-radius: 18px;
+  background: rgba(255,255,255,.98);
+  box-shadow: 0 15px 38px rgba(3,28,65,.19);
+  color: #0b2554;
+}
+
+.advanced-search-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 0 0 12px;
+}
+
+.advanced-search-kicker {
+  display: block;
+  margin-bottom: 2px;
+  color: #f36b18;
+  font: 800 .62rem/1.2 Inter,sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.advanced-search-intro h2 {
+  margin: 0;
+  color: #0b2554;
+  font: 800 1.08rem/1.2 Inter,sans-serif;
+  letter-spacing: -.025em;
+}
+
+.advanced-search-grid {
+  display: grid;
+  grid-template-columns: minmax(150px,1.08fr) minmax(150px,1fr) minmax(170px,1.2fr) minmax(135px,.78fr) minmax(145px,.88fr) minmax(112px,.68fr);
+  align-items: end;
+  gap: 8px;
+}
+
+.advanced-search-field {
+  position: relative;
+  min-width: 0;
+}
+
+.advanced-search-field > label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 17px;
+  min-height: 17px;
+  margin: 0 0 5px;
+  color: #0b2554;
+  font: 800 .68rem/1.2 Inter,sans-serif;
+  white-space: nowrap;
+}
+
+.advanced-search-field > label i { color: #f36b18; font-size: .75rem; }
+
+.advanced-search-field > input,
+.advanced-token-control {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  min-height: 42px;
+  border: 1px solid #d9e1ec;
+  border-radius: 10px;
+  background: #fff;
+  color: #213755;
+  font: 500 .76rem/1.35 Inter,sans-serif;
+}
+
+.advanced-search-field > input { padding: 0 11px; }
+.advanced-search-field > input::placeholder,
+.advanced-token-control input::placeholder { color: #8a96a8; opacity: 1; }
+
+.advanced-token-control {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  gap: 4px;
+  padding: 4px 7px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.advanced-token-control:focus-within,
+.advanced-search-field > input:focus {
+  border-color: #f36b18;
+  outline: 3px solid rgba(243,107,24,.17);
+  outline-offset: 1px;
+}
+
+.advanced-token-control input {
+  flex: 1 1 110px;
+  width: 100%;
+  min-width: 75px;
+  height: 30px;
+  padding: 0 4px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #213755;
+  font: 500 .74rem/1.3 Inter,sans-serif;
+}
+
+.advanced-selected-values { display: contents; }
+
+.advanced-selected-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 3px 5px 3px 8px;
+  border: 1px solid #f5d3bd;
+  border-radius: 999px;
+  background: #fff6ef;
+  color: #17355e;
+  font: 700 .66rem/1.25 Inter,sans-serif;
+}
+
+.advanced-selected-chip > span:first-child { overflow-wrap: anywhere; }
+
+.advanced-chip-remove {
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #91502f;
+  font: 700 1rem/1 Inter,sans-serif;
+  cursor: pointer;
+}
+
+.advanced-chip-remove:hover,
+.advanced-chip-remove:focus-visible { background: #fbe3d4; outline: 2px solid #f36b18; }
+
+.advanced-suggestions {
+  position: absolute;
+  z-index: 50;
+  inset: calc(100% + 4px) 0 auto;
+  max-height: min(220px,40vh);
+  margin: 0;
+  padding: 5px;
+  overflow-y: auto;
+  border: 1px solid #dbe3ee;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(4,27,62,.2);
+  list-style: none;
+}
+
+.advanced-suggestions[hidden] { display: none; }
+
+.advanced-suggestions [role="option"] {
+  padding: 9px 10px;
+  border-radius: 7px;
+  color: #17355e;
+  font: 600 .76rem/1.3 Inter,sans-serif;
+  cursor: pointer;
+}
+
+.advanced-suggestions [role="option"]:hover,
+.advanced-suggestions [role="option"][aria-selected="true"] {
+  background: #fff1e8;
+  color: #aa4b12;
+}
+
+.advanced-suggestion-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#section-home .advanced-search-grid .advanced-existing-filter {
+  box-sizing: border-box;
+  align-self: end;
+  height: 42px !important;
+  min-height: 42px !important;
+  padding-inline: 8px !important;
+  border: 1px solid #d9e1ec !important;
+  border-radius: 10px;
+  background: #fff;
+}
+
+#section-home .advanced-search-grid .advanced-existing-filter > label {
+  gap: 5px !important;
+  color: #0b2554 !important;
+  font: 700 .68rem/1.2 Inter,sans-serif !important;
+}
+
+#section-home .advanced-search-grid .advanced-existing-filter > label > i:first-child { color: #f36b18 !important; }
+#section-home .advanced-search-grid .advanced-existing-filter > label > span { font-family: Inter,sans-serif !important; }
+
+#section-home .advanced-search-grid > .travel-search-submit {
+  align-self: end;
+  height: 42px !important;
+  min-width: 0 !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border-radius: 10px !important;
+}
+
+/* Reusable presentation for the post-search quick filters in the next stage. */
+.search-result-refinements {
+  display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  margin:0 0 18px; font-family:Inter,sans-serif;
+}
+.search-result-category-group { display:flex; flex:1 1 560px; flex-wrap:wrap; align-items:center; gap:8px; }
+.search-result-category-chip {
+  display:inline-flex; align-items:center; gap:6px; min-height:34px; padding:6px 12px;
+  border:1px solid #dbe3ee; border-radius:999px; background:#fff; color:#17355e;
+  font:700 .75rem/1.2 Inter,sans-serif; cursor:pointer; transition:background .16s ease,border-color .16s ease,color .16s ease;
+}
+.search-result-category-chip[aria-pressed="true"] { border-color:#f36b18; background:#fff2e9; color:#a84911; }
+.search-result-category-chip:focus-visible { outline:3px solid rgba(243,107,24,.3); outline-offset:2px; }
+.search-result-sort { display:flex; align-items:center; gap:8px; color:#56677d; font:600 .78rem/1.2 Inter,sans-serif; }
+.search-result-sort select {
+  min-height:36px; max-width:100%; padding:0 30px 0 10px; border:1px solid #dbe3ee; border-radius:9px;
+  background:#fff; color:#17355e; font:600 .78rem/1.2 Inter,sans-serif;
+}
+.search-result-sort select:focus-visible { outline:3px solid rgba(243,107,24,.3); outline-offset:2px; }
+
+@media (max-width: 1180px) {
+  .advanced-search-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  #section-home .advanced-search-grid > .travel-search-submit { height: 42px !important; min-height: 42px !important; }
+}
+
+@media (max-width: 760px) {
+  .advanced-search-preview { padding: 13px 12px; border-radius: 17px; }
+  .advanced-search-intro { display: block; margin-bottom: 10px; }
+  .advanced-search-intro h2 { font-size: 1rem; }
+  .advanced-search-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap: 9px 7px; }
+  .advanced-search-name,.advanced-search-field:nth-child(3) { grid-column:1/-1; }
+  .advanced-search-field > label { font-size: .66rem; }
+  .advanced-search-field > input { height: 44px; min-height: 44px; }
+  .advanced-token-control { height: auto; min-height: 44px; max-height: 92px; align-content: flex-start; }
+  #section-home .advanced-search-grid .advanced-existing-filter { height: 44px !important; min-height: 44px !important; }
+  #section-home .advanced-search-grid > .travel-search-submit { grid-column:1/-1; }
+  .search-result-refinements { align-items:stretch; gap:10px; margin-bottom:14px; }
+  .search-result-category-group { flex-basis:100%; gap:7px; }
+  .search-result-category-chip { min-height:36px; padding:7px 10px; }
+  .search-result-sort { justify-content:space-between; width:100%; }
+  .search-result-sort select { flex:1; width:1px; }
+}
+
+@media (max-width: 420px) {
+  .advanced-search-grid { grid-template-columns:minmax(0,1fr); }
+  .advanced-search-name,.advanced-search-field:nth-child(3) { grid-column:auto; }
+  #section-home .advanced-search-grid .advanced-existing-filter { height: 46px !important; min-height: 46px !important; }
+  #section-home .advanced-search-grid > .travel-search-submit { height: 46px !important; min-height: 46px !important; }
+}
+
+#travelSearchForm[hidden] { display: none !important; }

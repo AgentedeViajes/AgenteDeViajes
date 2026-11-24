@@ -9,6 +9,7 @@ const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const source = fs.readFileSync(path.join(root, 'travel-search.js'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'travel-comparison.css'), 'utf8');
+const premiumCss = fs.readFileSync(path.join(root, 'premium-home.css'), 'utf8');
 const favoritesCss = fs.readFileSync(path.join(root, 'travel-favorites.css'), 'utf8');
 const sharing = require('../program-sharing.js');
 const id1 = 'supabase:8eaa3606-5ec7-4c82-ae94-13d6e34fc233';
@@ -126,6 +127,40 @@ test('compara pares grupales, sin aéreo y a medida, además de selecciones mixt
   });
 });
 
+test('los programas publicados reportados se resuelven por sus UUID estables y abren la comparación', () => {
+  const leyendasId = 'supabase:925a7d92-c8e8-4803-a660-ab370df4ef82';
+  const portugalId = 'supabase:6605f99f-e535-4b57-a36e-ca2d359abcca';
+  const berninaId = 'supabase:35ed9a2e-9ab1-40f3-a96d-6d62f4d43f08';
+  const indiaId = 'supabase:b0f1fc16-9af0-427c-b77d-fd7e9f8bc8d0';
+  const programs = [
+    {id:leyendasId,source:'supabase',status:'published',name:'Leyendas de Europa',comparison:{availability:['7 de junio de 2027'],priceText:'USD 5.790',operatorCode:'VIE'}},
+    {id:portugalId,source:'supabase',status:'published',name:'Portugal Andalucía y Marruecos OLA',comparison:{availability:['16 de abril de 2027'],priceText:'USD 6.890',operatorCode:'OLA'}},
+    {id:berninaId,source:'supabase',status:'published',name:'Bernina Expres, Circuito Alpino',comparison:{availabilityLabel:'Período de viaje',availability:['01/03/2027 al 10/06/2027'],priceText:'USD 1.700',operatorCode:'TRAVEL'}},
+    {id:indiaId,source:'supabase',status:'published',name:'India con Fiesta Holi',comparison:{availability:['14 de marzo de 2027'],priceText:'USD 6.560',operatorCode:'CROWN'}}
+  ];
+  const combinations = [[leyendasId,portugalId],[berninaId,indiaId],[leyendasId,indiaId],[portugalId,berninaId],[leyendasId,portugalId,indiaId]];
+  combinations.forEach(ids => {
+    const store = comparison.create(storage());
+    ids.forEach(id => store.toggle(id));
+    const available = store.available(programs);
+    assert.equal(available.length, ids.length, ids.join(' + '));
+    assert.deepEqual(available.map(program => program.id), ids);
+    assert.equal(available.map(comparison.renderCard).length, ids.length);
+  });
+  assert.match(comparison.renderCard(programs[0]), /VIE/);
+  assert.match(comparison.renderCard(programs[1]), /OLA/);
+  assert.match(comparison.renderCard(programs[2]), /TRAVEL/);
+  assert.match(comparison.renderCard(programs[3]), /CROWN/);
+  assert.match(comparison.renderCard(programs[2]), /Período de viaje/);
+});
+
+test('las tarjetas favoritas reservan espacio para la flecha de ficha y no superponen el control Comparar', () => {
+  assert.match(css,/\.favorite-compare-actions \{ padding:0 58px 14px 14px; \}/);
+  assert.match(premiumCss,/\.favoriteTripsSection[^{]*\.trip-card::after|#favoriteTripsSection \.trip-card::after/);
+  assert.match(premiumCss,/pointer-events:none/);
+  assert.match(css,/\.travel-favorites-section \.favorite-card-compare-button\.is-compared/);
+});
+
 test('permite quitar, volver a agregar y recuperar tras recargar una selección de cualquier categoría', () => {
   const local = storage();
   const programs = [
@@ -197,6 +232,13 @@ test('Comparar solo se ofrece dentro de Mis favoritos y usa los datos actuales d
   assert.match(source,/localStorage/);
 });
 
+test('la llegada del catálogo público vuelve a pintar Favoritos si la sección se abrió durante la carga', () => {
+  const collector = source.match(/function collectPublicPrograms\(programs\) \{[\s\S]*?\n  \}/)?.[0] || '';
+  assert.match(collector,/comparisonStore\(\)\?\.reconcile\(favoritePrograms\(\)\)/);
+  assert.match(collector,/if \(!document\.getElementById\('favoriteTripsSection'\)\?\.hidden\) renderFavoriteTrips\(\)/);
+  assert.match(collector,/if \(!document\.getElementById\('travelComparisonSection'\)\?\.hidden\) renderComparisonView\(\)/);
+});
+
 test('el control de cuarto programa anuncia el límite de manera accesible', () => {
   assert.match(html,/id="comparisonLimitToast" role="status" aria-live="polite" hidden/);
   assert.match(source,/Podés comparar hasta \$\{comparisonModule\.MAX_PROGRAMS\} programas/);
@@ -223,5 +265,9 @@ test('Inicio y otros cambios de sección ocultan el comparador sin vaciar su sel
   assert.match(source,/window\.showTravelComparison = function/);
   assert.match(source,/window\.hideTravelComparisonView = function/);
   assert.match(source,/comparisonStore\(\)\?\.reconcile\(favoritePrograms\(\)\)/);
-  assert.match(source,/function clearAllFiltersFavoritesAndComparison[\s\S]*?favoriteStore\(\)\?\.clear\?\.\(\)[\s\S]*?comparisonStore\(\)\?\.clear\?\.\(\)/);
+  const clearFilters = source.match(/function clearAllSearchFilters\(\) \{[\s\S]*?\n  \}/)?.[0] || '';
+  assert.doesNotMatch(clearFilters,/favoriteStore|comparisonStore|\.clear\(/);
+  const clearFavorites = source.match(/function clearFavoritesAndComparisons\(\) \{[\s\S]*?\n  \}/)?.[0] || '';
+  assert.match(clearFavorites,/favoriteStore\(\)\?\.clear\?\.\(\)/);
+  assert.match(clearFavorites,/comparisonStore\(\)\?\.clear\?\.\(\)/);
 });
